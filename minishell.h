@@ -7,30 +7,36 @@ typedef struct			s_arg
 {
 	char				*name;
 	int					is_env;
+	struct s_arg		*next;
 }						t_arg;
+
+typedef struct			s_cmd_info
+{
+	int					n_flag;
+	t_arg				*args;
+	int					stdin;
+	int					stdout;
+	int					is_separated;
+}						t_cmd_info;
 
 typedef struct			s_cmd
 {
 	char				*name;
-	int					n_flag;
-	t_arg				*args;
-	char				*stdin;
-	char				*stdout;
-	int					is_separated;
+	t_cmd_info			cmd_info;
 	struct s_cmd		*next;
 }						t_cmd;
 
-typedef struct			s_env_var
+typedef struct			s_env_list
 {
 	char				*key;
 	char				*value;
-	struct s_env_var	*next;
-}						t_env_var;
+	struct s_env_list	*next;
+}						t_env_list;
 
 typedef struct	s_info
 {
 	t_cmd		*cmd;
-	t_env_var	*env;
+	t_env_list	*env;
 }				t_info;
 
 #endif
