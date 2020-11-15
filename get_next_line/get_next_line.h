@@ -6,7 +6,7 @@
 /*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/21 13:02:38 by cbach             #+#    #+#             */
-/*   Updated: 2020/11/14 16:50:40 by cbach            ###   ########.fr       */
+/*   Updated: 2020/11/15 13:18:19 by cbach            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #  define FD_MAX_COUNT 1024
 # endif
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 0
+#  define BUFFER_SIZE 1024
 # endif
 # include <unistd.h>
 # include <stdlib.h>
