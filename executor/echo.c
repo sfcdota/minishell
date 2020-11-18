@@ -8,7 +8,7 @@ int echo(t_cmd *cmd, t_list *args, t_list *env_list)
 	{
 		out = !((t_arg *)(args->content))->is_env ? 
 		((t_arg *)(args->content))->name :
-		get_env_by_key(((t_arg *)(args->content))->name, env_list);
+			  get_env_val_by_key(((t_arg *) (args->content))->name, env_list);
 		if (!out || write(cmd->stdout, out, ft_strlen(out)) == -1)
 			return (1);
 		args = args->next;
