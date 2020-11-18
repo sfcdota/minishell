@@ -50,7 +50,7 @@ int check_cdpath(t_cmd *cmd, char *path)
 		i++;
 	}
 	if (dirs[i]) // mojno ubrat t.k pri dirs[i] = null putstr niche ne sdelaet
-		ft_putstr_fd(dirs[i], cmd->stdout);
+		ft_putstr_fd(dirs[i], cmd->std_out);
 	return ((int)dirs[i] + (int)ft_clear(dirs, i));
 }
 
@@ -69,7 +69,7 @@ int cd(t_cmd *cmd, t_list *args, t_list *env_list)
 	{
 		if (!chdir(get_env_val_by_key("OLDPWD", env_list)))
 		{
-			ft_putendl_fd(get_env_val_by_key("OLDPWD", env_list), cmd->stdout);
+			ft_putendl_fd(get_env_val_by_key("OLDPWD", env_list), cmd->std_out);
 			return (0);
 		}
 		return (1);
