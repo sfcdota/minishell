@@ -2,6 +2,7 @@
 # define PROJECT_MINISHELL_H
 # include "libft/libft.h"
 # include "get_next_line/get_next_line.h"
+# include <sys/stat.h>
 # define MAX_CMD_LENGTH 262144
 # define REDIRECTION_IN 3
 # define REDIRECTION_OUT 4
@@ -18,7 +19,7 @@ typedef struct			s_cmd
 {
 	char				*name;
 	char				*flags;
-	t_list				*args;
+	t_list				*arg_list;
 	int					std_in;
 	int					std_out;
 	int					is_separated;
@@ -34,8 +35,8 @@ typedef struct			s_env
 
 typedef struct			s_info
 {
-	t_list				*cmd;
-	t_list				*env;
+	t_list				*cmd_list;
+	t_list				*env_list;
 }						t_info;
 
 #endif

@@ -1,10 +1,12 @@
 #include "executor.h"
 
-char *pwd(t_cmd *cmd, t_list *args, t_list *env_list)
+int pwd(t_cmd *cmd)
 {
 	char *pwd;
 	
+	pwd = NULL;
 	if (!(getcwd(pwd, 228)))
-		return (NULL);
-	return (pwd);
+		return (1);
+	ft_putstr_fd(pwd, cmd->std_out);
+	return (0);
 }

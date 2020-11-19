@@ -4,16 +4,19 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-t_cmd	new_cmd(char *name, char *flags, t_list *args, int std_in, int std_out, int is_separated, int is_bin)
+#include "executor/executor.h"
+t_cmd	*new_cmd(char *name, char *flags, t_list *args, int std_in, int std_out, int is_separated, int is_bin)
 {
-	t_cmd cmd;
-	cmd.name = name;
-	cmd.flags = flags;
-	cmd.args = args;
-	cmd.std_in = std_in;
-	cmd.std_out = std_out;
-	cmd.is_separated = is_separated;
-	cmd.is_bin = is_bin;
+	t_cmd *cmd;
+
+	cmd = malloc(sizeof(t_cmd));
+	cmd->name = name;
+	cmd->flags = flags;
+	cmd->arg_list = args;
+	cmd->std_in = std_in;
+	cmd->std_out = std_out;
+	cmd->is_separated = is_separated;
+	cmd->is_bin = is_bin;
 	return (cmd);
 }
 void print_cmds(t_list *cmd_list)
@@ -34,27 +37,40 @@ void	add_echo(t_list *cmd)
 	printf("name = %s\nflags = %s\n", for_short->name, for_short->flags);
 }
 
+void	print_envp(char **envp)
+{
+	while (*envp)
+	{
+		ft_putendl_fd(*envp, 1);
+		envp++;
+	}
+}
+
 int main(int argc, char **argv, char *envp[])
 {
-	t_info info;
-	t_cmd	tmp;
-	tmp = new_cmd(ft_strdup("echo"), ft_strdup("-n"), NULL, -1, 1, 0, 0);
-	info.cmd = ft_lstnew(&tmp);
-	print_cmds(info.cmd);
-	tmp = new_cmd(ft_strdup("sdfsf"), ft_strdup("sadf"), NULL, -1, 1, 0, 0);
-	ft_lstadd_back(&(info.cmd), ft_lstnew(&tmp));
-	tmp = new_cmd(ft_strdup("echo"), ft_strdup(""), NULL, -1, 1, 0, 0);
-	ft_lstadd_back(&(info.cmd), ft_lstnew(&tmp));
-	print_cmds(info.cmd);
-	
-	
-	t_cmd *cmd = malloc(sizeof(t_cmd));
-	cmd->name = ft_strdup("");
-	cmd->flags = ft_strdup("");
-	t_list *new = ft_lstnew(cmd);
-	
-	
-	
+	print_envp(envp);
+	printf("\n\n\n");
+	t_list *env_list = envs_to_list(envp);
+	print_env_list(env_list, "declare -x ", 1);
+//	t_info info;
+//	t_cmd	*tmp;
+//	tmp = new_cmd(ft_strdup("echo"), ft_strdup("-n"), NULL, -1, 1, 0, 0);
+//	info.cmd = ft_lstnew(tmp);
+//	print_cmds(info.cmd);
+//	tmp = new_cmd(ft_strdup("sdfsf"), ft_strdup("sadf"), NULL, -1, 1, 0, 0);
+//	ft_lstadd_back(&(info.cmd), ft_lstnew(tmp));
+//	tmp = new_cmd(ft_strdup("echo"), ft_strdup(""), NULL, -1, 1, 0, 0);
+//	ft_lstadd_back(&(info.cmd), ft_lstnew(tmp));
+//	print_cmds(info.cmd);
+//	
+//	
+//	t_cmd *cmd = malloc(sizeof(t_cmd));
+//	cmd->name = ft_strdup("");
+//	cmd->flags = ft_strdup("");
+//	t_list *new = ft_lstnew(cmd);
+
+
+
 //	else
 //	{
 //		char *cmd = ft_strdup("echo");

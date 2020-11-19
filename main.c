@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include "executor/executor.h"
 t_cmd	*new_cmd(char *name, char *flags, t_list *args, int std_in, int std_out, int is_separated, int is_bin)
 {
 	t_cmd *cmd;
@@ -11,7 +12,7 @@ t_cmd	*new_cmd(char *name, char *flags, t_list *args, int std_in, int std_out, i
 	cmd = malloc(sizeof(t_cmd));
 	cmd->name = name;
 	cmd->flags = flags;
-	cmd->args = args;
+	cmd->arg_list = args;
 	cmd->std_in = std_in;
 	cmd->std_out = std_out;
 	cmd->is_separated = is_separated;
@@ -36,40 +37,38 @@ void	add_echo(t_list *cmd)
 	printf("name = %s\nflags = %s\n", for_short->name, for_short->flags);
 }
 
+void	print_envp(char **envp)
+{
+	while (*envp)
+	{
+		ft_putendl_fd(*envp, 1);
+		envp++;
+	}
+}
+
 int main(int argc, char **argv, char *envp[])
 {
-	t_info info;
-	t_cmd	*tmp;
-	tmp = new_cmd(ft_strdup("echo"), ft_strdup("-n"), NULL, -1, 1, 0, 0);
-	info.cmd = ft_lstnew(tmp);
-	print_cmds(info.cmd);
-	tmp = new_cmd(ft_strdup("sdfsf"), ft_strdup("sadf"), NULL, -1, 1, 0, 0);
-	ft_lstadd_back(&(info.cmd), ft_lstnew(tmp));
-	tmp = new_cmd(ft_strdup("echo"), ft_strdup(""), NULL, -1, 1, 0, 0);
-	ft_lstadd_back(&(info.cmd), ft_lstnew(tmp));
-	print_cmds(info.cmd);
+	char *kek;
 	
-	
-	t_cmd *cmd = malloc(sizeof(t_cmd));
-	cmd->name = ft_strdup("");
-	cmd->flags = ft_strdup("");
-	t_list *new = ft_lstnew(cmd);
-	
-	
-	
-//	else
+	t_list *env_list = envs_to_list(envp);
+	char **env = env_list_to_array(env_list);
+	print_env_array(env);
+//	if (argc && argv[0] && envp)
 //	{
-//		char *cmd = ft_strdup("echo");
-//		char *flags = ft_strdup("");
-//		t_list *temp = ft_lstnew(&new_cmd(cmd, flags, -1, 1, 0, 0));
-//		ft_lstadd_back(&info->cmd, temp);
-//		print_cmds(info->cmd);
+//		kek = ft_calloc(MAX_CMD_LENGTH + 1, 1);
+//		while (1)
+//		{
+//			if (write(1, "minishell> ", 2) == -1 ||
+//				read(0, kek, MAX_CMD_LENGTH + 1) == -1)
+//				exit(-1);
+//			if (kek[MAX_CMD_LENGTH])
+//				exit(-1);
+//			if (!ft_strncmp(kek, "exit\n", MAX_CMD_LENGTH))
+//				exit(0);
+//			//parsing
+//			//execution
+//			ft_memset(kek, 0, MAX_CMD_LENGTH);
+//		}
 //	}
-	// ft_putendl_fd("hui", 1);
-	// add_echo(info->cmd);
-	// add_echo(info.cmd);
-	// add_echo(info.cmd);
-	// printf("kek2");
-	// print_cmds(info.cmd);
 	return (0);
 }
