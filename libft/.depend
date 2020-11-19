@@ -1,0 +1,43 @@
+ft_atoi.o: ft_atoi.c libft.h
+ft_bzero.o: ft_bzero.c libft.h
+ft_isalnum.o: ft_isalnum.c libft.h
+ft_isalpha.o: ft_isalpha.c
+ft_isascii.o: ft_isascii.c
+ft_isdigit.o: ft_isdigit.c
+ft_isprint.o: ft_isprint.c
+ft_itoa.o: ft_itoa.c libft.h
+ft_memchr.o: ft_memchr.c libft.h
+ft_memcmp.o: ft_memcmp.c libft.h
+ft_memmove.o: ft_memmove.c libft.h
+ft_memset.o: ft_memset.c libft.h
+ft_putchar_fd.o: ft_putchar_fd.c
+ft_putendl_fd.o: ft_putendl_fd.c libft.h
+ft_putnbr_fd.o: ft_putnbr_fd.c libft.h
+ft_putstr_fd.o: ft_putstr_fd.c libft.h
+ft_split.o: ft_split.c libft.h
+ft_strchr.o: ft_strchr.c libft.h
+ft_strjoin.o: ft_strjoin.c libft.h
+ft_strlcat.o: ft_strlcat.c libft.h
+ft_strlcpy.o: ft_strlcpy.c libft.h
+ft_strlen.o: ft_strlen.c libft.h
+ft_strmapi.o: ft_strmapi.c libft.h
+ft_strncmp.o: ft_strncmp.c libft.h
+ft_strrchr.o: ft_strrchr.c libft.h
+ft_strtrim.o: ft_strtrim.c libft.h
+ft_substr.o: ft_substr.c libft.h
+ft_tolower.o: ft_tolower.c
+ft_toupper.o: ft_toupper.c
+ft_calloc.o: ft_calloc.c libft.h
+ft_memccpy.o: ft_memccpy.c libft.h
+ft_memcpy.o: ft_memcpy.c libft.h
+ft_strdup.o: ft_strdup.c libft.h
+ft_strnstr.o: ft_strnstr.c libft.h
+ft_lstnew.o: ft_lstnew.c libft.h
+ft_lstadd_front.o: ft_lstadd_front.c libft.h
+ft_lstsize.o: ft_lstsize.c libft.h
+ft_lstlast.o: ft_lstlast.c libft.h
+ft_lstadd_back.o: ft_lstadd_back.c libft.h
+ft_lstdelone.o: ft_lstdelone.c libft.h
+ft_lstclear.o: ft_lstclear.c libft.h
+ft_lstiter.o: ft_lstiter.c libft.h
+ft_lstmap.o: ft_lstmap.c libft.h

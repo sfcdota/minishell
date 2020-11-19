@@ -19,10 +19,10 @@ typedef struct			s_cmd
 	char				*name;
 	char				*flags;
 	t_list				*args;
-	int					stdin;
-	int					stdout;
-	int					is_separated;
-	int					is_bin;
+	int					std_in;
+	int					std_out;
+	// int					is_separated;
+	// int					is_bin;
 }						t_cmd;
 
 typedef struct			s_env
