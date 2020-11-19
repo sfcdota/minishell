@@ -21,8 +21,13 @@ typedef struct			s_cmd
 	t_list				*args;
 	int					std_in;
 	int					std_out;
+<<<<<<< HEAD
 	// int					is_separated;
 	// int					is_bin;
+=======
+	int					is_separated;
+	int					is_bin;
+>>>>>>> 2ae4d1e52f950326f1e89130ea53ec880dc0a063
 }						t_cmd;
 
 typedef struct			s_env

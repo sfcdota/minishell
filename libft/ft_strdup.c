@@ -16,7 +16,7 @@ char	*ft_strdup(const char *s)
 {
 	unsigned char *t;
 
-	t = malloc(ft_strlen(s) + 1);
+	t = ft_calloc(ft_strlen(s) + 1, sizeof(char));
 	if (t)
 		return (ft_memmove(t, s, ft_strlen(s) + 1));
 	return (NULL);
