@@ -11,7 +11,7 @@ char *to_delimiter(char *envp_string, char delimiter);
 char	**env_list_to_array(t_list *env_list);
 void print_env_list(t_list *env_list, char *prefix, int std_out);
 void	print_env_array(char **envp);
-
+int binary(t_cmd *cmd, t_list *arg_list, t_list *env_list);
 
 /*
 **
@@ -27,4 +27,9 @@ int pwd(t_cmd *cmd);
 int exit_(t_list *arg_list, t_list *env_list);
 
 void	*ft_clear(char **t, int i);
+
+
+
+
+int execution(t_list *cmd_list, t_list *env_list);
 #endif

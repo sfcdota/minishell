@@ -30,7 +30,14 @@ int exit_(t_list *arg_list, t_list *env_list)
 		code = arg->is_env ? get_env_val_by_key(arg->name, env_list)
 						   : arg->name;
 		if (*code == '-')
-			is_neg = 1;
+		{
+			if (is_str_numeric(code + 1))
+				is_neg = 1;
+			else
+				return (1);//need error msg num arg required
+		}
+		else if (is_str_numeric(code))
+			return (1); //also need error msg
 		kek = ft_atoi(code);
 		if ((is_neg && !kek) || (!is_neg && kek == -1))
 		{
