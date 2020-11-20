@@ -2,41 +2,45 @@
 # define PROJECT_MINISHELL_H
 # include "libft/libft.h"
 # include "get_next_line/get_next_line.h"
+# include <sys/stat.h>
+# define SHELL_PREFIX "minishell> "
 # define MAX_CMD_LENGTH 262144
+# define REDIRECTION_IN 3
+# define REDIRECTION_OUT 4
+# define PIPE 5
+
+
 typedef struct			s_arg
 {
 	char				*name;
 	int					is_env;
-	struct s_arg		*next;
 }						t_arg;
-
-typedef struct			s_cmd_info
-{
-	int					n_flag;
-	t_arg				*args;
-	int					stdin;
-	int					stdout;
-	int					is_separated;
-}						t_cmd_info;
 
 typedef struct			s_cmd
 {
 	char				*name;
-	t_cmd_info			cmd_info;
-	struct s_cmd		*next;
+	int 				is_env;
+	char				*flags;
+	t_list				*arg_list;
+	int					std_in;
+	int					std_out;
+	int					is_separated;
 }						t_cmd;
 
-typedef struct			s_env_list
+typedef struct			s_env
 {
 	char				*key;
 	char				*value;
-	struct s_env_list	*next;
-}						t_env_list;
+	int					is_hidden;
+}						t_env;
 
-typedef struct	s_info
+typedef struct			s_info
 {
-	t_cmd		*cmd;
-	t_env_list	*env;
-}				t_info;
+	t_list				*cmd_list;
+	t_list				*env_list;
+}						t_info;
+
+
+t_arg *new_arg(char *name, int is_env);
 
 #endif
