@@ -31,5 +31,5 @@ void	*ft_clear(char **t, int i);
 
 
 
-int execution(t_list *cmd_list, t_list *env_list);
+int execution(t_info *info, t_list *cmd_list, t_list *env_list);
 #endif

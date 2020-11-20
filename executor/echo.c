@@ -3,7 +3,7 @@
 int echo(t_cmd *cmd, t_list *args, t_list *env_list)
 {
 	char *out;
-	
+
 	while (args)
 	{
 		out = !((t_arg *)(args->content))->is_env ? 

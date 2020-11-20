@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "executor/executor.h"
-#include <signal.h>
 t_cmd	*new_cmd(char *name, char *flags, t_list *args, int std_in, int std_out, int is_separated)
 {
 	t_cmd *cmd;
@@ -74,10 +73,18 @@ int main(int argc, char **argv, char *envp[])
 {
 	char *kek;
 	t_info info;
+	
+	pipe(info.pipe_fd);
 	pid_t pid;
+	kek = ft_calloc(MAX_CMD_LENGTH + 1, 1);
+
 	if ((pid = fork()) == 0)
 	{
-		//child process execution
+		
+		read(info.pipe_fd[0], kek, MAX_CMD_LENGTH + 1);
+		//parsing
+		execution(&info, info.cmd_list, info.env_list);
+		free(kek);
 	}
 	else
 	{
@@ -94,7 +101,6 @@ int main(int argc, char **argv, char *envp[])
 		//print_env_array(env);
 		if (argc && argv[0] && envp)
 		{
-			kek = ft_calloc(MAX_CMD_LENGTH + 1, 1);
 			while (1)
 			{
 				if (write(1, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1 ||
@@ -107,7 +113,7 @@ int main(int argc, char **argv, char *envp[])
 				//execution prototype execution(t_list *cmd_list, t_list *env_list)
 				//to est execution(info.cmd_list, info.env_list);
 				custom_test(&info, info.env_list);
-				execution(info.cmd_list, info.env_list);
+				execution(&info, info.cmd_list, info.env_list);
 				ft_memset(kek, 0, MAX_CMD_LENGTH);
 			}
 		}
