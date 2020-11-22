@@ -3,8 +3,9 @@
 # include "libft/libft.h"
 # include "get_next_line/get_next_line.h"
 # include <sys/stat.h>
-#include <signal.h>
-
+# include <signal.h>
+# define STDIN 0
+# define STDOUT 1
 # define SHELL_PREFIX "minishell> "
 # define MAX_CMD_LENGTH 262144
 # define REDIRECTION_IN 3

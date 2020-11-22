@@ -1,11 +1,5 @@
 #include "executor.h"
 
-int error(char *message, int err)
-{
-	ft_putendl_fd(message, 1);
-	return (err);
-}
-
 int change(char *path, t_list *env_list)
 {
 	t_env *pwd;
@@ -56,7 +50,7 @@ int check_cdpath(t_cmd *cmd, char *path)
 		ft_putstr_fd(dirs[i], cmd->std_out);
 	if (dirs[i])
 		is_found = 1;
-	ft_clear(dirs, i);
+	ft_clear_split(dirs, i);
 	return (is_found);
 }
 

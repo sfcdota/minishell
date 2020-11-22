@@ -71,51 +71,32 @@ void	custom_test(t_info *info, t_list *env_list)
 
 int main(int argc, char **argv, char *envp[])
 {
-	char *kek;
+	char *line;
 	t_info info;
 	
-	pipe(info.pipe_fd);
-	pid_t pid;
-	kek = ft_calloc(MAX_CMD_LENGTH + 1, 1);
-
-	if ((pid = fork()) == 0)
+	if (argc != 1)
+	{
+		ft_putendl_fd("minishell : error, arguments on minishell are not supported",1);
+		exit(1);
+	}
+	info.cmd_list = NULL;
+	info.env_list = envs_to_list(envp);
+	if ((info.pid = fork()) == 0)
 	{
 		
-		read(info.pipe_fd[0], kek, MAX_CMD_LENGTH + 1);
-		//parsing
-		execution(&info, info.cmd_list, info.env_list);
-		free(kek);
+		if (get_next_line(info.pipe_fd[0], &line) == -1)
+			exit(-1);
 	}
-	else
+	else if (argc && argv[0] && envp)
 	{
-		kill(pid, 0);
-		if (argc != 1)
+		while (1)
 		{
-			ft_putendl_fd("minishell : error, arguments on minishell are not supported", 1);
-			exit(1);
-		}
-		info.cmd_list = NULL;
-		info.env_list = envs_to_list(envp);
-		//custom_test(&info, info.env_list);
-		//char **env = env_list_to_array(env_list);
-		//print_env_array(env);
-		if (argc && argv[0] && envp)
-		{
-			while (1)
-			{
-				if (write(1, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1 ||
-					read(0, kek, MAX_CMD_LENGTH + 1) == -1)
-					exit(-1);
-				if (kek[MAX_CMD_LENGTH])
-					exit(-1);
-				//parsing prototype parsing(t_info *info, char *input_string)
-				// to est' parsing(&info, kek);
-				//execution prototype execution(t_list *cmd_list, t_list *env_list)
-				//to est execution(info.cmd_list, info.env_list);
-				custom_test(&info, info.env_list);
-				execution(&info, info.cmd_list, info.env_list);
-				ft_memset(kek, 0, MAX_CMD_LENGTH);
-			}
+			if (write(STDOUT, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1 ||
+				get_next_line(STDIN, &line) == -1)
+				exit(-1);
+			custom_test(&info, info.env_list);
+			execution(&info, info.cmd_list, info.env_list);
+			free(line);
 		}
 	}
 	return (0);

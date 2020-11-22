@@ -26,9 +26,10 @@ int export(t_cmd *cmd, t_list *arg_list, t_list *env_list);
 int pwd(t_cmd *cmd);
 int exit_(t_list *arg_list, t_list *env_list);
 
-void	*ft_clear(char **t, int i);
+void	*ft_clear_split(char **t, int i);
 
 
+int error_msg(char *message, int error_code, t_info *info);
 
 
 int execution(t_info *info, t_list *cmd_list, t_list *env_list);
