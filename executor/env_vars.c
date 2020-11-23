@@ -1,7 +1,7 @@
 #include "executor.h"
 
 /*
-** check for is_hidden == -1 made for default adding
+** check for type == -1 made for default adding
 ** not default case: adding PWD and OLDPWD in cd, because in error we need free
 */
 
@@ -13,7 +13,7 @@ t_env	*add_env(t_list **env_list, char *key, char *value, int is_hidden)
 		return (NULL);
 	env->key = key;
 	env->value = value;
-	env->is_hidden = is_hidden;
+	env->type = is_hidden;
 	if (is_hidden == -1)
 		ft_lstadd_back(env_list, ft_lstnew(env));
 	return (env);

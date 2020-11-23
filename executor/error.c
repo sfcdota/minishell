@@ -47,6 +47,13 @@ void clear_all(t_info *info)
 int error_msg(char *message, int error_code, t_info *info)
 {
 	clear_all(info);
-	ft_putendl_fd(message, 1);
+	ft_putendl_fd(message, STDOUT_FILENO);
 	return (error_code);
+}
+
+int ft_exit(char *message, int status, t_info *info)
+{
+	clear_all(info);
+	ft_putendl_fd(message, STDOUT_FILENO);
+	exit(status);
 }

@@ -19,7 +19,7 @@ int		ft_strcmp(const char *s1, const char *s2)
 
 char *get_env_val_by_key(char *key, t_list *env_list)
 {
-	while(env_list)
+	while(key && env_list)
 	{
 		if(!ft_strcmp(key, ((t_env *)(env_list->content))->key))
 			return ((t_env *)(env_list->content))->value;

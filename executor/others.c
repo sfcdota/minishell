@@ -50,7 +50,6 @@ int binary(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 {
 	char *filename;
 	struct stat buf;
-	char *cmd_name;
 	
 	if (!stat(cmd->name, &buf))
 	{
