@@ -1,6 +1,18 @@
 #include "executor.h"
 
-int execute_cmd(char *cmd_name, t_cmd *cmd, t_list *env_list)
+int check_pwd(t_list *env_list)
+{
+	char *pwd;
+	if (!get_env_val_by_key("PWD", env_list))
+	{
+		if (!(pwd = getcwd(NULL, 0)))
+			return (1);
+		add_env(&env_list, "PWD", pwd);
+	}
+	return (0);
+}
+
+int execute_cmd(char *cmd_name, t_cmd *cmd, t_list *env_list, t_info *info)
 {
 	if (!ft_strcmp(cmd_name, "echo"))
 		echo(cmd, cmd->arg_list, env_list);
@@ -15,48 +27,11 @@ int execute_cmd(char *cmd_name, t_cmd *cmd, t_list *env_list)
 	else if (!ft_strcmp(cmd_name, "env"))
 		env(cmd, cmd->arg_list, env_list);
 	else if (!ft_strcmp(cmd_name, "exit"))
-		exit_(cmd->arg_list, env_list);
+		exit_(cmd->arg_list, env_list, info);
 	else
-		binary(cmd, cmd->arg_list, env_list);
+		binary(cmd, cmd->arg_list, env_list, info);
 	//nado dobavit result and errors
 }
-
-ssize_t write_to_fd(int fd, char *s)
-{
-	if (s)
-		return (write(fd, s, ft_strlen(s)));
-	return (0);
-}
-
-int cmd_to_fd(t_cmd *cmd, int fd, t_list *arg_list, t_list *env_list)
-{
-	t_arg *arg;
-	
-	if (cmd->is_env)
-	{
-		write_to_fd(fd, "$");
-		write_to_fd(fd, get_env_val_by_key(cmd->name, env_list));
-	}
-	else
-		write_to_fd(fd, cmd->name);
-	if (cmd->flags)
-		write_to_fd(fd, cmd->flags);
-	while (arg_list)
-	{
-		arg = ((t_arg *)(arg_list->content));
-		if (arg->is_env)
-		{
-			write_to_fd(fd, "$");
-			write_to_fd(fd, get_env_val_by_key(cmd->name,env_list));
-		}
-		else
-			write_to_fd(fd, arg->name);
-		arg_list = arg_list->next;
-	}
-	write_to_fd(fd, "\n");
-	return (0);
-}
-
 
 char *cmd_to_string(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 {
@@ -95,39 +70,34 @@ void uncapitalize_str(char *str)
 int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 {
 	t_cmd *cmd;
-	int *status;
+	int res;
 	
 	while (cmd_list)
 	{
 		cmd = ((t_cmd *)(cmd_list->content));
 		cmd->name = cmd->is_env ? get_env_val_by_key(cmd->name, env_list) : cmd->name;
 		uncapitalize_str(cmd->name);
-		if (!info->pid)
-			cmd->std_out = info->child_fd;
-//		if (info->pid)
-//		{
-//			ft_putendl_fd("main process cmd to string:", STDOUT_FILENO);
-//			ft_putendl_fd(cmd_to_string(cmd, cmd->arg_list, env_list),
-//						  STDOUT_FILENO);
-//		}
 		if (cmd->is_pipe)
 		{
 			if (!cmd_list->next)
-				return -1; //error
+				return (1);//error around |
 			pipe(info->pipe_fd);
-			dup2(STDIN_FILENO, info->pipe_fd[0]);
-			dup2(STDOUT_FILENO, info->pipe_fd[1]);
-			info->pid = fork();
-			ft_putnbr_fd(info->child_fd, info->pipe_fd[0]);
-			cmd_to_fd(cmd, info->pipe_fd[0], cmd->arg_list, env_list);
-			wait(status);
-			dup2(info->pipe_fd[1], STDOUT_FILENO);
-			//dup2(info->pipe_fd[0], STDIN_FILENO);
-			close(info->pipe_fd[0]);
+			if ((info->pid = fork()) == 0)
+			{
+				close(info->pipe_fd[0]);
+				dup2(info->pipe_fd[1], 1);
+				res = execute_cmd(cmd->name, cmd, env_list, info);
+				close(info->pipe_fd[1]);
+				exit (res);
+			}
 			close(info->pipe_fd[1]);
+			dup2(info->pipe_fd[0], 0);
+			wait(&res);
+			close(info->pipe_fd[0]);
+			
 		}
 		else
-			execute_cmd(cmd->name, cmd, env_list);
+			execute_cmd(cmd->name, cmd, env_list, info);
 		cmd_list = cmd_list->next;
 	}
 }

@@ -62,34 +62,17 @@ void	custom_test(t_info *info, t_list *env_list)
 
 //	ft_lstadd_back(&arg_list, ft_lstnew(new_arg("privet poka", 0)));
 //	ft_lstadd_back(&arg_list, ft_lstnew(new_arg(" ", 0)));
-	ft_lstadd_back(&arg_list2, ft_lstnew(new_arg("-e", 0)));
+	//ft_lstadd_back(&arg_list2, ft_lstnew(new_arg("-e", 0)));
 
 	//ft_lstadd_back(&arg_list, ft_lstnew(new_arg("", 1)));
-	ft_lstadd_back(&arg_list1, ft_lstnew(new_arg(" ", 0)));
-	ft_lstadd_back(&arg_list1, ft_lstnew(new_arg("..", 0)));
+	//ft_lstadd_back(&arg_list1, ft_lstnew(new_arg(" ", 0)));
+	ft_lstadd_back(&arg_list1, ft_lstnew(new_arg(ft_strdup(".."), 0)));
 	
-	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd("echo", NULL, arg_list1, 0, 1, 1)));
-	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd("cat", NULL, arg_list2, 0, 1, 0)));
+	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd(ft_strdup("ls"), NULL, arg_list1, 0, 1, 1)));
+	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd(ft_strdup("cat"), ft_strdup("-e"), arg_list2, 0, 1, 0)));
 	//printf("res val= %d",binary(((t_cmd *)(info->cmd_list->content)), arg_list, env_list));
 }
 
-void	custom_test_child(t_info *info, t_list *env_list)
-{
-	t_list *arg_list1 = NULL;
-	t_list *arg_list2 = NULL;
-
-//	ft_lstadd_back(&arg_list, ft_lstnew(new_arg("privet poka", 0)));
-//	ft_lstadd_back(&arg_list, ft_lstnew(new_arg(" ", 0)));
-	ft_lstadd_back(&arg_list2, ft_lstnew(new_arg("-e", 0)));
-
-	//ft_lstadd_back(&arg_list, ft_lstnew(new_arg("", 1)));
-	ft_lstadd_back(&arg_list1, ft_lstnew(new_arg(" ", 0)));
-	ft_lstadd_back(&arg_list1, ft_lstnew(new_arg("..", 0)));
-
-	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd("echo", NULL, arg_list1, 0, 1, 1)));
-	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd("cat", NULL, arg_list2, 0, 1, 0)));
-	//printf("res val= %d",binary(((t_cmd *)(info->cmd_list->content)), arg_list, env_list));
-}
 
 void sig_child_handler(int signum)
 {
@@ -138,28 +121,16 @@ int main(int argc, char **argv, char *envp[])
 	t_info info;
 	int res;
 	
-	info.pid = fork();
-	if (info.pid)
-		kill(info.pid, 0);
 	if (argc != 1 && argv)
 	{
 		ft_putendl_fd("minishell : error, arguments on minishell are not supported",1);
 		exit(1);
 	}
 	info.pipe_fd = ft_calloc(2, 1);
+	info.pid = -10;
 	info.cmd_list = NULL;
 	info.env_list = envs_to_list(envp);
-//	if (!info.pid)
-//	{
-//		signal(SIGINT, sig_child_handler);
-//		signal(SIGQUIT, sig_child_handler);
-//		if ((get_next_line(STDIN_FILENO, &line)) == -1)
-//			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
-//		info.child_fd = ft_atoi(line);
-//		execution(&info, info.cmd_list, info.env_list);
-//		free(line);
-//		exit(0);
-//	}
+	check_pwd(info.env_list);
 	while (1)
 	{
 		signal(SIGINT, sig_handler);
@@ -174,5 +145,6 @@ int main(int argc, char **argv, char *envp[])
 		custom_test(&info, info.env_list);
 		execution(&info, info.cmd_list, info.env_list);
 		free(line);
+		ft_lstclear(&info.cmd_list, clear_cmds);
 	}
 }

@@ -5,7 +5,7 @@
 ** not default case: adding PWD and OLDPWD in cd, because in error we need free
 */
 
-t_env	*add_env(t_list **env_list, char *key, char *value, int is_hidden)
+t_env	*add_env(t_list **env_list, char *key, char *value)
 {
 	t_env *env;
 	
@@ -13,9 +13,7 @@ t_env	*add_env(t_list **env_list, char *key, char *value, int is_hidden)
 		return (NULL);
 	env->key = key;
 	env->value = value;
-	env->type = is_hidden;
-	if (is_hidden == -1)
-		ft_lstadd_back(env_list, ft_lstnew(env));
+	ft_lstadd_back(env_list, ft_lstnew(env));
 	return (env);
 }
 
@@ -75,7 +73,7 @@ t_list	*envs_to_list(char *envp[])
 	{
 		temp = to_delimiter(*envp, '=');
 		add_env(&env_list, get_substr(*envp, temp),
-		get_substr(temp ? temp + 1 : temp, NULL), -1);
+		get_substr(temp ? temp + 1 : temp, NULL));
 		envp++;
 	}
 
@@ -108,5 +106,31 @@ void	print_env_array(char **envp)
 	{
 		ft_putendl_fd(*envp, 1);
 		envp++;
+	}
+}
+
+void	ft_lst_elem_delete(t_list **lst, t_list *elem, void (*del)(void *))
+{
+	if (lst && *lst)
+	{
+		if (*lst == elem)
+		{
+			*lst = (*lst)->next;
+			if (del)
+				del(elem->content);
+			free(elem);
+		}
+		else
+		{
+			while (*lst && (*lst)->next != elem)
+				*lst = (*lst)->next;
+			if ((*lst)->next == elem)
+			{
+				(*lst)->next = elem->next;
+				if (del)
+					del(elem->content);
+				free(elem);
+			}
+		}
 	}
 }

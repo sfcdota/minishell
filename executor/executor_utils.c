@@ -39,6 +39,17 @@ t_env *get_env_by_key(char *key, t_list *env_list)
 	return (NULL);
 }
 
+t_list *get_env_list_by_key(char *key, t_list *env_list)
+{
+	while(env_list)
+	{
+		if(!ft_strcmp(key, ((t_env *)(env_list->content))->key))
+			return (env_list);
+		env_list = env_list->next;
+	}
+	return (NULL);
+}
+
 void del(void *content)
 {
 	free(content);
