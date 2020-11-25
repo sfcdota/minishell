@@ -120,6 +120,7 @@ int main(int argc, char **argv, char *envp[])
 	char *line;
 	t_info info;
 	int res;
+	int i = 0;
 	
 	if (argc != 1 && argv)
 	{
@@ -130,11 +131,11 @@ int main(int argc, char **argv, char *envp[])
 	info.pid = -10;
 	info.cmd_list = NULL;
 	info.env_list = envs_to_list(envp);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
 	check_pwd(info.env_list);
 	while (1)
 	{
-		signal(SIGINT, sig_handler);
-		signal(SIGQUIT, sig_handler);
 		if (write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1)
 			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
 		if ((res = get_next_line(STDIN_FILENO, &line)) == -1)
@@ -142,9 +143,11 @@ int main(int argc, char **argv, char *envp[])
 		if (res == 0) //EOF (CTRL + D) handling
 			ft_exit("exit", 0, &info);
 		//parser
-		custom_test(&info, info.env_list);
+		if (!i)
+			custom_test(&info, info.env_list);
 		execution(&info, info.cmd_list, info.env_list);
 		free(line);
 		ft_lstclear(&info.cmd_list, clear_cmds);
+		i++;
 	}
 }

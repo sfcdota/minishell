@@ -25,10 +25,14 @@ char *check_path(t_cmd *cmd, char *path)
 	return (NULL);
 }
 
-char *const *arg_list_to_array(t_list *arg_list)
+char *const *arg_list_to_array(char *flags, t_list *arg_list)
 {
 	char **arg_array;
-
+	
+	if (flags)
+	{
+		ft_lstadd_back(&arg_list, ft_lstnew(new_arg(ft_strdup(flags), 0)));
+	}
 	int j = 0;
 	int i = ft_lstsize(arg_list);
 	arg_array = ft_calloc(sizeof(char *), i + 1);
@@ -58,13 +62,14 @@ int binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 		if (!stat(cmd->name, &buf))
 		{
 			ft_lstadd_front(&arg_list, ft_lstnew(new_arg(cmd->name, 0)));
-			return (execve(cmd->name, arg_list_to_array(arg_list),
-						   env_list_to_array(env_list)));
+			exit(execve(cmd->name, arg_list_to_array(cmd->flags, arg_list),
+						env_list_to_array(env_list)) == -1 ? 1 : 0);
 		}
 		if (!(filename = check_path(cmd, get_env_val_by_key("PATH", env_list))))
-			return (1); //unknown command
+			exit(1); //unknown command
 		ft_lstadd_front(&arg_list, ft_lstnew(new_arg(cmd->name, 0)));
-		exit(execve(filename, arg_list_to_array(arg_list), env_list_to_array(env_list)));
+		exit(execve(filename, arg_list_to_array(cmd->flags, arg_list),
+					env_list_to_array(env_list)) == -1 ? 1 : 0);
 	}
 	if (pid == -1 || wait(&retval) == -1)
 		return 1;

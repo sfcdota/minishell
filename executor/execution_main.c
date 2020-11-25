@@ -15,21 +15,21 @@ int check_pwd(t_list *env_list)
 int execute_cmd(char *cmd_name, t_cmd *cmd, t_list *env_list, t_info *info)
 {
 	if (!ft_strcmp(cmd_name, "echo"))
-		echo(cmd, cmd->arg_list, env_list);
+		return(echo(cmd, cmd->arg_list, env_list));
 	else if (!ft_strcmp(cmd_name, "cd"))
-		cd(cmd, cmd->arg_list, env_list);
+		return(cd(cmd, cmd->arg_list, env_list));
 	else if (!ft_strcmp(cmd_name, "pwd"))
-		pwd(cmd);
+		return(pwd(cmd));
 	else if (!ft_strcmp(cmd_name, "export"))
-		export(cmd, cmd->arg_list, env_list);
+		return(export(cmd, cmd->arg_list, env_list));
 	else if (!ft_strcmp(cmd_name, "unset"))
-		unset(cmd->arg_list, env_list);
+		return(unset(cmd->arg_list, env_list));
 	else if (!ft_strcmp(cmd_name, "env"))
-		env(cmd, cmd->arg_list, env_list);
+		return(env(cmd, cmd->arg_list, env_list));
 	else if (!ft_strcmp(cmd_name, "exit"))
-		exit_(cmd->arg_list, env_list, info);
+		return(exit_(cmd->arg_list, env_list, info));
 	else
-		binary(cmd, cmd->arg_list, env_list, info);
+		return(binary(cmd, cmd->arg_list, env_list, info));
 	//nado dobavit result and errors
 }
 
@@ -71,7 +71,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 {
 	t_cmd *cmd;
 	int res;
-	
+	int 
 	while (cmd_list)
 	{
 		cmd = ((t_cmd *)(cmd_list->content));
@@ -88,13 +88,12 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 				dup2(info->pipe_fd[1], 1);
 				res = execute_cmd(cmd->name, cmd, env_list, info);
 				close(info->pipe_fd[1]);
-				exit (res);
+				exit(res);
 			}
 			close(info->pipe_fd[1]);
 			dup2(info->pipe_fd[0], 0);
 			wait(&res);
 			close(info->pipe_fd[0]);
-			
 		}
 		else
 			execute_cmd(cmd->name, cmd, env_list, info);
