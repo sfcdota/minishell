@@ -71,7 +71,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 {
 	t_cmd *cmd;
 	int res;
-	int 
+	
 	while (cmd_list)
 	{
 		cmd = ((t_cmd *)(cmd_list->content));
