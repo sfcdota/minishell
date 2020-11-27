@@ -35,21 +35,15 @@ int cmd_count(char *line, t_info *info)
 	int		cnt;
 	char	*str;
 	size_t	len;
-//	t_list	*cmd;
-//	t_list	*cmd0;
-//	t_list	*arg0;
-//	t_list	*arg;
 	t_cmd	*cmd1;
 	t_cmd	*cmd;
 	t_arg	*arg1;
 
 	cmd1 = new_cmd();
-//	ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd1));
 	len = ft_strlen(line);
 	cnt = 0;
 	str = malloc(sizeof(char));
 	i = -1;
-//	cmd0 = cmd;
 	while (line[++i])
 	{
 		if (shite(line, &i))
@@ -66,10 +60,8 @@ int cmd_count(char *line, t_info *info)
 				 cmd1->name = ft_strdup(str);
 			 else
 			 	ft_lstadd_back(&cmd1->arg_list, ft_lstnew(new_arg(ft_strdup(str), 0)));
-//			printf("\t\t\t' = |%s|\n", str);
 			 if (line[i + 1] == 32 && cmd1->arg_list)
 			 	ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(" "), 0)));
-//				 printf("\t\t\t_ = | |\n");
 			free(str);
 			if (i == len)
 				return (-1);
@@ -93,14 +85,12 @@ int cmd_count(char *line, t_info *info)
 					cmd1->name = ft_strdup(str);
 				else
 					ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(str), 0)));
-//				printf("\t\t\t\" = |%s|\n", str);
 				free(str);
 				if (i == len)
 					return (-1);
 				 if (line[i] == 34)
 				 	if (line[i + 1] == 32 && cmd1->arg_list)
 				 		ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(" "), 0)));
-//						 printf("\t\t\t_ = | |\n");
 				str = malloc(sizeof(char) * 1);
 				*str = '\0';
 				cnt++;
@@ -110,7 +100,6 @@ int cmd_count(char *line, t_info *info)
 				while (line[i] != 39 && line[i] != 34 && line[i] != 32 && line[i] != 36 && i < len)
 					str = strj(str, line[i++]);
 				ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(str), 1)));
-//				printf("\t\t\t$ = |%s|\n", str);
 				free(str);
 				str = malloc(sizeof(char) * 1);
 				*str = '\0';
@@ -122,23 +111,18 @@ int cmd_count(char *line, t_info *info)
 		{
 			if (i + 1 == len)
 			{
-//				str = strj(str, 36);
-//				printf("\t\t\tq = |%s|\n", str);
 				if (!cmd1->name)
 					return (-1);
-				ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(str), 1)));
+				ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup("$"), 1)));
 				cnt++;
 				continue ;
 			}
 
 			if (line[i + 1] == 32)
 			{
-//				str = strj(str, 36);
-//				printf("\t\t\tq = |%s|\n", str);
-//				printf("\t\t\t_ = | |\n");
 				if (!cmd1->name)
 					return (-1);
-				ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(str), 1)));
+				ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup("$"), 1)));
 				ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(" "), 0)));
 				cnt++;
 				continue ;
@@ -154,7 +138,6 @@ int cmd_count(char *line, t_info *info)
 			 }
 			 else
 			 	ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(str), 0)));
-//			printf("\t\t\t$ = |%s|\n", str);
 			free(str);
 			str = malloc(sizeof(char) * 1);
 			*str = '\0';
@@ -177,25 +160,12 @@ int cmd_count(char *line, t_info *info)
 			 if (!cmd1->name)
 			 	return (-1);
 			 cmd1->is_pipe = 1;
-//			 *cmd->name = *cmd1->name;
-//			 cmd->is_env = cmd1->is_env;
-//			 cmd->is_pipe = cmd1->is_pipe;
-//			 cmd->is_separated = cmd1->is_separated;
-//			 cmd->arg_list = cmd1->arg_list;
-//			 cmd->flags = cmd1->flags;
-//			 cmd->std_in = cmd->std_in;
-//			 cmd->std_out = cmd->std_out;
 			 
 			 ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd1));
 			 cmd1 = new_cmd();
-//			printf("\t\t\t| = |%s|\n", str);
 			free(str);
 			str = malloc(sizeof(char) * 1);
 			*str = '\0';
-//			 if (line[i - 1] == 32 && cmd1->arg_list)
-//			 	ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(" "), 0)));
-//				printf("\t\t\t_ = | |\n");
-//			cnt++;
 			i--;
 			continue ;
 		}
@@ -210,14 +180,9 @@ int cmd_count(char *line, t_info *info)
 				return (-1);
 			ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd1));
 			cmd1 = new_cmd();
-//			printf("\t\t\t; = |%s|\n", str);
 			free(str);
 			str = malloc(sizeof(char) * 1);
 			*str = '\0';
-//			 if (line[i - 1] == 32/* && cmd_list->args*/)
-//			// 	ft_lstadd_back(&cmd_list->args, ft_lstnew(new_arg(ft_strdup(str), 0)));
-//				 printf("\t\t\t_ = | |\n");
-//			cnt++;
 			i--;
 			continue ;
 		}
@@ -231,13 +196,11 @@ int cmd_count(char *line, t_info *info)
 			 if (!cmd1->name)
 				return (-1);
 		 	ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(str), 0)));
-//			printf("\t\t\t< = |%s|\n", str);
 			free(str);
 			str = malloc(sizeof(char) * 1);
 			*str = '\0';
 			 if (line[i - 1] == 32 && cmd1->arg_list)
 			 	ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(str), 0)));
-//				 printf("\t\t\t_ = | |\n");
 			cnt++;
 			i--;
 			continue ;
@@ -254,16 +217,11 @@ int cmd_count(char *line, t_info *info)
 			 if (!cmd1->name)
 			 	return (-1);
 			 ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(str), 0)));
-//			if (!ft_strncmp(str, ">>", 2))
-//				printf("\t\t\t>> |%s|\n", str);
-//			else if (!ft_strncmp(str, ">", 1))
-//				printf("\t\t\t> |%s|\n", str);
 			free(str);
 			str = malloc(sizeof(char) * 1);
 			*str = '\0';
 			 if (line[i - 1] == 32 && cmd1->arg_list)
 			 	ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(" "), 0)));
-//				 printf("\t\t\t_ = | |\n");
 			cnt++;
 			i--;
 			continue ;
@@ -281,14 +239,12 @@ int cmd_count(char *line, t_info *info)
 			 	cmd1->flags = ft_strdup(str);
 			 else
 			 	ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(str), 0)));
-//			printf("\t\t\tq = |%s|\n", str);
 			free(str);
 			if (line[i] == 92)
 				return (-1);
 
 			 if (line[i] == 32 && cmd1->arg_list)
 			 	ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(" "), 0)));
-//				 printf("\t\t\t_ = | |\n");
 			str = malloc(sizeof(char) * 1);
 			*str = '\0';
 			cnt++;
@@ -300,13 +256,11 @@ int cmd_count(char *line, t_info *info)
 			while (line[i] != 39 && line[i] != 34 && line[i] != 32 && line[i] != 36 && i < len)
 					str = strj(str, line[i++]);
 			ft_lstadd_back(&(cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(str), 0)));
-//			printf("\t\t\t$ = |%s|\n", str);
 			free(str);
 			str = malloc(sizeof(char) * 1);
 			*str = '\0';
 			 if (line[i] == 32 && cmd1->arg_list)
 			 	ft_lstadd_back(&(cmd1->arg_list),  ft_lstnew(new_arg(ft_strdup(str), 0)));
-//				 printf("\t\t\t_ = | |\n");
 			cnt++;
 			i--;
 		}
@@ -342,3 +296,4 @@ void	parser(char *command, t_info *info)
 		cmd->arg_list = cmd->arg_list->next;
 	}
 }
+//  echo -n hello world ; ls -la parser.c ; pwd lol hol gol
