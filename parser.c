@@ -278,7 +278,7 @@ void	parser(char *command, t_info *info)
 
 	if (!command) 
 		return ;
-	printf("count = %d\n" , cmd_count(command, info));
+	cmd_count(command, info);
 	while (info->cmd_list->next)
 	{
 		cmd = info->cmd_list->content;
