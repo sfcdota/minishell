@@ -10,7 +10,7 @@ int is_str_numeric(char *s)
 	return (1);
 }
 
-int exit_(t_list *arg_list, t_list *env_list)
+int exit_(t_list *arg_list, t_list *env_list, t_info *info)
 {
 	t_arg *arg;
 	char *code;
@@ -18,7 +18,6 @@ int exit_(t_list *arg_list, t_list *env_list)
 	int is_neg;
 	
 	is_neg = 0;
-	ft_putendl_fd("exit", 1);
 	if (arg_list->next)
 	{
 		ft_putendl_fd("exit: too many arguments", 1);
@@ -28,7 +27,7 @@ int exit_(t_list *arg_list, t_list *env_list)
 	{
 		arg = ((t_arg *) (arg_list->content));
 		code = arg->is_env ? get_env_val_by_key(arg->name, env_list)
-						   : arg->name;
+			: arg->name;
 		if (*code == '-')
 		{
 			if (is_str_numeric(code + 1))
@@ -46,7 +45,7 @@ int exit_(t_list *arg_list, t_list *env_list)
 			ft_putendl_fd(": numeric argument required", 1);
 			return (1);
 		}
-		return (kek % 256);
+		ft_exit("exit", kek % 256, &info);
 	}
 	return (0);
 }

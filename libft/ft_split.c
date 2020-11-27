@@ -47,7 +47,7 @@ static int		words_count(char const *s, char c)
 	return (i);
 }
 
-void			*ft_clear(char **t, int i)
+void			*ft_clear_split(char **t, int i)
 {
 	while (i >= 0)
 	{
@@ -77,7 +77,7 @@ char			**ft_split(char const *s, char c)
 	while (*s)
 	{
 		if (!(t[i] = malloc(word_length(s, c) + 1)))
-			return (ft_clear(t, i));
+			return (ft_clear_split(t, i));
 		ft_strlcpy(t[i], s, word_length(s, c) + 1);
 		s = next_word(s, c);
 		i++;

@@ -5,8 +5,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "executor/executor.h"
-#include <signal.h>
-t_cmd	*new_cmd(char *name, char *flags, t_list *args, int std_in, int std_out, int is_separated)
+t_cmd	*new_cmd(char *name, char *flags, t_list *args, int std_in, int std_out, int is_pipe)
 {
 	t_cmd *cmd;
 
@@ -16,7 +15,7 @@ t_cmd	*new_cmd(char *name, char *flags, t_list *args, int std_in, int std_out, i
 	cmd->arg_list = args;
 	cmd->std_in = std_in;
 	cmd->std_out = std_out;
-	cmd->is_separated = is_separated;
+	cmd->is_pipe = is_pipe;
 	return (cmd);
 }
 void print_cmds(t_list *cmd_list)
@@ -58,59 +57,97 @@ t_arg *new_arg(char *name, int is_env)
 
 void	custom_test(t_info *info, t_list *env_list)
 {
-	t_list *arg_list = NULL;
+	t_list *arg_list1 = NULL;
+	t_list *arg_list2 = NULL;
+
 //	ft_lstadd_back(&arg_list, ft_lstnew(new_arg("privet poka", 0)));
 //	ft_lstadd_back(&arg_list, ft_lstnew(new_arg(" ", 0)));
-//	ft_lstadd_back(&arg_list, ft_lstnew(new_arg("HOME", 1)));
+	//ft_lstadd_back(&arg_list2, ft_lstnew(new_arg("-e", 0)));
 
-	ft_lstadd_back(&arg_list, ft_lstnew(new_arg(".", 1)));
-	ft_lstadd_back(&arg_list, ft_lstnew(new_arg("..", 1)));
+	//ft_lstadd_back(&arg_list, ft_lstnew(new_arg("", 1)));
+	//ft_lstadd_back(&arg_list1, ft_lstnew(new_arg(" ", 0)));
+	ft_lstadd_back(&arg_list1, ft_lstnew(new_arg(ft_strdup(".."), 0)));
 	
-	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd("ls", NULL, arg_list, -1, 1, 0)));
+	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd(ft_strdup("ls"), NULL, arg_list1, 0, 1, 1)));
+	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd(ft_strdup("cat"), ft_strdup("-e"), arg_list2, 0, 1, 0)));
 	//printf("res val= %d",binary(((t_cmd *)(info->cmd_list->content)), arg_list, env_list));
 }
 
+
+void sig_child_handler(int signum)
+{
+	if (signum == SIGINT)
+		ft_putendl_fd("", STDOUT_FILENO);
+	if (signum == SIGQUIT)
+	{
+		ft_putendl_fd("Quit: ", STDOUT_FILENO);
+		ft_putnbr_fd(SIGQUIT, STDOUT_FILENO);
+	}
+	exit(0);
+}
+
+
+void sig_handler(int signum)
+{
+	if (signum)
+		return ;
+	return ;
+}
+
+/*
+ * 
+ * 				FOR CHILD PROCESSES ONLY
+ * 
+ */
+//SIGINT = ctrl + C : interrupt process (as kill)
+//$? = 146: command not found
+
+
+//SIGQUIT = ctrl + \ : quit as soon as possible without saving info and put msg like this
+//^\zsh: quit       ls -rR /
+//$? = 131: command not found
+
+/*
+ * 
+ * 				FOR MAIN PROCESS ONLY
+ * 
+ */
+
+// END OF TRANSMISSION, EOF = ctrl + D  = exit when zero input and print exit
+
 int main(int argc, char **argv, char *envp[])
 {
-	char *kek;
+	char *line;
 	t_info info;
-	pid_t pid;
-	if ((pid = fork()) == 0)
+	int res;
+	int i = 0;
+	
+	if (argc != 1 && argv)
 	{
-		//child process execution
+		ft_putendl_fd("minishell : error, arguments on minishell are not supported",1);
+		exit(1);
 	}
-	else
+	info.pipe_fd = ft_calloc(2, 1);
+	info.pid = -10;
+	info.cmd_list = NULL;
+	info.env_list = envs_to_list(envp);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
+	check_pwd(info.env_list);
+	while (1)
 	{
-		kill(pid, 0);
-		if (argc != 1)
-		{
-			ft_putendl_fd("minishell : error, arguments on minishell are not supported", 1);
-			exit(1);
-		}
-		info.cmd_list = NULL;
-		info.env_list = envs_to_list(envp);
-		//custom_test(&info, info.env_list);
-		//char **env = env_list_to_array(env_list);
-		//print_env_array(env);
-		if (argc && argv[0] && envp)
-		{
-			kek = ft_calloc(MAX_CMD_LENGTH + 1, 1);
-			while (1)
-			{
-				if (write(1, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1 ||
-					read(0, kek, MAX_CMD_LENGTH + 1) == -1)
-					exit(-1);
-				if (kek[MAX_CMD_LENGTH])
-					exit(-1);
-				//parsing prototype parsing(t_info *info, char *input_string)
-				// to est' parsing(&info, kek);
-				//execution prototype execution(t_list *cmd_list, t_list *env_list)
-				//to est execution(info.cmd_list, info.env_list);
-				custom_test(&info, info.env_list);
-				execution(info.cmd_list, info.env_list);
-				ft_memset(kek, 0, MAX_CMD_LENGTH);
-			}
-		}
+		if (write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1)
+			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
+		if ((res = get_next_line(STDIN_FILENO, &line)) == -1)
+			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
+		if (res == 0) //EOF (CTRL + D) handling
+			ft_exit("exit", 0, &info);
+		//parser
+		if (!i)
+			custom_test(&info, info.env_list);
+		execution(&info, info.cmd_list, info.env_list);
+		free(line);
+		ft_lstclear(&info.cmd_list, clear_cmds);
+		i++;
 	}
-	return (0);
 }

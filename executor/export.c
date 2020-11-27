@@ -5,20 +5,17 @@ void print_env_list(t_list *env_list, char *prefix, int std_out)
 	t_env *env;
 	while (env_list)
 	{
-		env = (t_env *)(env_list->content);
-		if (env->is_hidden != 1)
-		{
-			if (prefix)
-				ft_putstr_fd(prefix, std_out);
-			ft_putstr_fd(env->key, std_out);
-			ft_putchar_fd('=', std_out);
-			if (prefix)
-				ft_putchar_fd('\"', std_out);
-			ft_putstr_fd(env->value, std_out);
-			if (prefix)
-				ft_putchar_fd('\"', std_out);
-			ft_putchar_fd('\n', std_out);
-		}
+		env = (t_env *) (env_list->content);
+		if (prefix)
+			ft_putstr_fd(prefix, std_out);
+		ft_putstr_fd(env->key, std_out);
+		ft_putchar_fd('=', std_out);
+		if (prefix)
+			ft_putchar_fd('\"', std_out);
+		ft_putstr_fd(env->value, std_out);
+		if (prefix)
+			ft_putchar_fd('\"', std_out);
+		ft_putchar_fd('\n', std_out);
 		env_list = env_list->next;
 	}
 }
@@ -50,11 +47,12 @@ int export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 		{
 			temp = to_delimiter(var_str, '=');
 			add_env(&env_list, get_substr(var_str, temp),
-		get_substr(temp ? temp + 1 : temp, NULL), -1);
+			get_substr(temp ? temp + 1 : temp, NULL));
 		}
 		else
 			return (1);//var is not correct
 	}
-	print_env_list(env_list, "declare -x ", cmd->std_out);
+	else
+		print_env_list(env_list, "declare -x ", cmd->std_out);
 	return (0);
 }
