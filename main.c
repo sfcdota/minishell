@@ -5,6 +5,9 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "executor/executor.h"
+
+t_info info;
+
 t_cmd	*new_cmd(char *name, char *flags, t_list *args, int std_in, int std_out, int is_pipe)
 {
 	t_cmd *cmd;
@@ -63,12 +66,12 @@ void	custom_test(t_info *info, t_list *env_list)
 //	ft_lstadd_back(&arg_list, ft_lstnew(new_arg("privet poka", 0)));
 //	ft_lstadd_back(&arg_list, ft_lstnew(new_arg(" ", 0)));
 	//ft_lstadd_back(&arg_list2, ft_lstnew(new_arg("-e", 0)));
-
+	
 	//ft_lstadd_back(&arg_list, ft_lstnew(new_arg("", 1)));
 	//ft_lstadd_back(&arg_list1, ft_lstnew(new_arg(" ", 0)));
 	ft_lstadd_back(&arg_list1, ft_lstnew(new_arg(ft_strdup(".."), 0)));
 	
-	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd(ft_strdup("ls"), NULL, arg_list1, 0, 1, 1)));
+	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd(ft_strdup("ls"), ft_strdup("-rR"), arg_list1, 0, 1, 1)));
 	ft_lstadd_back(&info->cmd_list, ft_lstnew(new_cmd(ft_strdup("cat"), ft_strdup("-e"), arg_list2, 0, 1, 0)));
 	//printf("res val= %d",binary(((t_cmd *)(info->cmd_list->content)), arg_list, env_list));
 }
@@ -89,9 +92,15 @@ void sig_child_handler(int signum)
 
 void sig_handler(int signum)
 {
-	if (signum)
-		return ;
-	return ;
+	if (signum == SIGINT)
+	{
+		ft_putstr_fd("\r", info.base_in);
+//		execve(info.argv[0], info.argv, info.envp);
+//		exit_(NULL, info.env_list, &info);
+	}
+	if (signum == SIGQUIT)
+		ft_putstr_fd("\b\b''''", STDIN_FILENO);
+
 }
 
 /*
@@ -118,9 +127,9 @@ void sig_handler(int signum)
 int main(int argc, char **argv, char *envp[])
 {
 	char *line;
-	t_info info;
 	int res;
 	int i = 0;
+	info.argv = argv;
 	
 	if (argc != 1 && argv)
 	{
@@ -131,16 +140,18 @@ int main(int argc, char **argv, char *envp[])
 	info.pid = -10;
 	info.cmd_list = NULL;
 	info.env_list = envs_to_list(envp);
+	info.envp = envp;
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	check_pwd(info.env_list);
+	info.base_in = dup(STDIN_FILENO);
 	while (1)
 	{
 		if (write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1)
-			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
-		if ((res = get_next_line(STDIN_FILENO, &line)) == -1)
-			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
-		if (res == 0) //EOF (CTRL + D) handling
+			ft_putendl_fd("I/O error. Read/write was not success", STDOUT_FILENO);
+		if ((res = get_next_line(info.base_in, &line)) == -1)
+			ft_putendl_fd("I/O error. Read/write was not success", STDOUT_FILENO);
+		if (res == 0 && ft_strlen(line) == 0) //EOF (CTRL + D) handling
 			ft_exit("exit", 0, &info);
 		//parser
 		if (!i)

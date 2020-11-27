@@ -45,11 +45,6 @@ char *const *arg_list_to_array(char *flags, t_list *arg_list)
 	return arg_array;
 }
 
-t_list *arg_array_to_list(char **arg_array)
-{
-	
-}
-
 int binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 {
 	char *filename;
@@ -72,6 +67,6 @@ int binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 					env_list_to_array(env_list)) == -1 ? 1 : 0);
 	}
 	if (pid == -1 || wait(&retval) == -1)
-		return 1;
+		return(ret_with_msg("Fork or wait for fork to execute binary is failed.", 1));
 	return retval;
 }

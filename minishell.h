@@ -28,7 +28,6 @@ typedef struct			s_cmd
 	int					redirect; // 0 for empty, 1 = <, 2 = >, 3 = >>
 	int					std_in;
 	int					std_out;
-	int 				is_out_trunc;
 	int					is_pipe;
 }						t_cmd;
 
@@ -45,6 +44,9 @@ typedef struct			s_info
 	pid_t				pid;
 	int					*pipe_fd;
 	int					status;
+	int 				base_in;
+	char 				**argv;
+	char 				**envp;
 }						t_info;
 
 

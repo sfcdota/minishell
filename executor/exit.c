@@ -45,7 +45,7 @@ int exit_(t_list *arg_list, t_list *env_list, t_info *info)
 			ft_putendl_fd(": numeric argument required", 1);
 			return (1);
 		}
-		ft_exit("exit", kek % 256, &info);
+		ft_exit("exit", kek % 256, info);
 	}
 	return (0);
 }

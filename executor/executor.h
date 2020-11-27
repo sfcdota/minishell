@@ -42,6 +42,7 @@ void clear_env(void *env_content);
 void clear_cmds(void *cmd_content);
 
 int error_msg(char *message, int error_code, t_info *info);
+int ret_with_msg(char *message, int retval);
 int ft_exit(char *message, int status, t_info *info);
 
 int execution(t_info *info, t_list *cmd_list, t_list *env_list);

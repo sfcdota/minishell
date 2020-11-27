@@ -61,3 +61,9 @@ int ft_exit(char *message, int status, t_info *info)
 	ft_putendl_fd(message, STDOUT_FILENO);
 	exit(status);
 }
+
+int ret_with_msg(char *message, int retval)
+{
+	ft_putendl_fd(message, STDOUT_FILENO);
+	return (retval);
+}
