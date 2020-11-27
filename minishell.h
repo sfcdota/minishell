@@ -18,16 +18,14 @@ typedef struct			s_cmd
 {
 	char				*name;
 	char				*flags;
+	int 				is_env;
 	t_list				*args;
-	int					std_in;
-	int					std_out;
-<<<<<<< HEAD
-	// int					is_separated;
-	// int					is_bin;
-=======
+	char				*std_in;
+	char				*std_out;
+	int                 is_trunc;
+	int                 is_pipe;
 	int					is_separated;
 	int					is_bin;
->>>>>>> 2ae4d1e52f950326f1e89130ea53ec880dc0a063
 }						t_cmd;
 
 typedef struct			s_env
