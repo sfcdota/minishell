@@ -199,25 +199,25 @@ int cmd_count(char *line, t_info *info)
 			i--;
 			continue ;
 		}
-
+		
 		if (line[i] == 59)
 		{
 			str = strj(str, line[i++]);
 			while (line[i] == 32 || line[i] == 59)
 				if (line[i++] == 59)
 					return (-1);
-			// if (!cmd_list->name)
-			// 	cmd_list->name = ft_strdup(str);
-			// else
-			// 	ft_lstadd_back(&cmd_list->args, ft_lstnew(new_arg(ft_strdup(str), 0)));
-			printf("\t\t\t; = |%s|\n", str);
+			if (!cmd1->name)
+				return (-1);
+			ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd1));
+			cmd1 = new_cmd();
+//			printf("\t\t\t; = |%s|\n", str);
 			free(str);
 			str = malloc(sizeof(char) * 1);
 			*str = '\0';
-			 if (line[i - 1] == 32/* && cmd_list->args*/)
-			// 	ft_lstadd_back(&cmd_list->args, ft_lstnew(new_arg(ft_strdup(str), 0)));
-				 printf("\t\t\t_ = | |\n");
-			cnt++;
+//			 if (line[i - 1] == 32/* && cmd_list->args*/)
+//			// 	ft_lstadd_back(&cmd_list->args, ft_lstnew(new_arg(ft_strdup(str), 0)));
+//				 printf("\t\t\t_ = | |\n");
+//			cnt++;
 			i--;
 			continue ;
 		}
