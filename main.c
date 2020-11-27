@@ -108,6 +108,12 @@ int cmd_count(char *cmd)
 			if ((cmd[i] == ' ' || cmd[i] == 34 || cmd[i] == 39) && cmd[i + 1] == 39)
 			{
 				i += 2;
+			if (((cmd[i] == ' ' || cmd[i] == 34 || cmd[i] == 39) && cmd[i + 1] == 39) || cmd[i] == 39)
+			{
+				if (cmd[i] == ' ')
+					i += 2;
+				else
+					i++;
 				while (cmd[i] != 39 && i < len)
 				{
 					str = strj(str, cmd[i++]);
@@ -126,6 +132,11 @@ int cmd_count(char *cmd)
 			if ((cmd[i] == ' ' || cmd[i] == 34 || cmd[i] == 39) && cmd[i + 1] == 34)
 			{
 				i += 2;
+			}
+			if (((cmd[i] == ' ' || cmd[i] == 34 || cmd[i] == 39) && cmd[i + 1] == 34) || cmd[i] == 34)
+			{
+				if (cmd[i] == ' ')
+					i += 2;
 				while (cmd[i] != 34 && i < len)
 				{
 					str = strj(str, cmd[i++]);
@@ -141,6 +152,7 @@ int cmd_count(char *cmd)
 				cnt++;
 				i++;
 				printf("%c\n", cmd[i]);
+				// printf("%c\n", cmd[i]);
 			}
 			
 			if ((cmd[i] == ' ' || i == 0 || cmd[i] == 39 || cmd[i] == 34) && cmd[i + 1] != ' ' && cmd[i] != 34 && cmd[i] != 39)
@@ -159,6 +171,8 @@ int cmd_count(char *cmd)
 				*str = '\0';
 				cnt++;
 				i--;
+				if (cmd[i] == ' ')
+					i--;
 			}
 		}
 	}
@@ -182,7 +196,7 @@ int main(int argc, char **argv, char *envp[])
 
 
 	parser("echo this is the first example     \"hello world\"'ABC'     sljfd");
-	
+	parser("'echo' this is the first example     kjfgj \"hello world\"'ABC'     sljfd");
 	
 	return (0);
 }
