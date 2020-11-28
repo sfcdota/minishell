@@ -1,29 +1,6 @@
 #include "parser.h"
 
-t_cmd	*new_cmd(void)
-{
-	t_cmd *cmd;
 
-	cmd = malloc(sizeof(t_cmd));
-	cmd->name = NULL;
-	cmd->flags = NULL;
-	cmd->arg_list = NULL;
-	cmd->is_env = 0;
-	cmd->std_in = 1;
-	cmd->std_out = 0;
-	cmd->is_pipe = 0;
-	return (cmd);
-}
-
-t_arg *new_arg(char *name, int is_env)
-{
-	t_arg *arg;
-
-	arg = malloc(sizeof(t_arg));
-	arg->name = name;
-	arg->is_env = is_env;
-	return (arg);
-}
 
 char		*strj(char *s1, char s2)
 {
@@ -280,21 +257,22 @@ void	parser(char *command, t_info *info)
 
 	if (!command) 
 		return ;
-	while (info->cmd_list->next)
-	{
-		cmd = info->cmd_list->content;
-		while (cmd->arg_list->next)
-		{
-			arg = (t_arg*)cmd->arg_list->content;
-			cmd->arg_list = cmd->arg_list->next;
-		}
-		info->cmd_list = info->cmd_list->next;
-	}
-	cmd = info->cmd_list->content;
-	while (cmd->arg_list->next)
-	{
-		arg = (t_arg*)cmd->arg_list->content;
-		cmd->arg_list = cmd->arg_list->next;
-	}
+	cmd_count(command, info);
+//	while (info->cmd_list->next)
+//	{
+//		cmd = info->cmd_list->content;
+//		while (cmd->arg_list->next)
+//		{
+//			arg = (t_arg*)cmd->arg_list->content;
+//			cmd->arg_list = cmd->arg_list->next;
+//		}
+//		info->cmd_list = info->cmd_list->next;
+//	}
+//	cmd = info->cmd_list->content;
+//	while (cmd->arg_list->next)
+//	{
+//		arg = (t_arg*)cmd->arg_list->content;
+//		cmd->arg_list = cmd->arg_list->next;
+//	}
 }
 //  echo -n hello world ; ls -la parser.c ; pwd lol hol gol

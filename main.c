@@ -24,6 +24,8 @@ int main(int argc, char **argv, char *envp[])
 			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
 		parser(line, &info);
 		execution(&info, info.cmd_list, info.env_list);
-		free(line);
+		clear_ptr(&line);
+		ft_lstclear(&info.cmd_list, clear_cmds);
+		info.cmd_list = NULL;
 	}
 }

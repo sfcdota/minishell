@@ -37,12 +37,13 @@ int check_pwd(t_list *env_list);
 void	ft_lst_elem_delete(t_list **lst, t_list *elem, void (*del)(void *));
 
 void	*ft_clear_split(char **t, int i);
-void clear_ptr(void *ptr);
+void clear_ptr(void **ptr);
 void clear_env(void *env_content);
 void clear_cmds(void *cmd_content);
 
 int error_msg(char *message, int error_code, t_info *info);
-int ret_with_msg(char *message, int retval);
+int ret_with_msg(char *message_prefix, char *message, char *message_suffix, int retval);
+
 int ft_exit(char *message, int status, t_info *info);
 
 int execution(t_info *info, t_list *cmd_list, t_list *env_list);

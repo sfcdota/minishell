@@ -59,9 +59,9 @@ int cd(t_cmd *cmd, t_list *args, t_list *env_list)
 {
 	char *out;
 	
-	if (args->next)
+	if (args && args->next)
 		return (1);//need output message (too much arguments)
-	if (!((t_arg *)(args->content))->name || 
+	if (!args || 
 	ft_strcmp("~",((t_arg *)(args->content))->name) ||
 	ft_strcmp("--",((t_arg *)(args->content))->name))
 		return (chdir(get_env_val_by_key("HOME", env_list)));

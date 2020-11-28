@@ -49,5 +49,5 @@ typedef struct			s_info
 
 
 t_arg *new_arg(char *name, int is_env);
-
+t_cmd	*new_cmd(void);
 #endif
