@@ -1,9 +1,4 @@
-#include "minishell.h"
-#include "libft/libft.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
+#include "parser.h"
 
 t_cmd	*new_cmd(void)
 {

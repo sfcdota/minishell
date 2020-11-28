@@ -1,9 +1,6 @@
 #include "minishell.h"
-#include "libft/libft.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
+#include "parser/parser.h"
+
 
 
 void print_cmds(t_list *cmd_list)
@@ -49,13 +46,13 @@ int main(int argc, char **argv, char *envp[])
 			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
 		if ((res = get_next_line(STDIN_FILENO, &line)) == -1)
 			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
-		parser(line, &info);
-//		while(info.cmd_list)
-//		{
-//			cmd = ((t_cmd *)info.cmd_list->content);
-//			arg = ((t_arg *)cmd->arg_list->content);
-//			info.cmd_list = info.cmd_list->next;
-//		}
+		parser(" \"'e'\"x\"p'o'r't'\"", &info);
+		while(info.cmd_list)
+		{
+			cmd = ((t_cmd *)info.cmd_list->content);
+			arg = ((t_arg *)cmd->arg_list->content);
+			info.cmd_list = info.cmd_list->next;
+		}
 		free(line);
 	}
 }

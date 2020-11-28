@@ -1,37 +1,6 @@
 #ifndef PARSER_H
 # define PARSER_H
-# include"../minishell.h"
-
-typedef struct			s_arg
-{
-	char				*name;
-	int					is_env;
-}						t_arg;
-
-typedef struct			s_cmd
-{
-	char				*name;
-	char				*flags;
-	int 				is_env;
-	t_list				*arg_list;
-	int					std_in;
-	int					std_out;
-	int					is_separated;
-	int					is_pipe;
-}						t_cmd;
-
-typedef struct			s_env
-{
-	char				*key;
-	char				*value;
-	int					is_hidden;
-}						t_env;
-
-typedef struct			s_info
-{
-	t_list				*cmd_list;
-	t_list				*env;
-}						t_info;
+# include "../minishell.h"
 
 typedef struct s_parser
 {
