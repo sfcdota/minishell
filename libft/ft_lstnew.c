@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+
 t_list				*ft_lstnew(void *content)
 {
 	t_list *t;
 	
-	//sleep(1);
 	t = malloc(sizeof(t_list));
 	if (t)
 	{

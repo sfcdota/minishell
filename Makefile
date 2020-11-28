@@ -53,8 +53,8 @@ all: make_libft $(NAME)
 	@rm -f .depend
 
 make_libft:
-	$(MAKE) -C libft all
-	$(MAKE) -C libft bonus
+	$(MAKE) -C $(LIBFT_DIR) bonus
+	$(MAKE) -C $(LIBFT_DIR) all
 
 $(NAME): $(OBJ_FILES)
 	@gcc $(FLAGS) $(OBJ_FILES) -L${LIBFT_DIR} -lft -o $(NAME)
