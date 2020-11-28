@@ -11,7 +11,6 @@ t_cmd	*new_cmd(void)
 	cmd->is_env = 0;
 	cmd->std_in = 1;
 	cmd->std_out = 0;
-	cmd->is_separated = 0;
 	cmd->is_pipe = 0;
 	return (cmd);
 }
@@ -281,7 +280,6 @@ void	parser(char *command, t_info *info)
 
 	if (!command) 
 		return ;
-	printf("count = %d\n" , cmd_count(command, info));
 	while (info->cmd_list->next)
 	{
 		cmd = info->cmd_list->content;

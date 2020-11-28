@@ -15,6 +15,7 @@ int main(int argc, char **argv, char *envp[])
 	char *line;
 	t_info info;
 	
+	init_info(&info, envp);
 	while (1)
 	{
 		if (write(STDOUT_FILENO, "SHELL_PREFIX ", ft_strlen("SHELL_PREFIX ")) == -1)
