@@ -45,8 +45,6 @@ typedef struct			s_info
 	int					*pipe_fd;
 	int					status;
 	int 				base_in;
-	char 				**argv;
-	char 				**envp;
 }						t_info;
 
 
