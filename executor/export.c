@@ -50,7 +50,7 @@ int export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 			get_substr(temp ? temp + 1 : temp, NULL));
 		}
 		else
-			return (1);//var is not correct
+			return (ret_with_msg("export : ", var_str, ": not a valid identifier", 1));//var is not correct
 	}
 	else
 		print_env_list(env_list, "declare -x ", cmd->std_out);

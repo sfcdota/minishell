@@ -33,7 +33,7 @@ int exit_(t_list *arg_list, t_list *env_list, t_info *info)
 			if (is_str_numeric(code + 1))
 				is_neg = 1;
 			else
-				return (1);//need error msg num arg required
+				return (ret_with_msg("exit: ", code, ": numeric argument required", 1));//need error msg num arg required
 		}
 		else if (is_str_numeric(code))
 			return (1); //also need error msg
@@ -43,7 +43,7 @@ int exit_(t_list *arg_list, t_list *env_list, t_info *info)
 			ft_putstr_fd("exit: ", 1);
 			ft_putstr_fd(code, 1);
 			ft_putendl_fd(": numeric argument required", 1);
-			return (1);
+			return (ret_with_msg("exit: ", code, ": numeric argument required", 1));
 		}
 		ft_exit("exit", kek % 256, info);
 	}

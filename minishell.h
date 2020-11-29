@@ -4,8 +4,9 @@
 # include "get_next_line/get_next_line.h"
 # include <sys/stat.h>
 # include <signal.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <sys/resource.h>
 # define SHELL_PREFIX "minishell> "
 # define MAX_CMD_LENGTH 262144
 # define REDIRECTION_IN 3
@@ -50,4 +51,5 @@ typedef struct			s_info
 
 t_arg *new_arg(char *name, int is_env);
 t_cmd	*new_cmd(void);
+void init_info(t_info *info, char **envp);
 #endif

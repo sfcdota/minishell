@@ -60,7 +60,7 @@ int cd(t_cmd *cmd, t_list *args, t_list *env_list)
 	char *out;
 	
 	if (args && args->next)
-		return (1);//need output message (too much arguments)
+		return (ret_with_msg(cmd->name, ": unistd.h write function failed", NULL, 1));
 	if (!args || 
 	ft_strcmp("~",((t_arg *)(args->content))->name) ||
 	ft_strcmp("--",((t_arg *)(args->content))->name))
@@ -72,13 +72,13 @@ int cd(t_cmd *cmd, t_list *args, t_list *env_list)
 			ft_putendl_fd(get_env_val_by_key("OLDPWD", env_list), cmd->std_out);
 			return (0);
 		}
-		return (1);
+		return (ret_with_msg(cmd->name, ": OLDPWD is not set", NULL, 1));
 	}
 	if ((out = get_env_val_by_key("CDPATH", env_list)) && !check_cdpath(cmd, out))
 		return (0);
 	out = !((t_arg *)(args->content))->is_env ? ((t_arg *)(args->content))->name
 	: get_env_val_by_key(((t_arg *) (args->content))->name, env_list);
 	if (chdir(out ? out : get_env_val_by_key("HOME", env_list)) == -1)
-		return (1); //need output message (hz, chdir ne udalsya)
+		return (ret_with_msg(cmd->name, ": unistd.h chdir function failed", NULL, 1));
 	return (0);
 }

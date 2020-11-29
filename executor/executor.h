@@ -47,4 +47,8 @@ int ret_with_msg(char *message_prefix, char *message, char *message_suffix, int 
 int ft_exit(char *message, int status, t_info *info);
 
 int execution(t_info *info, t_list *cmd_list, t_list *env_list);
+
+
+void sighandler(int signum);
+
 #endif

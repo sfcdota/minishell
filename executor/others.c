@@ -66,7 +66,7 @@ int binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 		exit(ret_with_msg("Binary execution had error.", NULL, NULL,execve(filename, arg_list_to_array(cmd->flags, arg_list),
 					env_list_to_array(env_list)) == -1 ? 1 : 0));
 	}
-	if (pid == -1 || wait(&retval) == -1)
+	if (pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1)
 		return(ret_with_msg(cmd->name, " : Fork or wait for fork to execute binary is failed.", NULL, 1));
 	return retval;
 }

@@ -1,4 +1,12 @@
-#include "minishell.h"
+#include "executor/executor.h"
+
+void init_info(t_info *info, char **envp)
+{
+	info->cmd_list = NULL;
+	info->env_list = envs_to_list(envp);
+	info->base_in = dup(STDIN_FILENO);
+	info->pid = -1;
+}
 
 t_cmd	*new_cmd(void)
 {

@@ -96,7 +96,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 		else
 		{
 			execute_cmd(cmd->name, cmd, env_list, info);
-			wait(&res);
+			waitpid(info->pid, &res, WUNTRACED);//peredelat' (ili kak to obrabotat oshibki, t.k do etogo moglo bit' ne cmd->is_pipe)
 			close(info->pipe_fd[0]);
 		}
 		cmd_list = cmd_list->next;
