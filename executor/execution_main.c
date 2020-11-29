@@ -33,28 +33,28 @@ int execute_cmd(char *cmd_name, t_cmd *cmd, t_list *env_list, t_info *info)
 	//nado dobavit result and errors
 }
 
-char *cmd_to_string(t_cmd *cmd, t_list *arg_list, t_list *env_list)
-{
-	char *cmd_str;
-	t_arg *arg;
-	cmd_str = NULL;
-	cmd_str = ft_strjoin(cmd_str,cmd->name);
-	cmd_str = ft_strjoin(cmd_str, " ");
-	if (cmd->flags)
-	{
-		cmd_str = ft_strjoin(cmd_str, "-");
-		cmd_str = ft_strjoin(cmd_str, cmd->flags);
-	}
-	while (arg_list)
-	{
-		arg = (t_arg *)(arg_list->content);
-		arg->name = arg->is_env ? get_env_val_by_key(arg->name, env_list) : arg->name;
-		cmd_str = ft_strjoin(cmd_str, arg->name);
-		arg_list = arg_list->next;
-	}
-	cmd_str = ft_strjoin(cmd_str,"\n");
-	return cmd_str;
-}
+//char *cmd_to_string(t_cmd *cmd, t_list *arg_list, t_list *env_list)
+//{
+//	char *cmd_str;
+//	t_arg *arg;
+//	cmd_str = NULL;
+//	cmd_str = ft_strjoin(cmd_str,cmd->name);
+//	cmd_str = ft_strjoin(cmd_str, " ");
+//	if (cmd->flags)
+//	{
+//		cmd_str = ft_strjoin(cmd_str, "-");
+//		cmd_str = ft_strjoin(cmd_str, cmd->flags);
+//	}
+//	while (arg_list)
+//	{
+//		arg = (t_arg *)(arg_list->content);
+//		arg->name = arg->is_env ? get_env_val_by_key(arg->name, env_list) : arg->name;
+//		cmd_str = ft_strjoin(cmd_str, arg->name);
+//		arg_list = arg_list->next;
+//	}
+//	cmd_str = ft_strjoin(cmd_str,"\n");
+//	return cmd_str;
+//}
 
 
 void uncapitalize_str(char *str)
@@ -84,6 +84,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 			pipe(info->pipe_fd);
 			if ((info->pid = fork()) == 0)
 			{
+				setsignals(info->pid);
 				close(info->pipe_fd[0]);
 				dup2(info->pipe_fd[1], 1);
 				res = execute_cmd(cmd->name, cmd, env_list, info);
@@ -96,8 +97,12 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 		else
 		{
 			execute_cmd(cmd->name, cmd, env_list, info);
-			waitpid(info->pid, &res, WUNTRACED);//peredelat' (ili kak to obrabotat oshibki, t.k do etogo moglo bit' ne cmd->is_pipe)
-			close(info->pipe_fd[0]);
+			if(info->pipe_fd)
+			{
+				waitpid(info->pid, &res,
+					WUNTRACED);//peredelat' (ili kak to obrabotat oshibki, t.k do etogo moglo bit' ne cmd->is_pipe)
+				close(info->pipe_fd[0]);
+			}
 		}
 		cmd_list = cmd_list->next;
 	}

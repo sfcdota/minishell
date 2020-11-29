@@ -49,8 +49,3 @@ t_list *get_env_list_by_key(char *key, t_list *env_list)
 	}
 	return (NULL);
 }
-
-void del(void *content)
-{
-	free(content);
-}

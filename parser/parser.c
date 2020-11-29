@@ -178,7 +178,7 @@ int cmd_count(char *line, t_info *info)
 					return (-1);
 			 if (!pars.cmd1->name)
 				return (-1);
-		 	ft_lstadd_back(&(pars.cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(pars.str), 0)));
+			ft_lstadd_back(&(pars.cmd1->arg_list), ft_lstnew(new_arg(ft_strdup(pars.str), 0)));
 			free(pars.str);
 			pars.str = malloc(sizeof(char) * 1);
 			*pars.str = '\0';

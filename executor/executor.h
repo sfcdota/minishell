@@ -48,7 +48,8 @@ int ft_exit(char *message, int status, t_info *info);
 
 int execution(t_info *info, t_list *cmd_list, t_list *env_list);
 
-
+char *strappend(char **s1, char *s2);
 void sighandler(int signum);
+void setsignals(pid_t pid);
 
 #endif

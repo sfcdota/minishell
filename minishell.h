@@ -6,7 +6,6 @@
 # include <signal.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <sys/resource.h>
 # define SHELL_PREFIX "minishell> "
 # define MAX_CMD_LENGTH 262144
 # define REDIRECTION_IN 3
@@ -44,6 +43,7 @@ typedef struct			s_info
 	t_list				*env_list;
 	pid_t				pid;
 	int					*pipe_fd;
+	char 				*line;
 	int					status;
 	int 				base_in;
 }						t_info;
@@ -52,4 +52,5 @@ typedef struct			s_info
 t_arg *new_arg(char *name, int is_env);
 t_cmd	*new_cmd(void);
 void init_info(t_info *info, char **envp);
+char *str_replace(char *s1, char *s2);
 #endif

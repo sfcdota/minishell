@@ -76,9 +76,26 @@ t_list	*envs_to_list(char *envp[])
 		get_substr(temp ? temp + 1 : temp, NULL));
 		envp++;
 	}
-
+	add_env(&env_list, ft_strdup("?"), ft_strdup("0"));
+	if (!get_env_val_by_key("PWD", env_list))
+	{
+		if (!(temp = getcwd(NULL, 228)))
+			str_replace(get_env_list_by_key("?", env_list)->content,
+				ft_strdup("1"));
+		else
+			add_env(&env_list, ft_strdup("PWD"), temp);
+	}
 	sort_envs(env_list);
 	return (env_list);
+}
+
+char *strappend(char **s1, char *s2)
+{
+	char *temp;
+	
+	temp = ft_strjoin(*s1, s2);
+	clear_ptr((void **)s1);
+	*s1 = temp;
 }
 
 char	**env_list_to_array(t_list *env_list)
@@ -88,13 +105,14 @@ char	**env_list_to_array(t_list *env_list)
 	char **out;
 	
 	i = ft_lstsize(env_list);
-	out = ft_calloc(sizeof(char *), i + 1);
+	if(!(out = ft_calloc(sizeof(char *), i + 1)))
+		return (NULL);
 	j = -1;
 	while (++j < i)
 	{
-		out[j] = ft_strjoin(out[j], ((t_env *)env_list->content)->key);
-		out[j] = ft_strjoin(out[j], "=");
-		out[j] = ft_strjoin(out[j], ((t_env *)env_list->content)->value);
+		strappend(&out[j], ((t_env *)env_list->content)->key);
+		strappend(&out[j], "=");
+		strappend(&out[j],  ((t_env *)env_list->content)->value);
 		env_list = env_list->next;
 	}
 	return (out);

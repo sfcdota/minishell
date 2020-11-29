@@ -43,9 +43,13 @@ void clear_all(t_info *info)
 {
 	ft_lstclear(&info->cmd_list, clear_cmds);
 	ft_lstclear(&info->env_list, clear_env);
-	close(info->pipe_fd[0]);
-	close(info->pipe_fd[1]);
+	if (info->pipe_fd)
+	{
+		close(info->pipe_fd[0]);
+		close(info->pipe_fd[1]);
+	}
 	clear_ptr((void **)&info->pipe_fd);
+	clear_ptr((void **)&info->line);
 }
 
 int error_msg(char *message, int error_code, t_info *info)

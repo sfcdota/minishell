@@ -4,25 +4,28 @@ char *check_path(t_cmd *cmd, char *path)
 {
 	char **dirs;
 	char *temp;
-	char *temp2;
 	struct stat buf;
 	int i;
 
 	i = 0;
+	temp = NULL;
 	if (!(dirs = ft_split(path, ':')))
 		return 0;
 	while(dirs[i])
 	{
-		temp = ft_strjoin(dirs[i], "/");
-		temp2 = ft_strjoin(temp, cmd->name);
-		free(temp);
-		temp = NULL;
-		if(!stat(temp2, &buf))
-			return (temp2);
-		free(temp2);
+		if (!strappend(&dirs[i], "/") || !strappend(&dirs[i], cmd->name))
+			break ;
+		if(!stat(dirs[i], &buf))
+		{
+			temp = dirs[i];
+			break ;
+		}
 		i++;
 	}
-	return (NULL);
+	while(i--)
+		clear_ptr((void **)&dirs[i]);
+	clear_ptr((void **)dirs);
+	return (temp);
 }
 
 char *const *arg_list_to_array(char *flags, t_list *arg_list)
@@ -54,6 +57,7 @@ int binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 	
 	if ((pid = fork()) == 0)
 	{
+		setsignals(info->pid);
 		if (!stat(cmd->name, &buf))
 		{
 			ft_lstadd_front(&arg_list, ft_lstnew(new_arg(cmd->name, 0)));

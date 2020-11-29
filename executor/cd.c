@@ -14,10 +14,10 @@ int change(char *path, t_list *env_list)
 	t_env *temp2;
 	
 	if (chdir(path) || (!(pwd = get_env_by_key("PWD", env_list)) &&
-	(!(temp = add_env(env_list, "PWD", "")))))
+	(!(temp = add_env(&env_list, "PWD", "")))))
 		return (1);
 	if (!(oldpwd = get_env_by_key("OLDPWD", env_list)) &&
-	(!(temp2 = add_env(env_list, "OLDPWD", ""))))
+	(!(temp2 = add_env(&env_list, "OLDPWD", ""))))
 	{
 		if (!pwd)
 			free(temp);
