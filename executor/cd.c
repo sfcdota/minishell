@@ -51,7 +51,7 @@ int check_cdpath(t_cmd *cmd, char *path)
 	}
 	if (dirs[i]) // mojno ubrat t.k pri dirs[i] = null putstr niche ne sdelaet
 		ft_putstr_fd(dirs[i], cmd->std_out);
-	return (0);
+	return (0); //поменять ретвал (ерроры)
 }
 
 
