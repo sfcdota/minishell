@@ -30,9 +30,12 @@ int cmd_count(char *line, t_info *info)
 {
 	t_pars	pars;
 
+//	if (!*line)
+//		return 0;
 	pars.cmd1 = new_cmd();
 	pars.len = ft_strlen(line);
 	pars.str = malloc(sizeof(char));
+	*(pars.str) = '\0';
 	pars.i = -1;
 	while (line[++pars.i])
 	{

@@ -78,7 +78,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 	{
 		cmd = ((t_cmd *)(cmd_list->content));
 		cmd->name = cmd->is_env ? get_env_val_by_key(cmd->name, env_list) : cmd->name;
-		uncapitalize_str(info->uncap_cmd = cmd->name);
+		uncapitalize_str(info->uncap_cmd = ft_strdup(cmd->name));
 		if (cmd->is_pipe)
 		{
 			if (!cmd_list->next)
