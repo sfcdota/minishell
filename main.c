@@ -11,13 +11,15 @@ int main(int argc, char **argv, char *envp[])
 	int res;
 	
 	init_info(&info, envp);
+	setsignals(info.pid);
 	while (1)
 	{
-		setsignals(info.pid);
-		if (write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1)
-			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
-		if ((res = get_next_line(STDIN_FILENO, &line)) == -1)
-			ft_putendl_fd("I/O error. Read/write was not success)", STDOUT_FILENO);
+		if (write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1 ||
+		(res = get_next_line(STDIN_FILENO, &line)) == -1)
+		{
+			errno_set(&info);
+			continue ;
+		}
 		if (res > MAX_CMD_LENGTH)
 		{
 			ft_putendl_fd("Cmd length over the max value of 262144 symbols", STDOUT_FILENO);

@@ -5,7 +5,7 @@
 ** not default case: adding PWD and OLDPWD in cd, because in error we need free
 */
 
-t_env	*add_env(t_list **env_list, char *key, char *value)
+t_env *add_env(t_list **env_list, char *key, char *value, int is_hidden)
 {
 	t_env *env;
 	
@@ -13,6 +13,7 @@ t_env	*add_env(t_list **env_list, char *key, char *value)
 		return (NULL);
 	env->key = key;
 	env->value = value;
+	env->is_hidden = is_hidden;
 	ft_lstadd_back(env_list, ft_lstnew(env));
 	return (env);
 }
@@ -73,17 +74,17 @@ t_list	*envs_to_list(char *envp[])
 	{
 		temp = to_delimiter(*envp, '=');
 		add_env(&env_list, get_substr(*envp, temp),
-		get_substr(temp ? temp + 1 : temp, NULL));
+			get_substr(temp ? temp + 1 : temp, NULL), 0);
 		envp++;
 	}
-	add_env(&env_list, ft_strdup("?"), ft_strdup("0"));
+	add_env(&env_list, ft_strdup("?"), ft_strdup("0"), 1);
 	if (!get_env_val_by_key("PWD", env_list))
 	{
 		if (!(temp = getcwd(NULL, 228)))
-			str_replace(get_env_list_by_key("?", env_list)->content,
+			str_replace(get_env_by_key("?", env_list)->value,
 				ft_strdup("1"));
 		else
-			add_env(&env_list, ft_strdup("PWD"), temp);
+			add_env(&env_list, ft_strdup("PWD"), temp, 0);
 	}
 	sort_envs(env_list);
 	return (env_list);
@@ -103,16 +104,18 @@ char	**env_list_to_array(t_list *env_list)
 	int i;
 	int j;
 	char **out;
+	t_env *env;
 	
 	i = ft_lstsize(env_list);
-	if(!(out = ft_calloc(sizeof(char *), i + 1)))
+	if(!i || !(out = ft_calloc(sizeof(char *), i + 1)))
 		return (NULL);
 	j = -1;
 	while (++j < i)
 	{
-		strappend(&out[j], ((t_env *)env_list->content)->key);
+		env = (t_env *)(env_list->content);
+		strappend(&out[j], env->key);
 		strappend(&out[j], "=");
-		strappend(&out[j],  ((t_env *)env_list->content)->value);
+		strappend(&out[j],  env->value);
 		env_list = env_list->next;
 	}
 	return (out);

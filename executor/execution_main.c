@@ -7,26 +7,37 @@ int check_pwd(t_list *env_list)
 	{
 		if (!(pwd = getcwd(NULL, 0)))
 			return (1);
-		add_env(&env_list, "PWD", pwd);
+		add_env(&env_list, "PWD", pwd, 0);
 	}
 	return (0);
 }
 
-int execute_cmd(char *cmd_name, t_cmd *cmd, t_list *env_list, t_info *info)
+void uncapitalize_str(char *str)
 {
-	if (!ft_strcmp(cmd_name, "echo"))
+	while (str && *str)
+	{
+		if (*str >= 65 && *str <= 90)
+			*str += 32;
+		str++;
+	}
+}
+
+
+int execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info)
+{
+	if (!ft_strcmp(info->uncap_cmd, "echo"))
 		return(echo(cmd, cmd->arg_list, env_list));
-	else if (!ft_strcmp(cmd_name, "cd"))
+	else if (!ft_strcmp(info->uncap_cmd, "cd"))
 		return(cd(cmd, cmd->arg_list, env_list));
-	else if (!ft_strcmp(cmd_name, "pwd"))
+	else if (!ft_strcmp(info->uncap_cmd, "pwd"))
 		return(pwd(cmd));
-	else if (!ft_strcmp(cmd_name, "export"))
+	else if (!ft_strcmp(info->uncap_cmd, "export"))
 		return(export(cmd, cmd->arg_list, env_list));
-	else if (!ft_strcmp(cmd_name, "unset"))
+	else if (!ft_strcmp(info->uncap_cmd, "unset"))
 		return(unset(cmd->arg_list, env_list));
-	else if (!ft_strcmp(cmd_name, "env"))
+	else if (!ft_strcmp(info->uncap_cmd, "env"))
 		return(env(cmd, cmd->arg_list, env_list));
-	else if (!ft_strcmp(cmd_name, "exit"))
+	else if (!ft_strcmp(info->uncap_cmd, "exit"))
 		return(exit_(cmd->arg_list, env_list, info));
 	else
 		return(binary(cmd, cmd->arg_list, env_list, info));
@@ -57,15 +68,6 @@ int execute_cmd(char *cmd_name, t_cmd *cmd, t_list *env_list, t_info *info)
 //}
 
 
-void uncapitalize_str(char *str)
-{
-	while (str && *str)
-	{
-		if (*str >= 65 && *str <= 90)
-			*str += 32;
-		str++;
-	}
-}
 
 int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 {
@@ -76,7 +78,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 	{
 		cmd = ((t_cmd *)(cmd_list->content));
 		cmd->name = cmd->is_env ? get_env_val_by_key(cmd->name, env_list) : cmd->name;
-		uncapitalize_str(cmd->name);//nado tolko dlya comand. + refactor
+		uncapitalize_str(info->uncap_cmd = cmd->name);
 		if (cmd->is_pipe)
 		{
 			if (!cmd_list->next)
@@ -87,7 +89,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 				setsignals(info->pid);
 				close(info->pipe_fd[0]);
 				dup2(info->pipe_fd[1], 1);
-				res = execute_cmd(cmd->name, cmd, env_list, info);
+				res = execute_cmd(cmd, env_list, info);
 				close(info->pipe_fd[1]);
 				exit(res);
 			}
@@ -96,7 +98,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 		}
 		else
 		{
-			execute_cmd(cmd->name, cmd, env_list, info);
+			res = execute_cmd(cmd, env_list, info);
 			if(info->pipe_fd)
 			{
 				waitpid(info->pid, &res,
@@ -104,6 +106,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 				close(info->pipe_fd[0]);
 			}
 		}
+		clear_ptr((void **)&info->uncap_cmd);
 		cmd_list = cmd_list->next;
 	}
 }
