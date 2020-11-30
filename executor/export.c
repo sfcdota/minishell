@@ -40,16 +40,31 @@ int export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 	t_arg *arg;
 	char *var_str;
 	char *temp;
+	char *temp_arg;
+	t_env *env;
 	
 	if (arg_list)
 	{
 		arg = (t_arg *)(arg_list->content);
 		var_str = arg->is_env ? get_env_val_by_key(arg->name, env_list) : arg->name;
+		if (!(temp = to_delimiter(var_str, '=') + 1) && arg_list->next)
+		{
+			arg_list = arg_list->next;
+			arg = (t_arg *)(arg_list->content);
+			strappend(&var_str, arg->is_env ? get_env_val_by_key(arg->name, env_list) : arg->name);
+		}
 		if (is_correct_var(var_str))
 		{
 			temp = to_delimiter(var_str, '=');
-			add_env(&env_list, get_substr(var_str, temp),
-				get_substr(temp ? temp + 1 : temp, NULL), 0);
+			if ((env = get_env_by_key(temp_arg = get_substr(var_str, temp), env_list)))
+			{
+				clear_ptr((void **)&env->value);
+				env->value = get_substr(temp ? temp + 1 : temp, NULL);
+			}
+			else
+				add_env(&env_list, get_substr(var_str, temp),
+					get_substr(temp ? temp + 1 : temp, NULL), 0);
+			clear_ptr((void **)&temp_arg);
 		}
 		else
 			return (ret_with_msg("export : ", var_str, ": not a valid identifier", 1));//var is not correct

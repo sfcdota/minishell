@@ -67,15 +67,21 @@ int ft_exit(char *message, int status, t_info *info)
 	exit(status);
 }
 
-int ret_with_msg(char *message_prefix, char *message, char *message_suffix, int retval)
+/*
+** if is_failed != 0, prints every char * parameters,
+** otherwise, prints only char *message (2nd parameter)
+*/
+int ret_with_msg(char *message_prefix, char *message, char *message_suffix, int is_failed)
 {
-	if (retval)
+	if (is_failed)
 	{
 		ft_putstr_fd(message_prefix, STDOUT_FILENO);
 		ft_putstr_fd(message, STDOUT_FILENO);
 		ft_putendl_fd(message_suffix, STDOUT_FILENO);
 	}
-	return (retval);
+	else
+		ft_putendl_fd(message, STDOUT_FILENO);
+	return (is_failed);
 }
 
 void errno_set(t_info *info)

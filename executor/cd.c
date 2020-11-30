@@ -1,36 +1,19 @@
 #include "executor.h"
 
-int error(char *message, int err)
-{
-	ft_putendl_fd(message, 1);
-	return (err);
-}
-
-int change(char *path, t_list *env_list)
+int go_to_dir(char *path, t_list *env_list)
 {
 	t_env *pwd;
 	t_env *oldpwd;
-	t_env *temp;
-	t_env *temp2;
 	
-	if (chdir(path) || (!(pwd = get_env_by_key("PWD", env_list)) &&
-	(!(temp = add_env(&env_list, "PWD", "", 0)))))
+	if (chdir(path))
 		return (1);
-	if (!(oldpwd = get_env_by_key("OLDPWD", env_list)) &&
-	(!(temp2 = add_env(&env_list, "OLDPWD", "", 0))))
-	{
-		if (!pwd)
-			free(temp);
-		return (1);
-	}
-	if (!pwd)
-		ft_lstadd_back(&env_list, ft_lstnew(temp));
-	if (!oldpwd)
-		ft_lstadd_back(&env_list, ft_lstnew(temp2));
-	pwd = temp;
-	oldpwd = temp2;
+	pwd = get_env_by_key("PWD", env_list);
+	oldpwd = get_env_by_key("OLDPWD", env_list);
+	clear_ptr((void **)&oldpwd->value);
 	oldpwd->value = pwd->value;
-	pwd->value = path;
+	if (oldpwd->is_hidden == 2)
+		oldpwd->is_hidden = 0;
+	pwd->value = getcwd(NULL, 228);
 	return (0);
 }
 
@@ -39,46 +22,41 @@ int check_cdpath(t_cmd *cmd, char *path)
 {
 	char **dirs;
 	int i;
+	int is_not_found;
 	
+	is_not_found = 1;
 	i = 0;
 	if (!(dirs = ft_split(path, ':')))
-		return -1;
+		return 1;
 	while(dirs[i])
 	{
-		if (!chdir(dirs[i]))
-			break ;
+		if (is_not_found && !chdir(dirs[i]))
+			is_not_found = 0;
 		i++;
 	}
-	if (dirs[i]) // mojno ubrat t.k pri dirs[i] = null putstr niche ne sdelaet
-		ft_putstr_fd(dirs[i], cmd->std_out);
-	return (0); //поменять ретвал (ерроры)
+	ft_putstr_fd(dirs[i], cmd->std_out);
+	while(i--)
+		clear_ptr((void **)&dirs[i]);
+	clear_ptr((void **)dirs);
+	return (is_not_found);
 }
 
 
 int cd(t_cmd *cmd, t_list *args, t_list *env_list)
 {
 	char *out;
+	t_arg *arg;
 	
 	if (args && args->next)
-		return (ret_with_msg(cmd->name, ": unistd.h write function failed", NULL, 1));
-	if (!args || 
-	ft_strcmp("~",((t_arg *)(args->content))->name) ||
-	ft_strcmp("--",((t_arg *)(args->content))->name))
-		return (chdir(get_env_val_by_key("HOME", env_list)));
-	if (!(ft_strcmp("-",((t_arg *)(args->content))->name)))
-	{
-		if (!chdir(get_env_val_by_key("OLDPWD", env_list)))
-		{
-			ft_putendl_fd(get_env_val_by_key("OLDPWD", env_list), cmd->std_out);
-			return (0);
-		}
-		return (ret_with_msg(cmd->name, ": OLDPWD is not set", NULL, 1));
-	}
+		return (ret_with_msg(cmd->name, ": too much arguments", NULL, 1));
+	arg = (t_arg *)(args->content);
 	if ((out = get_env_val_by_key("CDPATH", env_list)) && !check_cdpath(cmd, out))
 		return (0);
-	out = !((t_arg *)(args->content))->is_env ? ((t_arg *)(args->content))->name
-	: get_env_val_by_key(((t_arg *) (args->content))->name, env_list);
-	if (chdir(out ? out : get_env_val_by_key("HOME", env_list)) == -1)
-		return (ret_with_msg(cmd->name, ": unistd.h chdir function failed", NULL, 1));
-	return (0);
+	if (!args || !ft_strcmp("~",arg->name) || !ft_strcmp("--",arg->name))
+		return (go_to_dir(get_env_val_by_key("HOME", env_list), env_list));
+	else if (!(ft_strcmp("-",arg->name)))
+		return (ret_with_msg(cmd->name, get_env_val_by_key("OLDPWD", env_list),
+		": OLDPWD is not set", go_to_dir(get_env_val_by_key("OLDPWD", env_list), env_list)));
+	arg->name = arg->is_env ? get_env_val_by_key(arg->name, env_list) : arg->name;
+	return (ret_with_msg(cmd->name, NULL, ": unistd.h chdir function failed", go_to_dir(arg->name, env_list)));
 }

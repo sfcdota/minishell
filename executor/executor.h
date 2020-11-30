@@ -43,7 +43,7 @@ void clear_cmds(void *cmd_content);
 
 int error_msg(char *message, int error_code, t_info *info);
 void errno_set(t_info *info);
-int ret_with_msg(char *message_prefix, char *message, char *message_suffix, int retval);
+int ret_with_msg(char *message_prefix, char *message, char *message_suffix, int is_failed);
 
 int ft_exit(char *message, int status, t_info *info);
 
