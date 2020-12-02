@@ -21,13 +21,19 @@ typedef struct			s_arg
 	int					is_env;
 }						t_arg;
 
+typedef struct			s_redirection
+{
+	t_list				*filenames; // content = char * (stroki, imena failov)
+	int 				type; // 0 for empty, 1 = <, 2 = >, 3 = >>
+}						t_redirection;
+
 typedef struct			s_cmd
 {
 	char				*name;
 	int 				is_env;
 	char				*flags;
 	t_list				*arg_list;
-	int					redirect; // 0 for empty, 1 = <, 2 = >, 3 = >>
+	t_redirection		redirects;
 	int					std_in;
 	int					std_out;
 	int					is_pipe;
