@@ -14,7 +14,7 @@ t_cmd	*new_cmd()
 {
 	t_cmd *cmd;
 
-	cmd = malloc(sizeof(t_cmd));
+	cmd = ft_calloc(sizeof(t_cmd), 1);
 	cmd->name = NULL;
 	cmd->flags = NULL;
 	cmd->arg_list = NULL;
@@ -29,10 +29,19 @@ t_arg *new_arg(char *name, int is_env)
 {
 	t_arg *arg;
 
-	arg = malloc(sizeof(t_arg));
+	arg = ft_calloc(sizeof(t_arg), 1);
 	arg->name = name;
 	arg->is_env = is_env;
 	return (arg);
+}
+
+t_redirection *new_redirection(int type)
+{
+	t_redirection *redirection;
+
+	redirection = ft_calloc(sizeof(t_redirection), 1);
+	redirection->type = type;
+	return (redirection);
 }
 
 char *str_replace(char *s1, char *s2)

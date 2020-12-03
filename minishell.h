@@ -33,7 +33,8 @@ typedef struct			s_cmd
 	int 				is_env;
 	char				*flags;
 	t_list				*arg_list;
-	t_redirection		redirects;
+	t_redirection		*redir_in;
+	t_redirection		*redir_out;
 	int					std_in;
 	int					std_out;
 	int					is_pipe;
@@ -63,4 +64,6 @@ t_arg *new_arg(char *name, int is_env);
 t_cmd	*new_cmd(void);
 void init_info(t_info *info, char **envp);
 char *str_replace(char *s1, char *s2);
+t_redirection *new_redirection(int type);
+
 #endif
