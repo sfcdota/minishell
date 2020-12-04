@@ -94,6 +94,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 				close(info->pipe_fd[1]);
 				exit(res);
 			}
+			
 			close(info->pipe_fd[1]);
 			dup2(info->pipe_fd[0], 0);
 		}
@@ -107,6 +108,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 				close(info->pipe_fd[0]);
 			}
 		}
+		str_replace(get_env_by_key("?", env_list)->value, ft_itoa(res));
 		clear_ptr((void **)&info->uncap_cmd);
 		cmd_list = cmd_list->next;
 	}
