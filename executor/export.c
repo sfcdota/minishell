@@ -10,12 +10,15 @@ void print_env_list(t_list *env_list, char *prefix, int std_out)
 			if (prefix)
 				ft_putstr_fd(prefix, std_out);
 			ft_putstr_fd(env->key, std_out);
-			ft_putchar_fd('=', std_out);
-			if (prefix)
-				ft_putchar_fd('\"', std_out);
-			ft_putstr_fd(env->value, std_out);
-			if (prefix)
-				ft_putchar_fd('\"', std_out);
+			if (env->value && *env->value)
+			{
+				ft_putchar_fd('=', std_out);
+				if (prefix)
+					ft_putchar_fd('\"', std_out);
+				ft_putstr_fd(env->value, std_out);
+				if (prefix)
+					ft_putchar_fd('\"', std_out);
+			}
 			ft_putchar_fd('\n', std_out);
 		}
 		env_list = env_list->next;

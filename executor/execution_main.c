@@ -74,16 +74,17 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 	t_cmd *cmd;
 	int res;
 	
-	while (cmd_list)
+	while (cmd_list && (cmd = ((t_cmd *)(cmd_list->content)))->name)
 	{
-		cmd = ((t_cmd *)(cmd_list->content));
+		//cmd = ((t_cmd *)(cmd_list->content));
 		cmd->name = cmd->is_env ? get_env_val_by_key(cmd->name, env_list) : cmd->name;
 		uncapitalize_str(info->uncap_cmd = ft_strdup(cmd->name));
 		if (cmd->is_pipe)
 		{
 			if (!cmd_list->next)
 				return (1);//error around |
-			pipe(info->pipe_fd);
+			info->pipe_fd = ft_calloc(2, sizeof(int));
+			res = pipe(info->pipe_fd);
 			if ((info->pid = fork()) == 0)
 			{
 				setsignals(info->pid);

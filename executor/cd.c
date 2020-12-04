@@ -58,5 +58,5 @@ int cd(t_cmd *cmd, t_list *args, t_list *env_list)
 		return (ret_with_msg(cmd->name, get_env_val_by_key("OLDPWD", env_list),
 		": OLDPWD is not set", go_to_dir(get_env_val_by_key("OLDPWD", env_list), env_list)));
 	arg->name = arg->is_env ? get_env_val_by_key(arg->name, env_list) : arg->name;
-	return (ret_with_msg(cmd->name, NULL, ": unistd.h chdir function failed", go_to_dir(arg->name, env_list)));
+	return (ret_with_msg(cmd->name, NULL, ": directory not found or unistd.h chdir function failed", go_to_dir(arg->name, env_list)));
 }

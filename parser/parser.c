@@ -1,7 +1,5 @@
 #include "parser.h"
 
-
-
 char		*strj(char *s1, char s2)
 {
 	unsigned int	i;

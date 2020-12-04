@@ -58,7 +58,7 @@ char *get_substr(char *begin, char *end)
 	
 	if (!end)
 		end = to_delimiter(begin, '\0');
-	if (!begin || !(out = malloc(end - begin + 2)))
+	if (!begin || !*begin || !(out = ft_calloc(sizeof(char),end - begin + 2)))
 		return (NULL);
 	ft_strlcpy(out, begin, end - begin + 1);
 	return (out);
