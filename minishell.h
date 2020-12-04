@@ -10,9 +10,6 @@
 # include <string.h>
 # define SHELL_PREFIX "minishell> "
 # define MAX_CMD_LENGTH 262144
-# define REDIRECTION_IN 3
-# define REDIRECTION_OUT 4
-# define PIPE 5
 
 
 typedef struct			s_arg
@@ -23,8 +20,8 @@ typedef struct			s_arg
 
 typedef struct			s_redirection
 {
-	t_list				*filenames; // content = char * (stroki, imena failov)
-	int 				type; // 0 for empty, 1 = <, 2 = >, 3 = >>
+	char 				*filename;
+	int 				type; // 1 = <, 2 = >, 3 = >>
 }						t_redirection;
 
 typedef struct			s_cmd
@@ -33,8 +30,7 @@ typedef struct			s_cmd
 	int 				is_env;
 	char				*flags;
 	t_list				*arg_list;
-	t_redirection		*redir_in;
-	t_redirection		*redir_out;
+	t_list				*redirection_list;
 	int					std_in;
 	int					std_out;
 	int					is_pipe;
