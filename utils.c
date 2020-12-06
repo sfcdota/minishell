@@ -47,11 +47,12 @@ t_arg *new_arg(char *name, int is_env)
 	return (arg);
 }
 
-t_redirection *new_redirection(int type)
+t_redirection *new_redirection(char *filename, int type)
 {
 	t_redirection *redirection;
 
 	redirection = ft_calloc(sizeof(t_redirection), 1);
+	redirection->filename = filename;
 	redirection->type = type;
 	return (redirection);
 }

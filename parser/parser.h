@@ -15,5 +15,6 @@ int			cmd_count(char *cmd, t_info *info);
 char		*strj(char *s1, char s2);
 t_arg		*new_arg(char *name, int is_env);
 t_cmd		*new_cmd(void);
+int         own_strchr(char *str, char ch);
 
 #endif
