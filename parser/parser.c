@@ -143,7 +143,7 @@ int cmd_count(char *line, t_info *info)
 					return (-1);
 			 if (!pars.cmd1->name)
 			 	return (-1);
-			pars.cmd1->is_pipe = 1;
+			pars.cmd1->cmd_delimeter = 1;
 			 
 			 ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars.cmd1));
 			pars.cmd1 = new_cmd();

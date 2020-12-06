@@ -33,7 +33,7 @@ t_cmd	*new_cmd()
 	cmd->is_env = 0;
 	cmd->std_in = 0;
 	cmd->std_out = 1;
-	cmd->is_pipe = 0;
+	cmd->cmd_delimeter = 0;
 	return (cmd);
 }
 

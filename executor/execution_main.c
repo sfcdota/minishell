@@ -63,7 +63,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 		//cmd = ((t_cmd *)(cmd_list->content));
 		cmd->name = cmd->is_env ? get_env_val_by_key(cmd->name, env_list) : cmd->name;
 		uncapitalize_str(info->uncap_cmd = ft_strdup(cmd->name));
-		if (cmd->is_pipe)
+		if (cmd->cmd_delimeter)
 		{
 			if (!cmd_list->next)
 				return (1);//error around |
@@ -88,7 +88,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 			if(info->pipe_fd)
 			{
 				waitpid(info->pid, &res,
-					WUNTRACED);//peredelat' (ili kak to obrabotat oshibki, t.k do etogo moglo bit' ne cmd->is_pipe)
+					WUNTRACED);//peredelat' (ili kak to obrabotat oshibki, t.k do etogo moglo bit' ne cmd->cmd_delimeter)
 				close(info->pipe_fd[0]);
 			}
 		}

@@ -33,7 +33,7 @@ typedef struct			s_arg
 typedef struct			s_redirection
 {
 	char 				*filename;
-	int 				type; // 1 = <, 2 = >, 3 = >>
+	int 				type; // 0 for empty, 1 = <, 2 = <<, 3 = >, 4 = >>
 }						t_redirection;
 
 typedef struct			s_cmd
@@ -45,7 +45,7 @@ typedef struct			s_cmd
 	t_list				*redirection_list;
 	int					std_in;
 	int					std_out;
-	int					is_pipe;
+	int					cmd_delimeter; // 0 for empty, 1 for pipe, 2 for &&, 3 for ||
 }						t_cmd;
 
 typedef struct			s_env
