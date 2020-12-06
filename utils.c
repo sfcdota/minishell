@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/06 13:00:01 by cbach             #+#    #+#             */
+/*   Updated: 2020/12/06 13:00:02 by cbach            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "executor/executor.h"
 
 void init_info(t_info *info, char **envp)
@@ -44,10 +56,28 @@ t_redirection *new_redirection(int type)
 	return (redirection);
 }
 
-char *str_replace(char *s1, char *s2)
+void	ft_lst_elem_delete(t_list **lst, t_list *elem, void (*del)(void *))
 {
-	clear_ptr((void **)&s1);
-	s1 = ft_strdup(s2);
-	clear_ptr((void **)&s2);
-	return (s1);
+	if (lst && *lst)
+	{
+		if (*lst == elem)
+		{
+			*lst = (*lst)->next;
+			if (del)
+				del(elem->content);
+			free(elem);
+		}
+		else
+		{
+			while (*lst && (*lst)->next != elem)
+				*lst = (*lst)->next;
+			if ((*lst)->next == elem)
+			{
+				(*lst)->next = elem->next;
+				if (del)
+					del(elem->content);
+				free(elem);
+			}
+		}
+	}
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/06 12:59:51 by cbach             #+#    #+#             */
+/*   Updated: 2020/12/06 12:59:53 by cbach            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parser/parser.h"
 #include "executor/executor.h"
@@ -9,7 +21,7 @@ int main(int argc, char **argv, char *envp[])
 	char *line;
 	t_info info;
 	int res;
-	
+
 	init_info(&info, envp);
 	setsignals(info.pid);
 	while (1)

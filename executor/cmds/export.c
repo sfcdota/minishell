@@ -1,11 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/06 13:01:05 by cbach             #+#    #+#             */
+/*   Updated: 2020/12/06 13:01:06 by cbach            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "executor.h"
 
-void print_env_list(t_list *env_list, char *prefix, int std_out)
+void	print_env_list(t_list *env_list, char *prefix, int std_out)
 {
 	t_env *env;
+	
 	while (env_list)
 	{
-		if (!(env = (t_env *) (env_list->content))->is_hidden)
+		if (!(env = (t_env *)(env_list->content))->is_hidden)
 		{
 			if (prefix)
 				ft_putstr_fd(prefix, std_out);
@@ -25,7 +38,7 @@ void print_env_list(t_list *env_list, char *prefix, int std_out)
 	}
 }
 
-int is_correct_var(char *s)
+int		is_correct_var(char *s)
 {
 	if (ft_isdigit(*s))
 		return (0);
@@ -38,23 +51,25 @@ int is_correct_var(char *s)
 	return (1);
 }
 
-int export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
+int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 {
 	t_arg *arg;
 	char *var_str;
 	char *temp;
 	char *temp_arg;
 	t_env *env;
-	
+
 	if (arg_list)
 	{
 		arg = (t_arg *)(arg_list->content);
 		var_str = arg->is_env ? get_env_val_by_key(arg->name, env_list) : arg->name;
-		if (!(temp = to_delimiter(var_str, '=') + 1) && arg_list->next)
+		if (!(to_delimiter(var_str, '=') + 1) && arg_list->next)
 		{
 			arg_list = arg_list->next;
 			arg = (t_arg *)(arg_list->content);
-			strappend(&var_str, arg->is_env ? get_env_val_by_key(arg->name, env_list) : arg->name);
+			str_append(&var_str,
+				arg->is_env ? get_env_val_by_key(arg->name, env_list)
+							: arg->name);
 		}
 		if (is_correct_var(var_str))
 		{

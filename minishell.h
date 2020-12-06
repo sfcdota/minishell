@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/06 12:59:57 by cbach             #+#    #+#             */
+/*   Updated: 2020/12/06 12:59:58 by cbach            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PROJECT_MINISHELL_H
 # define PROJECT_MINISHELL_H
 # include "libft/libft.h"
@@ -59,7 +71,6 @@ typedef struct			s_info
 t_arg *new_arg(char *name, int is_env);
 t_cmd	*new_cmd(void);
 void init_info(t_info *info, char **envp);
-char *str_replace(char *s1, char *s2);
 t_redirection *new_redirection(int type);
-
+void	ft_lst_elem_delete(t_list **lst, t_list *elem, void (*del)(void *));
 #endif

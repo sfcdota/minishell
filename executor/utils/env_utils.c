@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/06 13:00:32 by cbach             #+#    #+#             */
+/*   Updated: 2020/12/06 13:00:33 by cbach            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "executor.h"
 
 /*
@@ -5,10 +17,10 @@
 ** not default case: adding PWD and OLDPWD in cd, because in error we need free
 */
 
-t_env *add_env(t_list **env_list, char *key, char *value, int is_hidden)
+t_env	*add_env(t_list **env_list, char *key, char *value, int is_hidden)
 {
 	t_env *env;
-	
+
 	if (!(env = malloc(sizeof(t_env))))
 		return (NULL);
 	env->key = key;
@@ -18,19 +30,17 @@ t_env *add_env(t_list **env_list, char *key, char *value, int is_hidden)
 	return (env);
 }
 
-
-
 void	sort_envs(t_list *env_list)
 {
-	t_list *begin;
-	t_list *begin2;
+	t_list	*begin;
+	t_list	*begin2;
 	void	*temp;
-	
+
 	begin = env_list;
-	while(begin)
+	while (begin)
 	{
 		begin2 = env_list;
-		while(begin2->next)
+		while (begin2->next)
 		{
 			if (ft_strcmp(((t_env *)(begin2->content))->key,
 				((t_env *)(begin2->next->content))->key) > 0)
@@ -45,32 +55,13 @@ void	sort_envs(t_list *env_list)
 	}
 }
 
-char *to_delimiter(char *envp_string, char delimiter)
-{
-	while (*envp_string && *envp_string != delimiter)
-		envp_string++;
-	return envp_string;
-}
-
-char *get_substr(char *begin, char *end)
-{
-	char *out;
-	
-	if (!end)
-		end = to_delimiter(begin, '\0');
-	if (!begin || !*begin || !(out = ft_calloc(sizeof(char),end - begin + 2)))
-		return (NULL);
-	ft_strlcpy(out, begin, end - begin + 1);
-	return (out);
-}
-
 t_list	*envs_to_list(char *envp[])
 {
-	t_list *env_list;
-	char *temp;
-	
+	t_list	*env_list;
+	char	*temp;
+
 	env_list = NULL;
-	while(*envp)
+	while (*envp)
 	{
 		temp = to_delimiter(*envp, '=');
 		add_env(&env_list, get_substr(*envp, temp),
@@ -86,32 +77,23 @@ t_list	*envs_to_list(char *envp[])
 	return (env_list);
 }
 
-char *strappend(char **s1, char *s2)
-{
-	char *temp;
-	
-	temp = ft_strjoin(*s1, s2);
-	clear_ptr((void **)s1);
-	*s1 = temp;
-}
-
 char	**env_list_to_array(t_list *env_list)
 {
-	int i;
-	int j;
-	char **out;
-	t_env *env;
-	
+	int		i;
+	int		j;
+	char	**out;
+	t_env	*env;
+
 	i = ft_lstsize(env_list);
-	if(!i || !(out = ft_calloc(sizeof(char *), i + 1)))
+	if (!i || !(out = ft_calloc(sizeof(char *), i + 1)))
 		return (NULL);
 	j = -1;
 	while (++j < i)
 	{
 		env = (t_env *)(env_list->content);
-		strappend(&out[j], env->key);
-		strappend(&out[j], "=");
-		strappend(&out[j],  env->value);
+		str_append(&out[j], env->key);
+		str_append(&out[j], "=");
+		str_append(&out[j], env->value);
 		env_list = env_list->next;
 	}
 	return (out);
@@ -123,31 +105,5 @@ void	print_env_array(char **envp)
 	{
 		ft_putendl_fd(*envp, 1);
 		envp++;
-	}
-}
-
-void	ft_lst_elem_delete(t_list **lst, t_list *elem, void (*del)(void *))
-{
-	if (lst && *lst)
-	{
-		if (*lst == elem)
-		{
-			*lst = (*lst)->next;
-			if (del)
-				del(elem->content);
-			free(elem);
-		}
-		else
-		{
-			while (*lst && (*lst)->next != elem)
-				*lst = (*lst)->next;
-			if ((*lst)->next == elem)
-			{
-				(*lst)->next = elem->next;
-				if (del)
-					del(elem->content);
-				free(elem);
-			}
-		}
 	}
 }

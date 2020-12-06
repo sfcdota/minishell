@@ -1,18 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution_main.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/06 13:00:24 by cbach             #+#    #+#             */
+/*   Updated: 2020/12/06 13:00:24 by cbach            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "executor.h"
 
-int check_pwd(t_list *env_list)
-{
-	char *pwd;
-	if (!get_env_val_by_key("PWD", env_list))
-	{
-		if (!(pwd = getcwd(NULL, 0)))
-			return (1);
-		add_env(&env_list, "PWD", pwd, 0);
-	}
-	return (0);
-}
-
-void uncapitalize_str(char *str)
+void	uncapitalize_str(char *str)
 {
 	while (str && *str)
 	{
@@ -22,58 +22,31 @@ void uncapitalize_str(char *str)
 	}
 }
 
-
-int execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info)
+int		execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info)
 {
 	if (!ft_strcmp(info->uncap_cmd, "echo"))
-		return(echo(cmd, cmd->arg_list, env_list));
+		return (echo(cmd, cmd->arg_list, env_list));
 	else if (!ft_strcmp(info->uncap_cmd, "cd"))
-		return(cd(cmd, cmd->arg_list, env_list));
+		return (cd(cmd, cmd->arg_list, env_list));
 	else if (!ft_strcmp(info->uncap_cmd, "pwd"))
-		return(pwd(cmd));
+		return (pwd(cmd));
 	else if (!ft_strcmp(info->uncap_cmd, "export"))
-		return(export(cmd, cmd->arg_list, env_list));
+		return (export(cmd, cmd->arg_list, env_list));
 	else if (!ft_strcmp(info->uncap_cmd, "unset"))
-		return(unset(cmd->arg_list, env_list));
+		return (unset(cmd->arg_list, env_list));
 	else if (!ft_strcmp(info->uncap_cmd, "env"))
-		return(env(cmd, cmd->arg_list, env_list));
+		return (env(cmd, cmd->arg_list, env_list));
 	else if (!ft_strcmp(info->uncap_cmd, "exit"))
-		return(exit_(cmd->arg_list, env_list, info));
+		return (exit_(cmd->arg_list, env_list, info));
 	else
-		return(binary(cmd, cmd->arg_list, env_list, info));
-	//nado dobavit result and errors
+		return (binary(cmd, cmd->arg_list, env_list, info));
 }
 
-//char *cmd_to_string(t_cmd *cmd, t_list *arg_list, t_list *env_list)
-//{
-//	char *cmd_str;
-//	t_arg *arg;
-//	cmd_str = NULL;
-//	cmd_str = ft_strjoin(cmd_str,cmd->name);
-//	cmd_str = ft_strjoin(cmd_str, " ");
-//	if (cmd->flags)
-//	{
-//		cmd_str = ft_strjoin(cmd_str, "-");
-//		cmd_str = ft_strjoin(cmd_str, cmd->flags);
-//	}
-//	while (arg_list)
-//	{
-//		arg = (t_arg *)(arg_list->content);
-//		arg->name = arg->is_env ? get_env_val_by_key(arg->name, env_list) : arg->name;
-//		cmd_str = ft_strjoin(cmd_str, arg->name);
-//		arg_list = arg_list->next;
-//	}
-//	cmd_str = ft_strjoin(cmd_str,"\n");
-//	return cmd_str;
-//}
-
-
-
-int execution(t_info *info, t_list *cmd_list, t_list *env_list)
+int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 {
-	t_cmd *cmd;
-	int res;
-	
+	t_cmd	*cmd;
+	int		res;
+
 	while (cmd_list && (cmd = ((t_cmd *)(cmd_list->content)))->name)
 	{
 		//cmd = ((t_cmd *)(cmd_list->content));
@@ -94,7 +67,7 @@ int execution(t_info *info, t_list *cmd_list, t_list *env_list)
 				close(info->pipe_fd[1]);
 				exit(res);
 			}
-			
+
 			close(info->pipe_fd[1]);
 			dup2(info->pipe_fd[0], 0);
 		}
