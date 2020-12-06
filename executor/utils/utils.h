@@ -14,7 +14,7 @@
 # define UTILS_H
 
 /*
-** CLEAR FUNCTIONS
+**						CLEAR FUNCTIONS
 */
 
 void					clear_ptr(void **ptr);
@@ -24,7 +24,7 @@ void					clear_cmds(void *cmd_content);
 void					clear_all(t_info *info);
 
 /*
-** ENVIRONMENT FUNCTIONS
+**						ENVIRONMENT FUNCTIONS
 */
 
 t_env					*add_env(t_list **env_list, char *key, char *value
@@ -36,7 +36,7 @@ char					**env_list_to_array(t_list *env_list);
 void					print_env_array(char **envp);
 
 /*
-** ENVIRONMENT "GET" FUNCTIONS
+**						ENVIRONMENT "GET" FUNCTIONS
 */
 
 char					*get_env_val_by_key(char *key, t_list *env_list);
@@ -44,7 +44,7 @@ t_env					*get_env_by_key(char *key, t_list *env_list);
 t_list					*get_env_list_by_key(char *key, t_list *env_list);
 
 /*
-** STATUS AND RETURN FUNCTIONS
+**						STATUS AND RETURN FUNCTIONS
 */
 
 int						ret_with_msg(char *message_prefix, char *message
@@ -53,7 +53,7 @@ int						ret_with_msg(char *message_prefix, char *message
 void					errno_set(t_info *info);
 
 /*
-** STRING UTILS FUNCTIONS
+**						STRING UTILS FUNCTIONS
 */
 
 int						ft_strcmp(const char *s1, const char *s2);

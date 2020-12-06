@@ -12,6 +12,10 @@
 
 #include "executor.h"
 
+/*
+** Trying to move to path directory with changing PWD & OLDPWD values
+*/
+
 int	go_to_dir(char *path, t_list *env_list)
 {
 	t_env *pwd;
@@ -28,6 +32,10 @@ int	go_to_dir(char *path, t_list *env_list)
 	pwd->value = getcwd(NULL, 228);
 	return (0);
 }
+
+/*
+** Trying to move to CDPATH environment variable
+*/
 
 int	check_cdpath(t_cmd *cmd, char *path)
 {
@@ -51,6 +59,10 @@ int	check_cdpath(t_cmd *cmd, char *path)
 	clear_ptr((void **)dirs);
 	return (is_not_found);
 }
+
+/*
+** Cd execution
+*/
 
 int	cd(t_cmd *cmd, t_list *args, t_list *env_list)
 {

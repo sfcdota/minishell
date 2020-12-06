@@ -12,6 +12,10 @@
 
 #include "executor.h"
 
+/*
+** Echo execution
+*/
+
 int	echo(t_cmd *cmd, t_list *args, t_list *env_list)
 {
 	char *out;

@@ -12,15 +12,22 @@
 
 #include "executor.h"
 
+/*
+** Modifying str to lower register symbols
+*/
+
 void	uncapitalize_str(char *str)
 {
 	while (str && *str)
 	{
-		if (*str >= 65 && *str <= 90)
-			*str += 32;
+		ft_tolower(*str);
 		str++;
 	}
 }
+
+/*
+** Executes command by comparing command name
+*/
 
 int		execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info)
 {
@@ -41,6 +48,10 @@ int		execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info)
 	else
 		return (binary(cmd, cmd->arg_list, env_list, info));
 }
+
+/*
+** Main execution function
+*/
 
 int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 {

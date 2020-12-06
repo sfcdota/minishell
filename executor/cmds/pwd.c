@@ -13,6 +13,10 @@
 #include "executor.h"
 #define GETCWD_ERROR " : Internal error. Lib func getcwd got error."
 
+/*
+** Pwd execution
+*/
+
 int	pwd(t_cmd *cmd)
 {
 	char *pwd;

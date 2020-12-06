@@ -12,6 +12,10 @@
 
 #include "../executor.h"
 
+/*
+** Original strcmp function
+*/
+
 int		ft_strcmp(const char *s1, const char *s2)
 {
 	if ((!s1 && !s2))
@@ -24,12 +28,24 @@ int		ft_strcmp(const char *s1, const char *s2)
 	return (*(unsigned char *)s1 - *(unsigned char *)s2);
 }
 
+/*
+** Returns pointer to delimiter symbol in envp_string, if it's not exist, point
+** to NULL
+*/
+
 char	*to_delimiter(char *envp_string, char delimiter)
 {
 	while (*envp_string && *envp_string != delimiter)
 		envp_string++;
 	return (envp_string);
 }
+
+/*
+** Gets substring by begin and end pointer which must be pointers of an existing
+** array of chars(string)
+** If end equals to NULL - gets substring from begin to '\0'
+** If begin equals to NULL - returns NULL
+*/
 
 char	*get_substr(char *begin, char *end)
 {
@@ -43,6 +59,10 @@ char	*get_substr(char *begin, char *end)
 	return (out);
 }
 
+/*
+** Concats two strings into the first argument with memory free of an old value
+*/
+
 char	*str_append(char **s1, char *s2)
 {
 	char *temp;
@@ -51,6 +71,10 @@ char	*str_append(char **s1, char *s2)
 	clear_ptr((void **)s1);
 	*s1 = temp;
 }
+
+/*
+** Replace 1st argument by 2nd like strdup, but with memory free of an old value
+*/
 
 char	*str_replace(char *s1, char *s2)
 {

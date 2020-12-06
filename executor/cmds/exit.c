@@ -12,6 +12,10 @@
 
 #include "executor.h"
 
+/*
+** Check if str is num
+*/
+
 int	is_str_numeric(char *s)
 {
 	if (s && *s == '-')
@@ -22,12 +26,21 @@ int	is_str_numeric(char *s)
 	return (1);
 }
 
+/*
+** Modified exit function with memory free of all necessary structures,
+** with extra message before exit
+*/
+
 int	ft_exit(char *message, int status, t_info *info)
 {
 	clear_all(info);
 	ft_putendl_fd(message, STDOUT_FILENO);
 	exit(status);
 }
+
+/*
+** Exit execution
+*/
 
 int	exit_(t_list *arg_list, t_list *env_list, t_info *info)
 {

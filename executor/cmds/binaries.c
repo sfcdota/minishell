@@ -12,6 +12,10 @@
 
 #include "executor.h"
 
+/*
+** Checks PATH env variable for binary name of cmd->name
+*/
+
 char	*check_path(t_cmd *cmd, char *path)
 {
 	char		**dirs;
@@ -40,6 +44,10 @@ char	*check_path(t_cmd *cmd, char *path)
 	return (temp);
 }
 
+/*
+** Casts argument list to an array for putting to execve as argument
+*/
+
 char	**arg_list_to_array(char *flags, t_list *arg_list)
 {
 	char	**arg_array;
@@ -61,6 +69,10 @@ char	**arg_list_to_array(char *flags, t_list *arg_list)
 	}
 	return (arg_array);
 }
+
+/*
+** Binary forked execution
+*/
 
 int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 {

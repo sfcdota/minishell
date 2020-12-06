@@ -12,6 +12,10 @@
 
 #include "executor.h"
 
+/*
+** Unset execution
+*/
+
 int	unset(t_list *arg_list, t_list *env_list)
 {
 	t_arg *arg;

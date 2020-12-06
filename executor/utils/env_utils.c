@@ -13,8 +13,7 @@
 #include "executor.h"
 
 /*
-** check for type == -1 made for default adding
-** not default case: adding PWD and OLDPWD in cd, because in error we need free
+** Adds new environment variable (t_env) to environment list with param values
 */
 
 t_env	*add_env(t_list **env_list, char *key, char *value, int is_hidden)
@@ -29,6 +28,10 @@ t_env	*add_env(t_list **env_list, char *key, char *value, int is_hidden)
 	ft_lstadd_back(env_list, ft_lstnew(env));
 	return (env);
 }
+
+/*
+** Sorts environment list by ascending the values of its content key(char *)
+*/
 
 void	sort_envs(t_list *env_list)
 {
@@ -55,6 +58,10 @@ void	sort_envs(t_list *env_list)
 	}
 }
 
+/*
+** Cast char *[] environment array to list(t_list)
+*/
+
 t_list	*envs_to_list(char *envp[])
 {
 	t_list	*env_list;
@@ -77,6 +84,10 @@ t_list	*envs_to_list(char *envp[])
 	return (env_list);
 }
 
+/*
+** Cast environment list to an char **array
+*/
+
 char	**env_list_to_array(t_list *env_list)
 {
 	int		i;
@@ -98,6 +109,10 @@ char	**env_list_to_array(t_list *env_list)
 	}
 	return (out);
 }
+
+/*
+** Prints char** envp array
+*/
 
 void	print_env_array(char **envp)
 {

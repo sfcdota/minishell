@@ -12,6 +12,11 @@
 
 #include "executor.h"
 
+/*
+** Prints all environment variables (excluding hidden as well as $?)
+** prefix - for unifying func for both export and env command
+*/
+
 void	print_env_list(t_list *env_list, char *prefix, int std_out)
 {
 	t_env *env;
@@ -38,6 +43,10 @@ void	print_env_list(t_list *env_list, char *prefix, int std_out)
 	}
 }
 
+/*
+** Check if var has valid name
+*/
+
 int		is_correct_var(char *s)
 {
 	if (ft_isdigit(*s))
@@ -50,6 +59,10 @@ int		is_correct_var(char *s)
 	}
 	return (1);
 }
+
+/*
+** Export execution
+*/
 
 int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 {

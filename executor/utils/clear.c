@@ -12,6 +12,10 @@
 
 #include "executor.h"
 
+/*
+** Clear(free) ptr
+*/
+
 void	clear_ptr(void **ptr)
 {
 	if (ptr && *ptr)
@@ -20,6 +24,10 @@ void	clear_ptr(void **ptr)
 		*ptr = NULL;
 	}
 }
+
+/*
+** Clear(free) environment list
+*/
 
 void	clear_env(void *env_content)
 {
@@ -31,6 +39,10 @@ void	clear_env(void *env_content)
 	clear_ptr((void **)&env);
 }
 
+/*
+** Clear(free) args list
+*/
+
 void	clear_args(void *arg_content)
 {
 	t_arg *arg;
@@ -39,6 +51,10 @@ void	clear_args(void *arg_content)
 	clear_ptr((void **)&arg->name);
 	clear_ptr((void **)&arg);
 }
+
+/*
+** Clear(free) commands list
+*/
 
 void	clear_cmds(void *cmd_content)
 {
@@ -50,6 +66,10 @@ void	clear_cmds(void *cmd_content)
 	ft_lstclear(&cmd->arg_list, clear_args);
 	clear_ptr((void **)&cmd);
 }
+
+/*
+** Clear(free) info(shell) structure
+*/
 
 void	clear_all(t_info *info)
 {

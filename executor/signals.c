@@ -12,6 +12,10 @@
 
 #include "executor.h"
 
+/*
+** Sets sighandler for the main(parent) process
+*/
+
 void	sighandler(int signum)
 {
 	if (signum == SIGINT)
@@ -25,6 +29,10 @@ void	sighandler(int signum)
 	}
 }
 
+/*
+** Sets sighandler for the child process(es)
+*/
+
 void	sighandler_child(int signum)
 {
 	if (signum == SIGINT)
@@ -36,6 +44,10 @@ void	sighandler_child(int signum)
 
 	}
 }
+
+/*
+** Sets sighandler by pid
+*/
 
 void	setsignals(pid_t pid)
 {

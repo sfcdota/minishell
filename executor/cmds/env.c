@@ -12,6 +12,10 @@
 
 #include "executor.h"
 
+/*
+** Env execution
+*/
+
 int	env(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 {
 	if (arg_list)

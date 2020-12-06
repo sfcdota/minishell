@@ -17,12 +17,12 @@
 # include "cmds/commands.h"
 
 /*
-** MAIN SHELL COMMAND
+**		MAIN SHELL COMMAND
 */
 int execution(t_info *info, t_list *cmd_list, t_list *env_list);
 
 /*
-** SIGNAL FUNCTIONSS
+**		SIGNAL FUNCTIONSS
 */
 void sighandler(int signum);
 void sighandler_child(int signum);
