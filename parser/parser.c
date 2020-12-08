@@ -44,6 +44,8 @@ int cmd_count(char *line, t_info *info)
 	pars.i = -1;
 	while (line[++pars.i])
 	{
+	    while (line[pars.i] == ' ')
+	        pars.i++;
 		if (own_strchr("\\#=()*", &pars.i))
 			return (-1);
 		if (line[pars.i] == '\'')
@@ -74,12 +76,14 @@ int cmd_count(char *line, t_info *info)
                 continue ;
 		}
 
-		if (line[pars.i] == '&' && line[pars.i + 1] == '&')
+		if (pars.i + 2 < pars.len && line[pars.i] == '&' && line[pars.i + 1] == '&')
         {
             if (pars.str[0])
             {
                 if (!pars.cmd1->name)
                     pars.cmd1->name = ft_strdup(pars.str);
+                else if (!pars.cmd1->flags && !pars.cmd1->arg_list && !ft_strncmp("-n", pars.str, 2))
+                    pars.cmd1->flags = pars.str;
                 else
                     ft_lstadd_back(&pars.cmd1->arg_list, ft_lstnew(new_arg(ft_strdup(pars.str), 0)));
                 free(pars.str);
@@ -107,8 +111,9 @@ int cmd_count(char *line, t_info *info)
 				pars.str = strj(pars.str, line[pars.i++]);
 			if (line[pars.i] == '\\')
 				return (-1);
-			pars.i--;
-			continue ;
+//			pars.i--;
+            if (line[pars.i + 1] != ' ' && pars.i + 1 < pars.len)
+			    continue ;
 		}
 
 		if (line[pars.i] == '|')
@@ -117,6 +122,8 @@ int cmd_count(char *line, t_info *info)
             {
                 if (!pars.cmd1->name)
                     pars.cmd1->name = ft_strdup(pars.str);
+                else if (!pars.cmd1->flags && !pars.cmd1->arg_list && !ft_strncmp("-n", pars.str, 2))
+                    pars.cmd1->flags = pars.str;
                 else
                     ft_lstadd_back(&pars.cmd1->arg_list, ft_lstnew(new_arg(ft_strdup(pars.str), 0)));
                 free(pars.str);
@@ -153,13 +160,14 @@ int cmd_count(char *line, t_info *info)
             {
                 if (!pars.cmd1->name)
                     pars.cmd1->name = ft_strdup(pars.str);
+                else if (!pars.cmd1->flags && !pars.cmd1->arg_list && !ft_strncmp("-n", pars.str, 2))
+                    pars.cmd1->flags = pars.str;
                 else
                     ft_lstadd_back(&pars.cmd1->arg_list, ft_lstnew(new_arg(ft_strdup(pars.str), 0)));
                 free(pars.str);
                 pars.str = malloc(sizeof(char) * 1);
                 pars.str[0] = '\0';
             }
-//			pars.str = strj(pars.str, line[pars.i++]);
             pars.i++;
 			while (own_strchr("; ", line[pars.i]) && pars.i < pars.len)
 				if (line[pars.i++] == ';')
@@ -184,6 +192,8 @@ int cmd_count(char *line, t_info *info)
 		    {
                 if (!pars.cmd1->name)
                     pars.cmd1->name = ft_strdup(pars.str);
+                else if (!pars.cmd1->flags && !pars.cmd1->arg_list && !ft_strncmp("-n", pars.str, 2))
+                    pars.cmd1->flags = pars.str;
                 else
                     ft_lstadd_back(&pars.cmd1->arg_list, ft_lstnew(new_arg(ft_strdup(pars.str), 0)));
                 free(pars.str);
@@ -194,7 +204,6 @@ int cmd_count(char *line, t_info *info)
 			while (line[pars.i] == ' ' || line[pars.i] == '<')
 				if (line[pars.i++] == '<')
 					return (-1);
-//			pars.i++;
             while (!own_strchr("'\"()$#&* |;\\<>", line[pars.i]) && line[pars.i])
                 pars.str = strj(pars.str, line[pars.i++]);
             ft_lstadd_back(&pars.cmd1->redirection_list, ft_lstnew(new_redirection(ft_strdup(pars.str), 1)));
@@ -216,6 +225,8 @@ int cmd_count(char *line, t_info *info)
             {
                 if (!pars.cmd1->name)
                     pars.cmd1->name = ft_strdup(pars.str);
+                else if (!pars.cmd1->flags && !pars.cmd1->arg_list && !ft_strncmp("-n", pars.str, 2))
+                    pars.cmd1->flags = pars.str;
                 else
                     ft_lstadd_back(&pars.cmd1->arg_list, ft_lstnew(new_arg(ft_strdup(pars.str), 0)));
                 free(pars.str);
@@ -232,7 +243,7 @@ int cmd_count(char *line, t_info *info)
 			    type = 2;
 			else
 			    type = 3;
-            if (pars.str)
+            if (pars.str[0])
             {
                 free(pars.str);
                 pars.str = malloc(sizeof(char) * 1);
@@ -240,18 +251,20 @@ int cmd_count(char *line, t_info *info)
             }
             while (!own_strchr("'\"()$#*& |;\\<>", line[pars.i]) && pars.i < pars.len)
                 pars.str = strj(pars.str, line[pars.i++]);
-            ft_lstadd_back(&pars.cmd1->redirection_list, ft_lstnew(new_redirection(ft_strdup(pars.str), type)));
-            if (pars.str)
+            if (pars.str[0])
             {
+                ft_lstadd_back(&pars.cmd1->redirection_list, ft_lstnew(new_redirection(ft_strdup(pars.str), type)));
                 free(pars.str);
                 pars.str = malloc(sizeof(char) * 1);
                 pars.str[0] = '\0';
             }
+            else
+                return (-1);
 			pars.i--;
 			continue ;
 		}
 
-		if (!own_strchr("\"'$ |;<>", line[pars.i]))
+		if (!own_strchr("\"'$ |;<>()#*&\\", line[pars.i]))
 		{
 			while (!own_strchr("'\"()#*& |;\\<>", line[pars.i]) && line[pars.i])
 				pars.str = strj(pars.str, line[pars.i++]);
@@ -263,6 +276,8 @@ int cmd_count(char *line, t_info *info)
 		{
             if (!pars.cmd1->name)
                 pars.cmd1->name = ft_strdup(pars.str);
+            else if (!pars.cmd1->flags && !pars.cmd1->arg_list && !ft_strncmp("-n", pars.str, 2))
+                pars.cmd1->flags = pars.str;
             else
                 ft_lstadd_back(&pars.cmd1->arg_list, ft_lstnew(new_arg(ft_strdup(pars.str), 0)));
             free(pars.str);
@@ -285,31 +300,8 @@ void	parser(char *command, t_info *info)
 	if (!command) 
 		return ;
 	cmd_count(command, info);
-//	while (info->cmd_list->next)
-//	{
-//		cmd = info->cmd_list->content;
-//		while (cmd->arg_list->next)
-//		{
-//			arg = (t_arg*)cmd->arg_list->content;
-//			cmd->arg_list = cmd->arg_list->next;
-//		}
-//		while (cmd->redirection_list->next)
-//        {
-//            redirection = (t_redirection*)cmd->redirection_list->content;
-//            cmd->redirection_list = cmd->redirection_list->next;
-//        }
-//		info->cmd_list = info->cmd_list->next;
-//	}
-//	cmd = info->cmd_list->content;
-//	while (cmd->arg_list->next)
-//	{
-//		arg = (t_arg*)cmd->arg_list->content;
-//		cmd->arg_list = cmd->arg_list->next;
-//	}
-//    while (cmd->redirection_list->next)
-//    {
-//        redirection = (t_redirection*)cmd->redirection_list->content;
-//        cmd->redirection_list = cmd->redirection_list->next;
-//    }
+	cmd = (t_cmd *)info->cmd_list->content;
+    arg = (t_arg *)cmd->arg_list->content;
+
 }
 //  echo -n hello world ; ls -la parser.c ; pwd lol hol gol
