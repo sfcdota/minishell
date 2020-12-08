@@ -46,7 +46,7 @@ int cmd_count(char *line, t_info *info)
 	{
 	    while (line[pars.i] == ' ')
 	        pars.i++;
-		if (own_strchr("\\#=()*", &pars.i))
+		if (own_strchr("\\#=()*", line[pars.i]))
 			return (-1);
 		if (line[pars.i] == '\'')
 		{
