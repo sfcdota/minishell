@@ -290,6 +290,115 @@ int cmd_count(char *line, t_info *info)
 	free(pars.str);
 	return (1);
 }
+int		own_strcmp(const char *s1, const char *s2)
+{
+    if ((!s1 && !s2))
+        return (0);
+    while (*s1 == *s2 && (*s1 != '\0' || *s2 != '\0'))
+    {
+        s1++;
+        s2++;
+    }
+    return (*(unsigned char *)s1 - *(unsigned char *)s2);
+}
+
+char	*get_env_value_by_key(char *key, t_list *env_list)
+{
+    t_env *env;
+
+    while (key && env_list)
+    {
+        env = (t_env *)(env_list->content);
+        if (!own_strcmp(key, env->key))
+            return (env->value);
+        env_list = env_list->next;
+    }
+    return ("");
+}
+
+char    *get_env(int *i, t_arg *arg, t_info *info)
+{
+    char *env_name;
+    int     j;
+
+    j = *i;
+    env_name = (char *)malloc(sizeof(char) * 1);
+    env_name[0] = '\0';
+    while (!own_strchr("$' \"", arg->name[j]) && arg->name[j])
+        env_name = strj(env_name, arg->name[j++]);
+    *i = j;
+    return (get_env_value_by_key(env_name, info->env_list));
+}
+
+void    execute_$(t_arg *arg, t_info *info)
+{
+    char *tmp;
+    char *env_name;
+    int i;
+
+    i = -1;
+    tmp = (char *)malloc(sizeof(char) * 1);
+    tmp[0] = '\0';
+    env_name = (char *)malloc(sizeof(char) * 1);
+    env_name[0] = '\0';
+
+    while (arg->name[++i])
+    {
+        if (arg->name[i] == '\'')
+        {
+            i++;
+            tmp = ft_strjoin(tmp, env_name);
+            while (arg->name[i] != '\'')
+                tmp = strj(tmp, arg->name[i++]);
+//            continue ;
+//            i++;
+        }
+        else if (arg->name[i] == '"')
+        {
+            i++;
+            while(arg->name[i] != '"')
+            {
+                while (!own_strchr("$\"", arg->name[i]) && arg->name[i])
+                    tmp = strj(tmp, arg->name[i++]);
+                if (arg->name[i] == '$') {
+                    i++;
+                    env_name = get_env(&i, arg, info);
+                }
+                tmp = ft_strjoin(tmp, env_name);
+            }
+        }
+        else if (arg->name[i] == '$')
+        {
+            i++;
+            env_name = get_env(&i, arg, info);
+            tmp = ft_strjoin(tmp, env_name);
+
+        }
+        else
+        tmp = strj(tmp, arg->name[i]);
+    }
+    free(arg->name);
+    arg->name = ft_strdup(tmp);
+}
+
+void    total_pars(t_info *info)
+{
+    t_cmd       *cmd;
+    t_arg       *arg;
+
+    cmd = info->cmd_list->content;
+    if (!ft_strncmp("export", cmd->name, 6))
+    {
+//        bla bla
+    }
+    while (cmd->arg_list)
+    {
+        arg = cmd->arg_list->content;
+        cmd->arg_list = cmd->arg_list->next;
+        execute_$(arg, info);
+    }
+}
+
 
 void	parser(char *command, t_info *info)
 {
@@ -300,8 +409,22 @@ void	parser(char *command, t_info *info)
 	if (!command) 
 		return ;
 	cmd_count(command, info);
-	cmd = (t_cmd *)info->cmd_list->content;
-    arg = (t_arg *)cmd->arg_list->content;
+	total_pars(info);
+    while (info->cmd_list)
+    {
+        cmd = info->cmd_list->content;
+        while (cmd->arg_list)
+        {
+            arg = cmd->arg_list->content;
+            cmd->arg_list = cmd->arg_list->next;
+        }
+        while (cmd->redirection_list)
+        {
+            redirection = cmd->redirection_list->content;
+            cmd->redirection_list = cmd->redirection_list->next;
+        }
+        info->cmd_list = info->cmd_list->next;
+    }
 
 }
 //  echo -n hello world ; ls -la parser.c ; pwd lol hol gol
