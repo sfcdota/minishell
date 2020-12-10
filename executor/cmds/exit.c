@@ -56,8 +56,7 @@ int	exit_(t_list *arg_list, t_list *env_list, t_info *info)
 	if (arg_list)
 	{
 		arg = ((t_arg *)(arg_list->content));
-		code = arg->is_env ? get_env_val_by_key(arg->name, env_list)
-			: arg->name;
+		code = execute_$(arg->name, env_list);
 		ft_putendl_fd("exit", STDOUT_FILENO);
 		kek = ft_atoi(code);
 		if (!is_str_numeric(code) || (*code == '-' && !kek)

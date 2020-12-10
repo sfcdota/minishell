@@ -75,7 +75,7 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 	if (arg_list)
 	{
 		arg = (t_arg *)(arg_list->content);
-		var_str = arg->is_env ? get_env_val_by_key(arg->name, env_list) : arg->name;
+		var_str = execute_$(arg->name, env_list);
 		if (!(to_delimiter(var_str, '=') + 1) && arg_list->next)
 		{
 			arg_list = arg_list->next;

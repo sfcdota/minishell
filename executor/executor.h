@@ -15,7 +15,7 @@
 # include "../minishell.h"
 # include "utils/utils.h"
 # include "cmds/commands.h"
-
+# include "../parser/parser.h"
 /*
 **		MAIN SHELL COMMAND
 */

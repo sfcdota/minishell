@@ -316,7 +316,7 @@ char	*get_env_value_by_key(char *key, t_list *env_list)
     return ("");
 }
 
-char    *get_env(int *i, char *arg, t_info *info)
+char    *get_env(int *i, char *arg, t_list *env_list)
 {
     char *env_name;
     int     j;
@@ -327,10 +327,10 @@ char    *get_env(int *i, char *arg, t_info *info)
     while (!own_strchr("$' \"", arg[j]) && arg[j])
         env_name = strj(env_name, arg[j++]);
     *i = --j;
-    return (get_env_value_by_key(env_name, info->env_list));
+    return (get_env_value_by_key(env_name, env_list));
 }
 
-char    *execute_$(char *arg, t_info *info)
+char    *execute_$(char *arg, t_list *env_list)
 {
     char *tmp;
     char *env_name;
@@ -362,7 +362,7 @@ char    *execute_$(char *arg, t_info *info)
                     tmp = strj(tmp, arg[i++]);
                 if (arg[i] == '$') {
                     i++;
-                    env_name = get_env(&i, arg, info);
+                    env_name = get_env(&i, arg, env_list);
                     i++;
                 }
                 tmp = ft_strjoin(tmp, env_name);
@@ -371,7 +371,7 @@ char    *execute_$(char *arg, t_info *info)
         else if (arg[i] == '$')
         {
             i++;
-            env_name = get_env(&i, arg, info);
+            env_name = get_env(&i, arg, env_list);
             tmp = ft_strjoin(tmp, env_name);
 
         }
@@ -400,7 +400,7 @@ void    total_pars(t_info *info)
         while (list)
         {
             arg = list->content;
-            arg->name = execute_$(arg->name, info);
+            arg->name = execute_$(arg->name, info->env_list);
             list = list->next;
         }
         cur_cmd = cur_cmd->next;
