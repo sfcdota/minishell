@@ -18,8 +18,8 @@ t_cmd		*new_cmd(void);
 int         own_strchr(char *str, char ch);
 void        total_pars(t_info *info);
 char	    *get_env_value_by_key(char *key, t_list *env_list);
-char        *get_env(int *i, t_arg *arg, t_info *info);
-void        execute_$(t_arg *arg, t_info *info);
+char        *get_env(int *i, char *arg, t_info *info);
+char        *execute_$(char *arg, t_info *info);
 int 		own_strcmp(const char *s1, const char *s2);
 
 

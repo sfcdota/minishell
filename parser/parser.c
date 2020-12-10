@@ -316,7 +316,7 @@ char	*get_env_value_by_key(char *key, t_list *env_list)
     return ("");
 }
 
-char    *get_env(int *i, t_arg *arg, t_info *info)
+char    *get_env(int *i, char *arg, t_info *info)
 {
     char *env_name;
     int     j;
@@ -324,13 +324,13 @@ char    *get_env(int *i, t_arg *arg, t_info *info)
     j = *i;
     env_name = (char *)malloc(sizeof(char) * 1);
     env_name[0] = '\0';
-    while (!own_strchr("$' \"", arg->name[j]) && arg->name[j])
-        env_name = strj(env_name, arg->name[j++]);
-    *i = j;
+    while (!own_strchr("$' \"", arg[j]) && arg[j])
+        env_name = strj(env_name, arg[j++]);
+    *i = --j;
     return (get_env_value_by_key(env_name, info->env_list));
 }
 
-void    execute_$(t_arg *arg, t_info *info)
+char    *execute_$(char *arg, t_info *info)
 {
     char *tmp;
     char *env_name;
@@ -342,32 +342,33 @@ void    execute_$(t_arg *arg, t_info *info)
     env_name = (char *)malloc(sizeof(char) * 1);
     env_name[0] = '\0';
 
-    while (arg->name[++i])
+    while (arg[++i])
     {
-        if (arg->name[i] == '\'')
+        if (arg[i] == '\'')
         {
             i++;
             tmp = ft_strjoin(tmp, env_name);
-            while (arg->name[i] != '\'')
-                tmp = strj(tmp, arg->name[i++]);
+            while (arg[i] != '\'')
+                tmp = strj(tmp, arg[i++]);
 //            continue ;
 //            i++;
         }
-        else if (arg->name[i] == '"')
+        else if (arg[i] == '"')
         {
             i++;
-            while(arg->name[i] != '"')
+            while(arg[i] != '"')
             {
-                while (!own_strchr("$\"", arg->name[i]) && arg->name[i])
-                    tmp = strj(tmp, arg->name[i++]);
-                if (arg->name[i] == '$') {
+                while (!own_strchr("$\"", arg[i]) && arg[i])
+                    tmp = strj(tmp, arg[i++]);
+                if (arg[i] == '$') {
                     i++;
                     env_name = get_env(&i, arg, info);
+                    i++;
                 }
                 tmp = ft_strjoin(tmp, env_name);
             }
         }
-        else if (arg->name[i] == '$')
+        else if (arg[i] == '$')
         {
             i++;
             env_name = get_env(&i, arg, info);
@@ -375,27 +376,34 @@ void    execute_$(t_arg *arg, t_info *info)
 
         }
         else
-        tmp = strj(tmp, arg->name[i]);
+        tmp = strj(tmp, arg[i]);
     }
-    free(arg->name);
-    arg->name = ft_strdup(tmp);
+    return (tmp);
 }
 
 void    total_pars(t_info *info)
 {
+    t_info      *tmp_info;
+    t_list      *cur_cmd;
     t_cmd       *cmd;
+    t_list      *list;
+    t_list      *list1;
     t_arg       *arg;
 
-    cmd = info->cmd_list->content;
-    if (!ft_strncmp("export", cmd->name, 6))
+    tmp_info = info;
+    cur_cmd = tmp_info->cmd_list;
+    while (cur_cmd)
     {
-//        bla bla
-    }
-    while (cmd->arg_list)
-    {
-        arg = cmd->arg_list->content;
-        cmd->arg_list = cmd->arg_list->next;
-        execute_$(arg, info);
+        cmd = cur_cmd->content;
+        list = cur_cmd->content;
+//        execute_$(cmd->name, info);
+        while (list)
+        {
+            arg = list->content;
+            arg->name = execute_$(arg->name, info);
+            list = list->next;
+        }
+        cur_cmd = cur_cmd->next;
     }
 }
 
