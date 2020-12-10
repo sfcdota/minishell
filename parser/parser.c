@@ -41,6 +41,7 @@ int cmd_count(char *line, t_info *info)
 	pars.len = ft_strlen(line);
 	pars.str = malloc(sizeof(char));
 	*(pars.str) = '\0';
+
 	pars.i = -1;
 	while (line[++pars.i])
 	{
@@ -341,7 +342,8 @@ char    *execute_$(char *arg, t_list *env_list)
     tmp[0] = '\0';
     env_name = (char *)malloc(sizeof(char) * 1);
     env_name[0] = '\0';
-
+    if (!arg)
+        return (NULL);
     while (arg[++i])
     {
         if (arg[i] == '\'')
@@ -387,24 +389,27 @@ void    total_pars(t_info *info)
     t_list      *cur_cmd;
     t_cmd       *cmd;
     t_list      *list;
-    t_list      *list1;
     t_arg       *arg;
 
     tmp_info = info;
     cur_cmd = tmp_info->cmd_list;
-    while (cur_cmd)
-    {
-        cmd = cur_cmd->content;
-        list = cur_cmd->content;
-//        execute_$(cmd->name, info);
-        while (list)
+    if (info->cmd_list)
+        while (cur_cmd)
         {
-            arg = list->content;
-            arg->name = execute_$(arg->name, info->env_list);
-            list = list->next;
+            cmd = cur_cmd->content;
+            list = cur_cmd->content;
+            cmd->name = execute_$(cmd->name, info->env_list);
+            while (list)
+            {
+                if (cmd->arg_list)
+                {
+                    arg = cmd->arg_list->content;
+                    arg->name = execute_$(arg->name, info->env_list);
+                }
+                list = list->next;
+            }
+            cur_cmd = cur_cmd->next;
         }
-        cur_cmd = cur_cmd->next;
-    }
 }
 
 
@@ -418,21 +423,22 @@ void	parser(char *command, t_info *info)
 		return ;
 	cmd_count(command, info);
 	total_pars(info);
-    while (info->cmd_list)
-    {
-        cmd = info->cmd_list->content;
-        while (cmd->arg_list)
+	if (info->cmd_list)
+        while (info->cmd_list)
         {
-            arg = cmd->arg_list->content;
-            cmd->arg_list = cmd->arg_list->next;
+            cmd = info->cmd_list->content;
+            while (cmd->arg_list)
+            {
+                arg = cmd->arg_list->content;
+                cmd->arg_list = cmd->arg_list->next;
+            }
+            while (cmd->redirection_list)
+            {
+                redirection = cmd->redirection_list->content;
+                cmd->redirection_list = cmd->redirection_list->next;
+            }
+            info->cmd_list = info->cmd_list->next;
         }
-        while (cmd->redirection_list)
-        {
-            redirection = cmd->redirection_list->content;
-            cmd->redirection_list = cmd->redirection_list->next;
-        }
-        info->cmd_list = info->cmd_list->next;
-    }
 
 }
 //  echo -n hello world ; ls -la parser.c ; pwd lol hol gol

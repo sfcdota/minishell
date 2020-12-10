@@ -47,4 +47,4 @@ include_directories(executor/cmds)
 include_directories(/usr/local/include)
 
 add_executable(minishell ${srcs} ${gnl} ${executor}
-        ${parser} ${libft} ${exec_cmds} ${exec_utils})
+        ${parser} ${libft} ${exec_cmds} ${exec_utils} )
