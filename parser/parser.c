@@ -333,69 +333,41 @@ char    *get_env(int *i, char *arg, t_list *env_list)
 
 char    *execute_$(char *arg, t_list *env_list)
 {
-    char *tmp;
-    char *env_name;
-    int i;
+    t_utils utils;
 
-    i = -1;
-    tmp = (char *)malloc(sizeof(char) * 1);
-    tmp[0] = '\0';
-    env_name = (char *)malloc(sizeof(char) * 1);
-    env_name[0] = '\0';
+    utils.i = -1;
+    utils.tmp = (char *)malloc(sizeof(char) * 1);
+    utils.tmp[0] = '\0';
+    utils.env_name = (char *)malloc(sizeof(char) * 1);
+    utils.env_name[0] = '\0';
     if (!arg)
         return (NULL);
-    while (arg[++i])
+    while (arg[++utils.i])
     {
-        if (arg[i] == '\'')
+        if (arg[utils.i] == '\'')
+            utils.tmp  = end_pars01(&utils, arg);
+        else if (arg[utils.i] == '"')
+            utils.tmp = end_pars02(&utils, arg, env_list);
+        else if (arg[utils.i] == '$')
         {
-            i++;
-            tmp = ft_strjoin(tmp, env_name);
-            while (arg[i] != '\'')
-                tmp = strj(tmp, arg[i++]);
-//            continue ;
-//            i++;
-        }
-        else if (arg[i] == '"')
-        {
-            i++;
-            while(arg[i] != '"')
-            {
-                while (!own_strchr("$\"", arg[i]) && arg[i])
-                    tmp = strj(tmp, arg[i++]);
-                if (arg[i] == '$') {
-                    i++;
-                    env_name = get_env(&i, arg, env_list);
-                    i++;
-                }
-                tmp = ft_strjoin(tmp, env_name);
-            }
-        }
-        else if (arg[i] == '$')
-        {
-            i++;
-            if (arg[i] == ' ' || !arg[i])
-                tmp = strj(tmp, '$');
-            else {
-                env_name = get_env(&i, arg, env_list);
-                tmp = ft_strjoin(tmp, env_name);
-            }
+            utils.tmp = end_pars03(&utils, arg, env_list);
         }
         else
-        tmp = strj(tmp, arg[i]);
+            utils.tmp = strj(utils.tmp, arg[utils.i]);
     }
-    return (tmp);
+    free(arg);
+    free(utils.env_name);
+    return (utils.tmp);
 }
 
-void    total_pars(t_info *info)
+void    end_pars(t_info *info)
 {
-    t_info      *tmp_info;
     t_list      *cur_cmd;
     t_cmd       *cmd;
     t_list      *list;
     t_arg       *arg;
 
-    tmp_info = info;
-    cur_cmd = tmp_info->cmd_list;
+    cur_cmd = info->cmd_list;
     if (info->cmd_list)
         while (cur_cmd)
         {
@@ -427,7 +399,7 @@ void	parser(char *command, t_info *info)
 	if (!command) 
 		return ;
 	cmd_count(command, info);
-	total_pars(info);
+    end_pars(info);
 	if (info->cmd_list)
         while (info->cmd_list)
         {
