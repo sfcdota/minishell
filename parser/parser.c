@@ -113,7 +113,7 @@ int cmd_count(char *line, t_info *info)
 			if (line[pars.i] == '\\')
 				return (-1);
 //			pars.i--;
-            if (line[pars.i + 1] != ' ' && pars.i + 1 < pars.len)
+            if (line[pars.i] != ' ' && pars.i + 1 < pars.len)
 			    continue ;
 		}
 
@@ -373,9 +373,12 @@ char    *execute_$(char *arg, t_list *env_list)
         else if (arg[i] == '$')
         {
             i++;
-            env_name = get_env(&i, arg, env_list);
-            tmp = ft_strjoin(tmp, env_name);
-
+            if (arg[i] == ' ' || !arg[i])
+                tmp = strj(tmp, '$');
+            else {
+                env_name = get_env(&i, arg, env_list);
+                tmp = ft_strjoin(tmp, env_name);
+            }
         }
         else
         tmp = strj(tmp, arg[i]);
@@ -399,6 +402,8 @@ void    total_pars(t_info *info)
             cmd = cur_cmd->content;
             list = cur_cmd->content;
             cmd->name = execute_$(cmd->name, info->env_list);
+            if (!cmd->flags)
+                cmd->flags = execute_$(cmd->flags, info->env_list);
             while (list)
             {
                 if (cmd->arg_list)
