@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/06 13:00:21 by cbach             #+#    #+#             */
-/*   Updated: 2020/12/06 13:00:22 by cbach            ###   ########.fr       */
+/*   Created: 2020/12/06 13:01:00 by cbach             #+#    #+#             */
+/*   Updated: 2020/12/06 13:01:01 by cbach            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_EXECUTOR_H
-# define MINISHELL_EXECUTOR_H
-# include "../minishell.h"
-# include "utils/utils.h"
-# include "cmds/commands.h"
-# include "../parser/parser.h"
-/*
-**		MAIN SHELL COMMAND
-*/
-int execution(t_info *info, t_list *cmd_list, t_list *env_list);
+#include "executor.h"
 
 /*
-**		SIGNAL FUNCTIONSS
+** Env execution
 */
-void sighandler(int signum);
-void sighandler_child(int signum);
-void setsignals(pid_t pid);
 
-#endif
+int	env(t_cmd *cmd, t_list *arg_list, t_list *env_list)
+{
+	if (arg_list)
+		return (ret_with_msg("env: ", "arguments is not allowed", NULL, 1));
+	print_env_list(env_list, NULL, cmd->std_out);
+	return (0);
+}

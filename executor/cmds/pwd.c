@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/06 13:00:21 by cbach             #+#    #+#             */
-/*   Updated: 2020/12/06 13:00:22 by cbach            ###   ########.fr       */
+/*   Created: 2020/12/06 13:01:08 by cbach             #+#    #+#             */
+/*   Updated: 2020/12/06 13:01:08 by cbach            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_EXECUTOR_H
-# define MINISHELL_EXECUTOR_H
-# include "../minishell.h"
-# include "utils/utils.h"
-# include "cmds/commands.h"
-# include "../parser/parser.h"
-/*
-**		MAIN SHELL COMMAND
-*/
-int execution(t_info *info, t_list *cmd_list, t_list *env_list);
+#include "executor.h"
+#define GETCWD_ERROR " : Internal error. Lib func getcwd got error."
 
 /*
-**		SIGNAL FUNCTIONSS
+** Pwd execution
 */
-void sighandler(int signum);
-void sighandler_child(int signum);
-void setsignals(pid_t pid);
 
-#endif
+int	pwd(t_cmd *cmd)
+{
+	char *pwd;
+
+	if (!(pwd = getcwd(NULL, 228)))
+		return (ret_with_msg(cmd->name, GETCWD_ERROR, NULL, 1));
+	ft_putendl_fd(pwd, cmd->std_out);
+	return (0);
+}

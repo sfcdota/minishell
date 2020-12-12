@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/06 13:00:01 by cbach             #+#    #+#             */
+/*   Updated: 2020/12/06 13:00:02 by cbach            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "executor/executor.h"
 
 void init_info(t_info *info, char **envp)
@@ -21,7 +33,7 @@ t_cmd	*new_cmd()
 	cmd->is_env = 0;
 	cmd->std_in = 0;
 	cmd->std_out = 1;
-	cmd->is_pipe = 0;
+	cmd->cmd_delimeter = 0;
 	return (cmd);
 }
 
@@ -35,19 +47,38 @@ t_arg *new_arg(char *name, int is_env)
 	return (arg);
 }
 
-t_redirection *new_redirection(int type)
+t_redirection *new_redirection(char *filename, int type)
 {
 	t_redirection *redirection;
 
 	redirection = ft_calloc(sizeof(t_redirection), 1);
+	redirection->filename = filename;
 	redirection->type = type;
 	return (redirection);
 }
 
-char *str_replace(char *s1, char *s2)
+void	ft_lst_elem_delete(t_list **lst, t_list *elem, void (*del)(void *))
 {
-	clear_ptr((void **)&s1);
-	s1 = ft_strdup(s2);
-	clear_ptr((void **)&s2);
-	return (s1);
+	if (lst && *lst)
+	{
+		if (*lst == elem)
+		{
+			*lst = (*lst)->next;
+			if (del)
+				del(elem->content);
+			free(elem);
+		}
+		else
+		{
+			while (*lst && (*lst)->next != elem)
+				*lst = (*lst)->next;
+			if ((*lst)->next == elem)
+			{
+				(*lst)->next = elem->next;
+				if (del)
+					del(elem->content);
+				free(elem);
+			}
+		}
+	}
 }
