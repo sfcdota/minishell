@@ -353,7 +353,6 @@ char    *execute_$(char *arg, t_list *env_list)
         else
             utils.tmp = strj(utils.tmp, arg[utils.i]);
     }
-    free(arg);
 //    free(utils.env_name);
     return (utils.tmp);
 }
