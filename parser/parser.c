@@ -34,9 +34,6 @@ int     own_strchr(char *str, char ch)
 int cmd_count(char *line, t_info *info)
 {
     t_pars	pars;
-
-//	if (!*line)
-//		return 0;
     pars.cmd1 = new_cmd();
     pars.len = ft_strlen(line);
     pars.str = malloc(sizeof(char));
@@ -61,7 +58,7 @@ int cmd_count(char *line, t_info *info)
                 continue ;
         }
 
-        if (line[pars.i] == '"')
+        else if (line[pars.i] == '"')
         {
             pars.str = strj(pars.str, line[pars.i++]);
             while (line[pars.i] != 34 && pars.i < pars.len)
@@ -77,7 +74,7 @@ int cmd_count(char *line, t_info *info)
                 continue ;
         }
 
-        if (pars.i + 2 < pars.len && line[pars.i] == '&' && line[pars.i + 1] == '&')
+        else if (pars.i + 2 < pars.len && line[pars.i] == '&' && line[pars.i + 1] == '&')
         {
             if (pars.str[0])
             {
@@ -106,18 +103,7 @@ int cmd_count(char *line, t_info *info)
             continue ;
         }
 
-//        if (line[pars.i] == '$')
-//        {
-//            while (!own_strchr("'\"()#*& |;\\<>", line[pars.i]) && pars.i < pars.len)
-//                pars.str = strj(pars.str, line[pars.i++]);
-//            if (line[pars.i] == '\\')
-//                return (-1);
-////			pars.i--;
-//            if (line[pars.i] != ' ' && pars.i + 1 < pars.len)
-//                continue ;
-//        }
-
-        if (line[pars.i] == '|')
+        else if (line[pars.i] == '|')
         {
             if (pars.str[0])
             {
@@ -155,7 +141,7 @@ int cmd_count(char *line, t_info *info)
             continue ;
         }
 
-        if (line[pars.i] == ';')
+        else if (line[pars.i] == ';')
         {
             if (pars.str[0])
             {
@@ -187,7 +173,7 @@ int cmd_count(char *line, t_info *info)
             continue ;
         }
 
-        if (line[pars.i] == '<')
+        else if (line[pars.i] == '<')
         {
             if (pars.str[0])
             {
@@ -218,7 +204,7 @@ int cmd_count(char *line, t_info *info)
             continue ;
         }
 
-        if (line[pars.i] == '>')
+        else if (line[pars.i] == '>')
         {
             int type;
 
@@ -265,7 +251,7 @@ int cmd_count(char *line, t_info *info)
             continue ;
         }
 
-        if (!own_strchr("\"' |;<>()#*&\\", line[pars.i]))
+        else if (!own_strchr("\"' |;<>()#*&\\", line[pars.i]))
         {
             while (!own_strchr("'\"()#*& |;\\<>", line[pars.i]) && line[pars.i])
                 pars.str = strj(pars.str, line[pars.i++]);
@@ -273,7 +259,7 @@ int cmd_count(char *line, t_info *info)
             if (line[pars.i + 1] != ' ' && pars.i + 1 < pars.len)
                 continue;
         }
-        if (pars.str[0])
+        else if (pars.str[0])
         {
             if (!pars.cmd1->name)
                 pars.cmd1->name = ft_strdup(pars.str);
@@ -285,6 +271,18 @@ int cmd_count(char *line, t_info *info)
             pars.str = malloc(sizeof(char) * 1);
             *pars.str = '\0';
         }
+    }
+    if (pars.str[0])
+    {
+        if (!pars.cmd1->name)
+            pars.cmd1->name = ft_strdup(pars.str);
+        else if (!pars.cmd1->flags && !pars.cmd1->arg_list && !ft_strncmp("-n", pars.str, 2))
+            pars.cmd1->flags = pars.str;
+        else
+            ft_lstadd_back(&pars.cmd1->arg_list, ft_lstnew(new_arg(ft_strdup(pars.str), 0)));
+        free(pars.str);
+        pars.str = malloc(sizeof(char) * 1);
+        *pars.str = '\0';
     }
     ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars.cmd1));
     pars.cmd1 = new_cmd();
@@ -356,7 +354,7 @@ char    *execute_$(char *arg, t_list *env_list)
             utils.tmp = strj(utils.tmp, arg[utils.i]);
     }
     free(arg);
-    free(utils.env_name);
+//    free(utils.env_name);
     return (utils.tmp);
 }
 
