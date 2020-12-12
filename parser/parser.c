@@ -106,16 +106,16 @@ int cmd_count(char *line, t_info *info)
             continue ;
         }
 
-        if (line[pars.i] == '$')
-        {
-            while (!own_strchr("'\"()=#*& |;\\<>", line[pars.i]) && pars.i < pars.len)
-                pars.str = strj(pars.str, line[pars.i++]);
-            if (line[pars.i] == '\\')
-                return (-1);
-//			pars.i--;
-            if (line[pars.i] != ' ' && pars.i + 1 < pars.len)
-                continue ;
-        }
+//        if (line[pars.i] == '$')
+//        {
+//            while (!own_strchr("'\"()#*& |;\\<>", line[pars.i]) && pars.i < pars.len)
+//                pars.str = strj(pars.str, line[pars.i++]);
+//            if (line[pars.i] == '\\')
+//                return (-1);
+////			pars.i--;
+//            if (line[pars.i] != ' ' && pars.i + 1 < pars.len)
+//                continue ;
+//        }
 
         if (line[pars.i] == '|')
         {
@@ -265,7 +265,7 @@ int cmd_count(char *line, t_info *info)
             continue ;
         }
 
-        if (!own_strchr("\"'$ |;<>()#*&\\", line[pars.i]))
+        if (!own_strchr("\"' |;<>()#*&\\", line[pars.i]))
         {
             while (!own_strchr("'\"()#*& |;\\<>", line[pars.i]) && line[pars.i])
                 pars.str = strj(pars.str, line[pars.i++]);
@@ -325,7 +325,7 @@ char    *get_env(int *i, char *arg, t_list *env_list)
     j = *i;
     env_name = (char *)malloc(sizeof(char) * 1);
     env_name[0] = '\0';
-    while (!own_strchr("$' \"", arg[j]) && arg[j])
+    while (!own_strchr("$' =\"", arg[j]) && arg[j])
         env_name = strj(env_name, arg[j++]);
     *i = --j;
     return (get_env_value_by_key(env_name, env_list));
