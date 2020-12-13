@@ -54,8 +54,8 @@ int cmd_count(char *line, t_info *info)
             pars.str = strj(pars.str, line[pars.i]);
             if (pars.i == pars.len)
                 return (-1);
-            if (line[pars.i + 1] != ' ' && pars.i + 1 < pars.len)
-                continue ;
+//            if (line[pars.i + 1] != ' ' && pars.i + 1 < pars.len)
+//                continue ;
         }
 
         else if (line[pars.i] == '"')
@@ -70,8 +70,8 @@ int cmd_count(char *line, t_info *info)
             pars.str = strj(pars.str, line[pars.i]);
             if (pars.i == pars.len)
                 return (-1);
-            if (line[pars.i + 1] != ' ' && pars.i + 1 < pars.len)
-                continue ;
+//            if (line[pars.i + 1] != ' ' && pars.i + 1 < pars.len)
+//                continue ;
         }
 
         else if (pars.i + 2 < pars.len && line[pars.i] == '&' && line[pars.i + 1] == '&')
@@ -89,8 +89,8 @@ int cmd_count(char *line, t_info *info)
                 pars.str[0] = '\0';
             }
             pars.i += 2;
-            while (own_strchr("& ", line[pars.i]) && pars.i < pars.len)
-                if (line[pars.i++] == '&')
+            while (own_strchr("& ", line[pars.i]))
+                if (line[pars.i++] == '&' || pars.i == pars.len)
                     return (-1);
             pars.cmd1->cmd_delimeter = 2;
 
@@ -100,7 +100,7 @@ int cmd_count(char *line, t_info *info)
             pars.str = malloc(sizeof(char) * 1);
             *pars.str = '\0';
             pars.i--;
-            continue ;
+//            continue ;
         }
 
         else if (line[pars.i] == '|')
@@ -120,13 +120,9 @@ int cmd_count(char *line, t_info *info)
             pars.str = strj(pars.str, line[pars.i++]);
             if (line[pars.i] == '|')
                 pars.str = strj(pars.str, line[pars.i++]);
-            while (own_strchr("| ", line[pars.i]) && pars.i < pars.len)
-                if (line[pars.i++] == '|')
+            while (own_strchr("| ", line[pars.i]))
+                if (line[pars.i++] == '|' || pars.i == pars.len || !pars.cmd1->name)
                     return (-1);
-            if (!pars.cmd1->name)
-                return (-1);
-            if (pars.i == pars.len)
-                return (-1);
             if (ft_strlen(pars.str) == 1)
                 pars.cmd1->cmd_delimeter = 1;
             else if (ft_strlen(pars.str) == 2)
@@ -138,7 +134,7 @@ int cmd_count(char *line, t_info *info)
             pars.str = malloc(sizeof(char) * 1);
             *pars.str = '\0';
             pars.i--;
-            continue ;
+//            continue ;
         }
 
         else if (line[pars.i] == ';')
@@ -157,20 +153,19 @@ int cmd_count(char *line, t_info *info)
             }
             pars.i++;
             while (own_strchr("; ", line[pars.i]) && pars.i < pars.len)
-                if (line[pars.i++] == ';')
+                if (line[pars.i++] == ';' || !pars.cmd1->name)
                     return (-1);
-            if (!pars.cmd1->name)
-                return (-1);
             if (pars.i == pars.len)
             {
                 pars.i--;
                 continue ;
             }
+
             ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars.cmd1));
             pars.cmd1 = new_cmd();
 
             pars.i--;
-            continue ;
+//            continue ;
         }
 
         else if (line[pars.i] == '<')
@@ -201,14 +196,14 @@ int cmd_count(char *line, t_info *info)
                 pars.str[0] = '\0';
             }
             pars.i--;
-            continue ;
+//            continue ;
         }
 
         else if (line[pars.i] == '>')
         {
             int type;
 
-            if (pars.str)
+            if (pars.str[0])
             {
                 if (!pars.cmd1->name)
                     pars.cmd1->name = ft_strdup(pars.str);
@@ -248,7 +243,7 @@ int cmd_count(char *line, t_info *info)
             else
                 return (-1);
             pars.i--;
-            continue ;
+//            continue ;
         }
 
         else if (!own_strchr("\"' |;<>()#*&\\", line[pars.i]))
@@ -256,10 +251,10 @@ int cmd_count(char *line, t_info *info)
             while (!own_strchr("'\"()#*& |;\\<>", line[pars.i]) && line[pars.i])
                 pars.str = strj(pars.str, line[pars.i++]);
             pars.i--;
-            if (line[pars.i + 1] != ' ' && pars.i + 1 < pars.len)
-                continue;
+//            if (line[pars.i + 1] != ' ' && pars.i + 1 < pars.len)
+//                continue;
         }
-        else if (pars.str[0])
+        if (pars.str[0] && line[pars.i + 1] == ' ')
         {
             if (!pars.cmd1->name)
                 pars.cmd1->name = ft_strdup(pars.str);
@@ -347,13 +342,11 @@ char    *execute_$(char *arg, t_list *env_list)
         else if (arg[utils.i] == '"')
             utils.tmp = end_pars02(&utils, arg, env_list);
         else if (arg[utils.i] == '$')
-        {
             utils.tmp = end_pars03(&utils, arg, env_list);
-        }
         else
             utils.tmp = strj(utils.tmp, arg[utils.i]);
     }
-//    free(utils.env_name);
+    free(utils.env_name);
     return (utils.tmp);
 }
 
