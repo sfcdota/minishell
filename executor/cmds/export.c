@@ -76,26 +76,19 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 	{
 		arg = (t_arg *)(arg_list->content);
 		var_str = execute_$(arg->name, env_list);
-		if (!(to_delimiter(var_str, '=') + 1) && arg_list->next)
-		{
-			arg_list = arg_list->next;
-			arg = (t_arg *)(arg_list->content);
-			str_append(&var_str,
-				arg->is_env ? get_env_val_by_key(arg->name, env_list)
-							: arg->name);
-		}
+		temp = to_delimiter(var_str, '=');
 		if (is_correct_var(var_str))
 		{
-			temp = to_delimiter(var_str, '=');
-			if ((env = get_env_by_key(temp_arg = get_substr(var_str, temp), env_list)))
+			temp_arg = get_substr(var_str, temp);
+			if ((env = get_env_by_key(temp_arg, env_list)))
 			{
-				clear_ptr((void **)&env->value);
-				env->value = get_substr(temp ? temp + 1 : temp, NULL);
+				str_replace(temp_arg, get_substr(temp ? temp + 1 : temp, NULL));
+				if (ft_strcmp(env->value, temp_arg))
+					str_replace(env->value, temp_arg);
 			}
 			else
-				add_env(&env_list, get_substr(var_str, temp),
+				add_env(&env_list, temp_arg,
 					get_substr(temp ? temp + 1 : temp, NULL), 0);
-			clear_ptr((void **)&temp_arg);
 		}
 		else
 			return (ret_with_msg("export : ", var_str, ": not a valid identifier", 1));//var is not correct

@@ -16,7 +16,7 @@
 /*
 **							SHELL COMMANDS
 */
-int		echo(t_cmd *cmd, t_list *args, t_list *env_list);
+int		echo(t_cmd *cmd, t_list *arg_list, t_list *env_list);
 int		env(t_cmd *cmd, t_list *arg_list, t_list *env_list);
 int		pwd(t_cmd *cmd);
 int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list);

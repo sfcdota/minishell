@@ -53,7 +53,7 @@ char	*get_substr(char *begin, char *end)
 
 	if (!end)
 		end = to_delimiter(begin, '\0');
-	if (!begin || !*begin || !(out = ft_calloc(sizeof(char), end - begin + 2)))
+	if (!begin || !*begin || !(out = ft_calloc(sizeof(char), end - begin + 1)))
 		return (NULL);
 	ft_strlcpy(out, begin, end - begin + 1);
 	return (out);
@@ -74,12 +74,12 @@ char	*str_append(char **s1, char *s2)
 
 /*
 ** Replace 1st argument by 2nd like strdup, but with memory free of an old value
+** And returns 1st argument (pointer to begin of char array)
 */
 
 char	*str_replace(char *s1, char *s2)
 {
 	clear_ptr((void **)&s1);
-	s1 = ft_strdup(s2);
-	clear_ptr((void **)&s2);
+	s1 = s2;
 	return (s1);
 }
