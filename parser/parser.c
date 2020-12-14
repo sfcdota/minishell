@@ -323,31 +323,35 @@ char    *get_env(int *i, char *arg, t_list *env_list)
     *i = --j;
     return (get_env_value_by_key(env_name, env_list));
 }
+void utils_init(t_utils *utils)
+{
+    utils->i = -1;
+    utils->tmp = (char *)malloc(sizeof(char) * 1);
+    utils->tmp[0] = '\0';
+    utils->env_name = (char *)malloc(sizeof(char) * 1);
+    utils->env_name[0] = '\0';
+}
 
 char    *execute_$(char *arg, t_list *env_list)
 {
-    t_utils utils;
+    t_utils *utils;
 
-    utils.i = -1;
-    utils.tmp = (char *)malloc(sizeof(char) * 1);
-    utils.tmp[0] = '\0';
-    utils.env_name = (char *)malloc(sizeof(char) * 1);
-    utils.env_name[0] = '\0';
+    utils_init(utils);
     if (!arg)
         return (NULL);
-    while (arg[++utils.i])
+    while (arg[++utils->i])
     {
-        if (arg[utils.i] == '\'')
-            utils.tmp  = end_pars01(&utils, arg);
-        else if (arg[utils.i] == '"')
-            utils.tmp = end_pars02(&utils, arg, env_list);
-        else if (arg[utils.i] == '$')
-            utils.tmp = end_pars03(&utils, arg, env_list);
+        if (arg[utils->i] == '\'')
+            utils->tmp  = end_pars01(&utils, arg);
+        else if (arg[utils->i] == '"')
+            utils->tmp = end_pars02(&utils, arg, env_list);
+        else if (arg[utils->i] == '$')
+            utils->tmp = end_pars03(utils, arg, env_list);
         else
-            utils.tmp = strj(utils.tmp, arg[utils.i]);
+            utils->tmp = strj(utils->tmp, arg[utils->i]);
     }
-    free(utils.env_name);
-    return (utils.tmp);
+    free(utils->env_name);
+    return (utils->tmp);
 }
 
 void    end_pars(t_info *info)
@@ -390,22 +394,22 @@ void	parser(char *command, t_info *info)
         return ;
     cmd_count(command, info);
     end_pars(info);
-    if (info->cmd_list)
-        while (info->cmd_list)
-        {
-            cmd = info->cmd_list->content;
-            while (cmd->arg_list)
-            {
-                arg = cmd->arg_list->content;
-                cmd->arg_list = cmd->arg_list->next;
-            }
-            while (cmd->redirection_list)
-            {
-                redirection = cmd->redirection_list->content;
-                cmd->redirection_list = cmd->redirection_list->next;
-            }
-            info->cmd_list = info->cmd_list->next;
-        }
+//    if (info->cmd_list)
+//        while (info->cmd_list)
+//        {
+//            cmd = info->cmd_list->content;
+//            while (cmd->arg_list)
+//            {
+//                arg = cmd->arg_list->content;
+//                cmd->arg_list = cmd->arg_list->next;
+//            }
+//            while (cmd->redirection_list)
+//            {
+//                redirection = cmd->redirection_list->content;
+//                cmd->redirection_list = cmd->redirection_list->next;
+//            }
+//            info->cmd_list = info->cmd_list->next;
+//        }
 
 }
 //  echo -n hello world ; ls -la parser.c ; pwd lol hol gol

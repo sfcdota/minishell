@@ -22,6 +22,7 @@ int			cmd_count(char *cmd, t_info *info);
 char		*strj(char *s1, char s2);
 t_arg		*new_arg(char *name, int is_env);
 t_cmd		*new_cmd(void);
+void        utils_init(t_utils *utils);
 int         own_strchr(char *str, char ch);
 void        end_pars(t_info *info);
 char	    *get_env_value_by_key(char *key, t_list *env_list);
