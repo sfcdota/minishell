@@ -5,6 +5,7 @@
 typedef struct s_parser
 {
 	int		i;
+	int     type;
 	char	*str;
 	size_t	len;
 	t_cmd	*cmd1;
@@ -32,5 +33,12 @@ int 		own_strcmp(const char *s1, const char *s2);
 char        *end_pars01(t_utils *utils, char *arg);
 char        *end_pars02(t_utils *utils, char *arg, t_list *env_list);
 char        *end_pars03(t_utils *utils, char *arg, t_list *env_list);
-
+int         quote(t_info *info, t_pars *pars, char *line);
+int         dquote(t_info *info, t_pars *pars, char *line);
+void        cmd_update(t_pars *pars);
+int         logical_and(t_info *info, t_pars *pars, char *line);
+int         pipes(t_info *info, t_pars *pars, char *line);
+int         end_cmd(t_info *info, t_pars *pars, char *line);
+int         redirection_out(t_info *info, t_pars *pars, char *line);
+int         redirection_in(t_info *info, t_pars *pars, char *line);
 #endif
