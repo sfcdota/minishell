@@ -43,7 +43,7 @@ void	clear_env(void *env_content)
 ** Clear(free) args list
 */
 
-void	clear_args(void *arg_content)
+void	clear_arg(void *arg_content)
 {
 	t_arg *arg;
 
@@ -56,14 +56,14 @@ void	clear_args(void *arg_content)
 ** Clear(free) commands list
 */
 
-void	clear_cmds(void *cmd_content)
+void	clear_cmd(void *cmd_content)
 {
 	t_cmd *cmd;
 
 	cmd = (t_cmd *)cmd_content;
 	clear_ptr((void **)&cmd->name);
 	clear_ptr((void **)&cmd->flags);
-	ft_lstclear(&cmd->arg_list, clear_args);
+	ft_lstclear(&cmd->arg_list, clear_arg);
 	clear_ptr((void **)&cmd);
 }
 
@@ -73,7 +73,7 @@ void	clear_cmds(void *cmd_content)
 
 void	clear_all(t_info *info)
 {
-	ft_lstclear(&info->cmd_list, clear_cmds);
+	ft_lstclear(&info->cmd_list, clear_cmd);
 	ft_lstclear(&info->env_list, clear_env);
 	if (info->pipe_fd)
 	{
