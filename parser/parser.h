@@ -41,4 +41,6 @@ int         pipes(t_info *info, t_pars *pars, char *line);
 int         end_cmd(t_info *info, t_pars *pars, char *line);
 int         redirection_out(t_info *info, t_pars *pars, char *line);
 int         redirection_in(t_info *info, t_pars *pars, char *line);
+int         loop(t_info *info, t_pars *pars, char *line);
+
 #endif

@@ -42,44 +42,10 @@ int cmd_count(char *line, t_info *info)
     pars.i = -1;
     while (line[++pars.i])
     {
-        while (line[pars.i] == ' ')
-            pars.i++;
-        if (own_strchr("\\#=()*", line[pars.i]))
+
+        if (loop(info, &pars, line) == -1)
             return (-1);
-        if (line[pars.i] == '\'' && quote(info, &pars, line) == -1)
-        {
-                return (-1);
-        }
-        else if (line[pars.i] == '"' && dquote(info, &pars, line) == -1)
-        {
-                return (-1);
-        }
-        else if (pars.i + 2 < pars.len && line[pars.i] == '&' && line[pars.i + 1] == '&' && logical_and(info, &pars, line) == -1)
-        {
-            return (-1);
-        }
-        else if (line[pars.i] == '|' && pipes(info, &pars, line) == -1)
-        {
-            return (-1);
-        }
-        else if (line[pars.i] == ';' && end_cmd(info, &pars, line) == -1) {
-            return (-1);
-        }
-        else if (line[pars.i] == '<' && redirection_out(info, &pars, line) == -1)
-        {
-            return (-1);
-        }
-        else if (line[pars.i] == '>' && redirection_in(info, &pars, line) == -1)
-        {
-            return (-1);
-        }
-        else if (!own_strchr("\"' |;<>()#*&\\", line[pars.i]))
-        {
-            while (!own_strchr("'\"()#*& |;\\<>", line[pars.i]) && line[pars.i])
-                pars.str = strj(pars.str, line[pars.i++]);
-            pars.i--;
-        }
-        if (pars.str[0] && line[pars.i + 1] == ' ')
+        if (pars.str[0] && (line[pars.i + 1] == ' ' || line[pars.i + 1] == '>' || line[pars.i + 1] == '<'))
         {
             cmd_update(&pars);
         }
@@ -125,7 +91,7 @@ char    *get_env(int *i, char *arg, t_list *env_list)
     j = *i;
     env_name = (char *)malloc(sizeof(char) * 1);
     env_name[0] = '\0';
-    while (!own_strchr("$' =\"", arg[j]) && arg[j])
+    while (!own_strchr("$' =\\\"", arg[j]) && arg[j])
         env_name = strj(env_name, arg[j++]);
     *i = --j;
     return (get_env_value_by_key(env_name, env_list));
@@ -161,34 +127,7 @@ char    *execute_$(char *arg, t_list *env_list)
     return (utils->tmp);
 }
 
-void    end_pars(t_info *info)
-{
-    t_list      *cur_cmd;
-    t_cmd       *cmd;
-    t_list      *list;
-    t_arg       *arg;
 
-    cur_cmd = info->cmd_list;
-    if (info->cmd_list)
-        while (cur_cmd)
-        {
-            cmd = cur_cmd->content;
-            list = cur_cmd->content;
-            cmd->name = execute_$(cmd->name, info->env_list);
-            if (!cmd->flags)
-                cmd->flags = execute_$(cmd->flags, info->env_list);
-            while (list)
-            {
-                if (cmd->arg_list)
-                {
-                    arg = cmd->arg_list->content;
-                    arg->name = execute_$(arg->name, info->env_list);
-                }
-                list = list->next;
-            }
-            cur_cmd = cur_cmd->next;
-        }
-}
 
 
 void	parser(char *command, t_info *info)
@@ -200,11 +139,11 @@ void	parser(char *command, t_info *info)
     if (!command)
         return ;
     cmd_count(command, info);
-    end_pars(info);
     if (info->cmd_list)
         while (info->cmd_list)
         {
             cmd = info->cmd_list->content;
+            cmd->name = execute_$(cmd->name, info->env_list);
             while (cmd->arg_list)
             {
                 arg = cmd->arg_list->content;

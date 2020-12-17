@@ -2,6 +2,11 @@
 
 int     quote(t_info *info, t_pars *pars, char *line)
 {
+    if (line[pars->i + 1] == '\'')
+    {
+        pars->i++;
+        return (1);
+    }
     pars->str = strj(pars->str, line[pars->i++]);
     while (line[pars->i] != 39 && pars->i < pars->len)
         pars->str = strj(pars->str, line[pars->i++]);
@@ -12,6 +17,11 @@ int     quote(t_info *info, t_pars *pars, char *line)
 }
 int     dquote(t_info *info, t_pars *pars, char *line)
 {
+    if (line[pars->i + 1] == '"')
+    {
+        pars->i++;
+        return (1);
+    }
     pars->str = strj(pars->str, line[pars->i++]);
     while (line[pars->i] != 34 && pars->i < pars->len)
     {
@@ -30,7 +40,7 @@ void        cmd_update(t_pars *pars)
     if (!pars->cmd1->name)
         pars->cmd1->name = ft_strdup(pars->str);
     else if (!pars->cmd1->flags && !pars->cmd1->arg_list && !ft_strncmp("-n", pars->str, 2))
-        pars->cmd1->flags = pars->str;
+        pars->cmd1->flags = ft_strdup(pars->str);
     else
         ft_lstadd_back(&pars->cmd1->arg_list, ft_lstnew(new_arg(ft_strdup(pars->str), 0)));
     free(pars->str);

@@ -1,23 +1,23 @@
 #include "parser.h"
 
-int         end_cmd(t_info *info, t_pars *pars, char *line)
+static int         redirection_out_utils(t_info *info, t_pars *pars, char *line)
 {
-    if (pars->str[0])
+    while (!own_strchr("()#&* |;\\<>", line[pars->i]) && line[pars->i])
     {
-        cmd_update(pars);
-    }
-    pars->i++;
-    while (own_strchr("; ", line[pars->i]) && pars->i < pars->len)
-        if (line[pars->i++] == ';' || !pars->cmd1->name)
+        if (line[pars->i] != '"' && line[pars->i] != '\'')
+            pars->str = strj(pars->str, line[pars->i++]);
+        if (line[pars->i] == '"' && dquote(info, pars, line) == -1)
             return (-1);
-    if (pars->i != pars->len)
-    {
-        ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars->cmd1));
-        pars->cmd1 = new_cmd();
+        else if (line[pars->i] == '"')
+            pars->i++;
+        if (line[pars->i] == '\'' && quote(info, pars, line) == -1)
+            return (-1);
+        else if (line[pars->i] == '\'')
+            pars->i++;
     }
-    pars->i--;
     return (1);
 }
+
 int         redirection_out(t_info *info, t_pars *pars, char *line)
 {
     if (pars->str[0])
@@ -28,8 +28,9 @@ int         redirection_out(t_info *info, t_pars *pars, char *line)
     while (line[pars->i] == ' ' || line[pars->i] == '<')
         if (line[pars->i++] == '<')
             return (-1);
-    while (!own_strchr("'\"()$#&* |;\\<>", line[pars->i]) && line[pars->i])
-        pars->str = strj(pars->str, line[pars->i++]);
+    if (redirection_out_utils(info, pars, line) == -1)
+        return (-1);
+
     ft_lstadd_back(&pars->cmd1->redirection_list, ft_lstnew(new_redirection(ft_strdup(pars->str), 1)));
     if (pars->str)
     {
@@ -37,10 +38,12 @@ int         redirection_out(t_info *info, t_pars *pars, char *line)
         pars->str = malloc(sizeof(char) * 1);
         pars->str[0] = '\0';
     }
-    pars->i--;
+    if (line[pars->i] != ' ')
+        pars->i--;
     return (1);
 }
-int         redirection_in(t_info *info, t_pars *pars, char *line)
+
+static int         redirection_in_utils(t_info *info, t_pars *pars, char *line)
 {
     if (pars->str[0])
     {
@@ -62,8 +65,34 @@ int         redirection_in(t_info *info, t_pars *pars, char *line)
         pars->str = malloc(sizeof(char) * 1);
         pars->str[0] = '\0';
     }
-    while (!own_strchr("'\"()$#*& |;\\<>", line[pars->i]) && pars->i < pars->len)
-        pars->str = strj(pars->str, line[pars->i++]);
+    return (1);
+}
+
+static int         redirection_in_loop(t_info *info, t_pars *pars, char *line)
+{
+    while (!own_strchr("()#*& |;\\<>", line[pars->i]) && pars->i < pars->len)
+    {
+        if (line[pars->i] != '"' && line[pars->i] != '\'')
+            pars->str = strj(pars->str, line[pars->i++]);
+        if (line[pars->i] == '"' && dquote(info, pars, line) == -1)
+            return (-1);
+        else if (line[pars->i] == '"')
+            pars->i++;
+        if (line[pars->i] == '\'' && quote(info, pars, line) == -1)
+            return (-1);
+        else if (line[pars->i] == '\'')
+            pars->i++;
+    }
+    return (1);
+}
+
+int         redirection_in(t_info *info, t_pars *pars, char *line)
+{
+    if (redirection_in_utils(info, pars, line) == -1)
+        return (-1);
+    if (redirection_in_loop(info, pars, line) == -1)
+        return (-1);
+
     if (pars->str[0])
     {
         ft_lstadd_back(&pars->cmd1->redirection_list, ft_lstnew(new_redirection(ft_strdup(pars->str), pars->type)));
@@ -73,6 +102,10 @@ int         redirection_in(t_info *info, t_pars *pars, char *line)
     }
     else
         return (-1);
-    pars->i--;
+    if (line[pars->i] != ' ')
+        pars->i--;
     return (1);
 }
+
+
+//echo >ds$path"kak dela"'''hello world'>c hoho
