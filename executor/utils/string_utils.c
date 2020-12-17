@@ -80,6 +80,7 @@ char	*str_append(char **s1, char *s2)
 char	*str_replace(char *s1, char *s2)
 {
 	clear_ptr((void **)&s1);
-	s1 = s2;
+	s1 = ft_strdup(s2);	
+	clear_ptr((void **)&s2);
 	return (s1);
 }
