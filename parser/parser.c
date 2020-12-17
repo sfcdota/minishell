@@ -156,6 +156,6 @@ void	parser(char *command, t_info *info)
 //            }
 //            info->cmd_list = info->cmd_list->next;
 //        }
-
+ 
 }
 //  echo -n hello world ; ls -la parser.c ; pwd lol hol gol
