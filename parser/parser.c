@@ -109,6 +109,7 @@ char    *execute_$(char *arg, t_list *env_list)
 {
     t_utils *utils;
 
+    utils = malloc(sizeof(t_utils));
     utils_init(utils);
     if (!arg)
         return (NULL);
