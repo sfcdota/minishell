@@ -132,30 +132,30 @@ char    *execute_$(char *arg, t_list *env_list)
 
 void	parser(char *command, t_info *info)
 {
-    t_cmd           *cmd;
-    t_arg	        *arg;
-    t_redirection   *redirection;
+//    t_cmd           *cmd;
+//    t_arg	        *arg;
+//    t_redirection   *redirection;
 
     if (!command)
         return ;
     cmd_count(command, info);
-    if (info->cmd_list)
-        while (info->cmd_list)
-        {
-            cmd = info->cmd_list->content;
-            cmd->name = execute_$(cmd->name, info->env_list);
-            while (cmd->arg_list)
-            {
-                arg = cmd->arg_list->content;
-                cmd->arg_list = cmd->arg_list->next;
-            }
-            while (cmd->redirection_list)
-            {
-                redirection = cmd->redirection_list->content;
-                cmd->redirection_list = cmd->redirection_list->next;
-            }
-            info->cmd_list = info->cmd_list->next;
-        }
+//    if (info->cmd_list)
+//        while (info->cmd_list)
+//        {
+//            cmd = info->cmd_list->content;
+//            cmd->name = execute_$(cmd->name, info->env_list);
+//            while (cmd->arg_list)
+//            {
+//                arg = cmd->arg_list->content;
+//                cmd->arg_list = cmd->arg_list->next;
+//            }
+//            while (cmd->redirection_list)
+//            {
+//                redirection = cmd->redirection_list->content;
+//                cmd->redirection_list = cmd->redirection_list->next;
+//            }
+//            info->cmd_list = info->cmd_list->next;
+//        }
 
 }
 //  echo -n hello world ; ls -la parser.c ; pwd lol hol gol
