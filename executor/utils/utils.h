@@ -19,8 +19,8 @@
 
 void					clear_ptr(void **ptr);
 void					clear_env(void *env_content);
-void					clear_arg(void *arg_content);
-void					clear_cmd(void *cmd_content);
+void					clear_args(void *arg_content);
+void					clear_cmds(void *cmd_content);
 void					clear_all(t_info *info);
 
 /*
