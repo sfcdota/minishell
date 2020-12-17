@@ -43,6 +43,6 @@ int main(int argc, char **argv, char *envp[])
 		parser(line, &info);
 		execution(&info, info.cmd_list, info.env_list);
 		clear_ptr((void **)&line);
-		ft_lstclear(&info.cmd_list, clear_cmds);
+		ft_lstclear(&info.cmd_list, clear_cmd);
 	}
 }
