@@ -60,7 +60,8 @@ char	*get_substr(char *begin, char *end)
 }
 
 /*
-** Concats two strings into the first argument with memory free of an old value
+** Concats two strings into the first argument with memory free of only 
+** an old value
 */
 
 char	*str_append(char **s1, char *s2)
@@ -70,6 +71,7 @@ char	*str_append(char **s1, char *s2)
 	temp = ft_strjoin(*s1, s2);
 	clear_ptr((void **)s1);
 	*s1 = temp;
+	return (*s1);
 }
 
 /*
@@ -77,10 +79,14 @@ char	*str_append(char **s1, char *s2)
 ** And returns 1st argument (pointer to begin of char array)
 */
 
-char	*str_replace(char *s1, char *s2)
+char	*str_replace(char **s1, char *s2)
 {
-	clear_ptr((void **)&s1);
-	s1 = ft_strdup(s2);	
-	clear_ptr((void **)&s2);
-	return (s1);
+	if (!ft_strcmp(*s1, s2))
+	{
+		clear_ptr((void **)&s2);
+		return (*s1);
+	}
+	clear_ptr((void **)s1);
+	*s1 = s2;	
+	return (*s1);
 }

@@ -60,6 +60,38 @@ int		is_correct_var(char *s)
 	return (1);
 }
 
+int		extra_argument(char *arg_name, t_list *arg_list, t_arg *arg)
+{
+	int is_exist;
+	char **temp;
+	t_list *new;
+	char *kek;
+	
+	is_exist = 0;
+	new = NULL;
+	while (arg_name && *arg_name && *arg_name == ' ')
+		arg_name++;
+	while (arg_name && *arg_name && *arg_name != ' ')
+		arg_name++;
+	while (!is_exist && arg_name && *arg_name)
+	{
+		if (*arg_name == ' ')
+		{
+			arg->name = str_replace(&arg->name, get_substr(arg->name, arg_name));
+			temp = ft_split(arg_name, ' ');
+			is_exist = !is_exist;
+			while (temp && *temp)
+				ft_lstadd_back(&new, ft_lstnew(temp++));
+			if (arg_list->next)
+				new->next = arg_list->next;
+			arg_list->next = new;
+		}
+		else
+			arg_name++;
+	}
+	return (is_exist);
+}
+
 /*
 ** Export execution
 */
@@ -67,33 +99,35 @@ int		is_correct_var(char *s)
 int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 {
 	t_arg *arg;
-	char *var_str;
 	char *temp;
 	char *temp_arg;
 	t_env *env;
 
-	if (arg_list)
+	if (!arg_list)
+		print_env_list(env_list, "declare -x ", cmd->std_out);
+	while (arg_list)
 	{
 		arg = (t_arg *)(arg_list->content);
-		var_str = execute_$(arg->name, env_list);
-		temp = to_delimiter(var_str, '=');
-		if (is_correct_var(var_str))
+		str_replace(&arg->name, execute_$(arg->name, env_list));
+		temp = to_delimiter(arg->name, '=');
+		if (extra_argument(temp ? temp + 1 : temp, arg_list, arg));
+			temp = to_delimiter(arg->name, '=');
+		if (is_correct_var(arg->name))
 		{
-			temp_arg = get_substr(var_str, temp);
+			temp_arg = get_substr(arg->name, temp);
 			if ((env = get_env_by_key(temp_arg, env_list)))
 			{
-				str_replace(temp_arg, get_substr(temp ? temp + 1 : temp, NULL));
+				str_replace(&temp_arg, get_substr(temp ? temp + 1 : temp, NULL));
 				if (ft_strcmp(env->value, temp_arg))
-					str_replace(env->value, temp_arg);
+					str_replace(&env->value, temp_arg);
 			}
 			else
 				add_env(&env_list, temp_arg,
 					get_substr(temp ? temp + 1 : temp, NULL), 0);
 		}
 		else
-			return (ret_with_msg("export : ", var_str, ": not a valid identifier", 1));//var is not correct
+			return (ret_with_msg("export : ", arg->name, ": not a valid identifier", 1));//var is not correct
+		arg_list = arg_list->next;
 	}
-	else
-		print_env_list(env_list, "declare -x ", cmd->std_out);
 	return (0);
 }

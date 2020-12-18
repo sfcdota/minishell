@@ -33,28 +33,29 @@ int     own_strchr(char *str, char ch)
 
 int cmd_count(char *line, t_info *info)
 {
-    t_pars	pars;
+    t_pars	*pars;
 
-    pars.cmd1 = new_cmd();
-    pars.len = ft_strlen(line);
-    pars.str = malloc(sizeof(char));
-    *(pars.str) = '\0';
-    pars.i = -1;
-    while (line[++pars.i])
+    pars = malloc(sizeof(t_pars));
+    pars->cmd1 = new_cmd();
+    pars->len = ft_strlen(line);
+    pars->str = malloc(sizeof(char));
+    *(pars->str) = '\0';
+    pars->i = -1;
+    while (line[++pars->i])
     {
 
-        if (loop(info, &pars, line) == -1)
+        if (loop(info, pars, line) == -1)
             return (-1);
-        if (pars.str[0] && (line[pars.i + 1] == ' ' || line[pars.i + 1] == '>' || line[pars.i + 1] == '<'))
+        if (pars->str[0] && (line[pars->i + 1] == ' ' || line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
         {
-            cmd_update(&pars);
+            cmd_update(pars);
         }
     }
-    if (pars.str[0])
-        cmd_update(&pars);
-    ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars.cmd1));
-    pars.cmd1 = new_cmd();
-    free(pars.str);
+    if (pars->str[0])
+        cmd_update(pars);
+    ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars->cmd1));
+    pars->cmd1 = new_cmd();
+    free(pars->str);
     return (1);
 }
 int		own_strcmp(const char *s1, const char *s2)
@@ -133,9 +134,9 @@ char    *execute_$(char *arg, t_list *env_list)
 
 void	parser(char *command, t_info *info)
 {
-//    t_cmd           *cmd;
-//    t_arg	        *arg;
-//    t_redirection   *redirection;
+    t_cmd           *cmd;
+    t_arg	        *arg;
+    t_redirection   *redirection;
 
     if (!command)
         return ;

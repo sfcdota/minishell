@@ -38,6 +38,6 @@ int		ret_with_msg(char *message_prefix, char *message, char *message_suffix
 
 void	errno_set(t_info *info)
 {
-	str_replace(get_env_by_key("?", info->env_list)->value, ft_itoa(errno));
+	str_replace(&get_env_by_key("?", info->env_list)->value, ft_itoa(errno));
 	ft_putendl_fd(strerror(errno), STDOUT_FILENO);
 }

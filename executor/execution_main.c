@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "fcntl.h"
 
 /*
 ** Modifying str to lower register symbols
@@ -49,6 +50,45 @@ int		execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info)
 		return (binary(cmd, cmd->arg_list, env_list, info));
 }
 
+int 	redirection_fds(t_cmd *cmd)
+{
+	t_redirection *redirection;
+	
+	while (cmd->redirection_list)
+	{
+		redirection = (t_redirection *)(cmd->redirection_list->content);
+		if (redirection->type == 1)
+		{
+			if (cmd->std_in)
+				if (cmd->std_in != 0)
+					close(cmd->std_in);
+			if ((cmd->std_in = open(redirection->filename, O_RDONLY)) == -1)
+				return (ret_with_msg("minishell: ",redirection->filename,
+					": No such file or directory", 1));
+		}
+		if (redirection->type == 2)
+		{
+			if (cmd->std_out)
+				if (cmd->std_out != 1)
+					close(cmd->std_out);
+			if ((cmd->std_out = open(redirection->filename, O_WRONLY | O_TRUNC | O_APPEND | O_CREAT)) == -1)
+				return (ret_with_msg("minishell: ",redirection->filename,
+					": File creation failed", 1));
+		}
+		if (redirection->type == 3)
+		{
+			if (cmd->std_out)
+				if (cmd->std_out != 1)
+					close(cmd->std_out);
+			if ((cmd->std_out = open(redirection->filename, O_WRONLY | O_APPEND | O_CREAT)) == -1)
+				return (ret_with_msg("minishell: ",redirection->filename,
+					": File creation failed", 1));
+		}
+		cmd->redirection_list = cmd->redirection_list->next;
+	}
+	return (0);
+}
+
 /*
 ** Main execution function
 */
@@ -61,8 +101,9 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 	while (cmd_list && (cmd = ((t_cmd *)(cmd_list->content)))->name)
 	{
 		//cmd = ((t_cmd *)(cmd_list->content));
-		str_replace(cmd->name, execute_$(cmd->name, env_list));
+		str_replace(&cmd->name, execute_$(cmd->name, env_list));
 		uncapitalize_str(info->uncap_cmd = ft_strdup(cmd->name));
+		redirection_fds(cmd);
 		if (cmd->cmd_delimeter)
 		{
 			if (!cmd_list->next)
@@ -91,8 +132,12 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 				close(info->pipe_fd[0]);
 			}
 		}
-		str_replace(get_env_by_key("?", env_list)->value, ft_itoa(res));
+		str_replace(&get_env_by_key("?", env_list)->value, ft_itoa(res));
 		clear_ptr((void **)&info->uncap_cmd);
+		if (cmd->std_in != 0)
+			close(cmd->std_in);
+		if (cmd->std_out != 1)
+			close(cmd->std_out);
 		cmd_list = cmd_list->next;
 	}
 }

@@ -22,8 +22,10 @@ int	go_to_dir(char *path, t_list *env_list)
 	t_env *oldpwd;
 	char *temp;
 	
-	temp = ft_strdup("/");
-	path = str_append(&temp, str_replace(path, ft_strtrim(path, "/")));
+	temp = ft_strdup(path);
+	str_replace(&temp, ft_strtrim(temp, "/"));
+	path = ft_strdup("/");
+	path = str_append(&path, temp);
 	if (chdir(path))
 		return (1);
 	pwd = get_env_by_key("PWD", env_list);
@@ -87,7 +89,7 @@ int	cd(t_cmd *cmd, t_list *args, t_list *env_list)
 			, get_env_val_by_key("PWD", env_list), ": OLDPWD is not set"
 			, go_to_dir(get_env_val_by_key("OLDPWD", env_list), env_list)));
 	}
-	str_replace(arg->name, execute_$(arg->name, env_list));
+	str_replace(&arg->name, execute_$(arg->name, env_list));
 	return (ret_with_msg(cmd->name, NULL
 		, ": directory not found or unistd.h chdir function failed"
 		, go_to_dir(arg->name, env_list)));
