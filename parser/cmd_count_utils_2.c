@@ -38,8 +38,7 @@ int         redirection_out(t_info *info, t_pars *pars, char *line)
         pars->str = malloc(sizeof(char) * 1);
         pars->str[0] = '\0';
     }
-    if (line[pars->i] != ' ' && pars->len != pars->i)
-        pars->i--;
+    pars->i--;
     return (1);
 }
 
@@ -102,8 +101,7 @@ int         redirection_in(t_info *info, t_pars *pars, char *line)
     }
     else
         return (-1);
-    if (line[pars->i] != ' ' && pars->len != pars->i)
-        pars->i--;
+    pars->i--;
     return (1);
 }
 

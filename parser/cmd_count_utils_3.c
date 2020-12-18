@@ -27,6 +27,12 @@ int         loop(t_info *info, t_pars *pars, char *line)
         return (-1);
     if (line[pars->i] == '\'' && quote(info, pars, line) == -1)
         return (-1);
+    else if (!own_strchr("\"' |;<>()#*&\\", line[pars->i]))
+    {
+        while (!own_strchr("'\"()#*& |;\\<>", line[pars->i]) && line[pars->i])
+            pars->str = strj(pars->str, line[pars->i++]);
+        pars->i--;
+    }
     else if (line[pars->i] == '"' && dquote(info, pars, line) == -1)
         return (-1);
     else if (pars->i + 2 < pars->len && line[pars->i] == '&' && line[pars->i + 1] == '&' && logical_and(info, &pars, line) == -1)
@@ -39,11 +45,5 @@ int         loop(t_info *info, t_pars *pars, char *line)
         return (-1);
     else if (line[pars->i] == '>' && redirection_in(info, pars, line) == -1)
         return (-1);
-    else if (!own_strchr("\"' |;<>()#*&\\", line[pars->i]))
-    {
-        while (!own_strchr("'\"()#*& |;\\<>", line[pars->i]) && line[pars->i])
-            pars->str = strj(pars->str, line[pars->i++]);
-        pars->i--;
-    }
     return (1);
 }
