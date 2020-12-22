@@ -21,12 +21,17 @@ int	go_to_dir(char *path, t_list *env_list)
 	t_env *pwd;
 	t_env *oldpwd;
 	char *temp;
-	
-	temp = ft_strdup(path);
-	str_replace(&temp, ft_strtrim(temp, "/"));
-	path = ft_strdup("/");
-	path = str_append(&path, temp);
-	if (chdir(path))
+	char *temp_path;
+
+	temp_path = path;
+	while (temp_path && *temp_path)
+		temp_path++;
+	temp_path--;
+	while(*temp_path == '/')
+		temp_path--;
+	temp_path++;
+	temp = get_substr(path, temp_path);
+	if (chdir(temp))
 		return (1);
 	pwd = get_env_by_key("PWD", env_list);
 	oldpwd = get_env_by_key("OLDPWD", env_list);

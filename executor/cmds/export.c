@@ -109,8 +109,8 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 		arg = (t_arg *)(arg_list->content);
 		str_replace(&arg->name, execute_$(arg->name, env_list));
 		temp = to_delimiter(arg->name, '=');
-		//if (extra_argument(temp ? temp + 1 : temp, arg_list, arg));
-		//	temp = to_delimiter(arg->name, '=');
+//		if (extra_argument(temp ? temp + 1 : temp, arg_list, arg));
+//			temp = to_delimiter(arg->name, '=');
 		if (is_correct_var(arg->name))
 		{
 			temp_arg = get_substr(arg->name, temp);
