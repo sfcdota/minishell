@@ -20,12 +20,29 @@ void	sighandler(int signum)
 {
 	if (signum == SIGINT)
 	{
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		ft_putstr_fd(SHELL_PREFIX, STDOUT_FILENO);
+		if (info.pid)
+		{
+			kill(info.pid, SIGINT);
+			ft_putendl_fd("", STDOUT_FILENO);
+			dup2(info.base_in, STDIN_FILENO);
+		}
+		else
+		{
+			ft_putstr_fd("\n", STDOUT_FILENO);
+			ft_putstr_fd(SHELL_PREFIX, STDOUT_FILENO);
+		}
 	}
 	if (signum == SIGQUIT)
 	{
-		ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
+		if (info.pid)
+		{
+			kill(info.pid, SIGQUIT);
+			ft_putendl_fd("Quit", STDOUT_FILENO);
+			dup2(info.base_in, STDIN_FILENO);
+
+		}
+		else
+			ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
 	}
 }
 
@@ -36,12 +53,10 @@ void	sighandler(int signum)
 void	sighandler_child(int signum)
 {
 	if (signum == SIGINT)
-	{
-
-	}
+		ft_exit(NULL, 130, &info);
 	if (signum == SIGQUIT)
 	{
-
+		ft_exit(NULL, 131, &info);
 	}
 }
 
@@ -51,8 +66,16 @@ void	sighandler_child(int signum)
 
 void	setsignals(pid_t pid)
 {
-	signal(SIGQUIT, sighandler);
-	signal(SIGINT, sighandler);
+	if (pid)
+	{
+		signal(SIGQUIT, sighandler);
+		signal(SIGINT, sighandler);
+	}
+	else
+	{
+		signal(SIGQUIT, sighandler_child);
+		signal(SIGINT, sighandler_child);
+	}
 }
 
 /*

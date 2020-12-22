@@ -67,6 +67,7 @@ typedef struct			s_info
 	int 				base_in;
 }						t_info;
 
+t_info info;
 
 t_arg *new_arg(char *name, int is_env);
 t_cmd	*new_cmd(void);

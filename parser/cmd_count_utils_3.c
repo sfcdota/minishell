@@ -35,7 +35,7 @@ int         loop(t_info *info, t_pars *pars, char *line)
     }
     else if (line[pars->i] == '"' && dquote(info, pars, line) == -1)
         return (-1);
-    else if (pars->i + 2 < pars->len && line[pars->i] == '&' && line[pars->i + 1] == '&' && logical_and(info, &pars, line) == -1)
+    else if (pars->i + 2 < pars->len && line[pars->i] == '&' && line[pars->i + 1] == '&' && logical_and(info, pars, line) == -1)
         return (-1);
     else if (line[pars->i] == '|' && pipes(info, pars, line) == -1)
         return (-1);

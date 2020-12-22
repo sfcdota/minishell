@@ -66,4 +66,6 @@ int	exit_(t_list *arg_list, t_list *env_list, t_info *info)
 				, info);
 		ft_exit(NULL, kek % 256, info);
 	}
+	else
+		ft_exit(NULL, 0, info);
 }

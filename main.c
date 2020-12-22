@@ -19,7 +19,6 @@
 int main(int argc, char **argv, char *envp[])
 {
 	char *line;
-	t_info info;
 	int res;
 
 	init_info(&info, envp);
@@ -27,7 +26,7 @@ int main(int argc, char **argv, char *envp[])
 	while (1)
 	{
 		if (write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1 ||
-		(res = get_next_line(STDIN_FILENO, &line)) == -1)
+		(res = get_next_line(info.base_in, &line)) == -1)
 		{
 			errno_set(&info);
 			continue ;
