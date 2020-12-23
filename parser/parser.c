@@ -43,13 +43,10 @@ int cmd_count(char *line, t_info *info)
     pars->i = -1;
     while (line[++pars->i])
     {
-
         if (loop(info, pars, line) == -1)
             return (-1);
         if (pars->str[0] && (line[pars->i + 1] == ' ' || line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
-        {
             cmd_update(pars);
-        }
     }
     if (pars->str[0])
         cmd_update(pars);
@@ -60,7 +57,7 @@ int cmd_count(char *line, t_info *info)
 }
 int		own_strcmp(const char *s1, const char *s2)
 {
-    if ((!s1 && !s2))
+    if ((!s1[0] || !s2[0]))
         return (0);
     while (*s1 == *s2 && (*s1 != '\0' || *s2 != '\0'))
     {
@@ -106,6 +103,52 @@ void utils_init(t_utils *utils)
     utils->env_name[0] = '\0';
 }
 
+char    *pure_$(char *arg, t_info *info)
+{
+    t_utils *utils;
+
+    utils = malloc(sizeof(t_utils));
+    utils_init(utils);
+    while (arg[++utils->i])
+        if (arg[utils->i] == '$')
+            utils->tmp = end_pars03(utils, arg, info->env_list);
+        else if (arg[utils->i] == '\'')
+        {
+            while (arg[++utils->i] != '\'' || !arg[utils->i])
+                utils->tmp = strj(utils->tmp, arg[utils->i]);
+            if (!arg[utils->i])
+                return (utils->tmp);
+        }
+        else
+            utils->tmp = strj(utils->tmp, arg[utils->i]);
+    return (utils->tmp);
+}
+
+char    *fixe_line(char *arg){
+    t_utils *utils;
+
+    utils = malloc(sizeof(t_utils));
+    utils_init(utils);
+    while (arg[++utils->i])
+        if (arg[utils->i] == '\'')
+        {
+            while (arg[++utils->i] != '\'' || !arg[utils->i])
+                utils->tmp = strj(utils->tmp, arg[utils->i]);
+            if (!arg[utils->i])
+                return (utils->tmp);
+        }
+        else if (arg[utils->i] == '"')
+        {
+            while (arg[++utils->i] != '"' || !arg[utils->i])
+                utils->tmp = strj(utils->tmp, arg[utils->i]);
+            if (!arg[utils->i])
+                return (utils->tmp);
+        }
+        else
+            utils->tmp = strj(utils->tmp, arg[utils->i]);
+    return (utils->tmp);
+}
+
 char    *execute_$(char *arg, t_list *env_list)
 {
     t_utils *utils;
@@ -129,9 +172,6 @@ char    *execute_$(char *arg, t_list *env_list)
     return (utils->tmp);
 }
 
-
-
-
 void	parser(char *command, t_info *info)
 {
     t_cmd           *cmd;
@@ -140,9 +180,10 @@ void	parser(char *command, t_info *info)
 
     if (!command)
         return ;
+    command = pure_$(command, info);
     cmd_count(command, info);
 //    if (info->cmd_list)
-//        while (info->cmd_list)
+//        while (info->ccmd_list)
 //        {
 //            cmd = info->cmd_list->content;
 //            cmd->name = execute_$(cmd->name, info->env_list);

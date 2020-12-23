@@ -36,15 +36,27 @@ char *end_pars02(t_utils *utils, char *arg, t_list *env_list) {
 }
 
 char *end_pars03(t_utils *utils, char *arg, t_list *env_list) {
+    int i;
+    char *tmp;
+
+    tmp = malloc(sizeof(char) * 1);
+    tmp[0] = '\0';
+    i = -1;
     utils->i++;
     if (arg[utils->i] == ' ' || !arg[utils->i])
         utils->tmp = strj(utils->tmp, '$');
     else {
         utils->env_name = ft_strdup(get_env(&utils->i, arg, env_list));
-        utils->tmp = ft_strjoin(utils->tmp, utils->env_name);
+        while (utils->env_name[++i])
+            if(utils->env_name[i] == ' ')
+                while (utils->env_name[++i]);
+            else
+                tmp = strj(tmp, utils->env_name[i]);
+        utils->tmp = ft_strjoin(utils->tmp, tmp);
     }
         free(utils->env_name);
         utils->env_name = malloc(sizeof(char) * 1);
         utils->env_name[0] = '\0';
     return (utils->tmp);
 }
+
