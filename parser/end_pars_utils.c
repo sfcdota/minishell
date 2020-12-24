@@ -47,12 +47,7 @@ char *end_pars03(t_utils *utils, char *arg, t_list *env_list) {
         utils->tmp = strj(utils->tmp, '$');
     else {
         utils->env_name = ft_strdup(get_env(&utils->i, arg, env_list));
-        while (utils->env_name[++i])
-            if(utils->env_name[i] == ' ')
-                while (utils->env_name[++i]);
-            else
-                tmp = strj(tmp, utils->env_name[i]);
-        utils->tmp = ft_strjoin(utils->tmp, tmp);
+        utils->tmp = ft_strjoin(utils->tmp, utils->env_name);
     }
         free(utils->env_name);
         utils->env_name = malloc(sizeof(char) * 1);
