@@ -62,7 +62,7 @@ int 	redirection_fds(t_cmd *cmd)
 			if (cmd->std_in)
 				if (cmd->std_in != 0)
 					close(cmd->std_in);
-6			dup2(open(redirection->filename, O_RDONLY), STDIN_FILENO);
+				dup2(open(redirection->filename, O_RDONLY), STDIN_FILENO);
 //			if ((info.base_in = open(redirection->filename, O_RDONLY)) == -1)
 //				return (ret_with_msg("minishell: ",redirection->filename,
 //					": No such file or directory", 1));
