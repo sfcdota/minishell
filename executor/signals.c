@@ -18,31 +18,25 @@
 
 void	sighandler(int signum)
 {
+	ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
 	if (signum == SIGINT)
 	{
-		if (info.pid)
+		if (info.pid == -1)
 		{
-			kill(info.pid, SIGINT);
-			ft_putendl_fd("", STDOUT_FILENO);
-			dup2(info.base_in, STDIN_FILENO);
-		}
-		else
-		{
+			dup2(STDIN_FILENO, info.base_in);
 			ft_putstr_fd("\n", STDOUT_FILENO);
 			ft_putstr_fd(SHELL_PREFIX, STDOUT_FILENO);
 		}
+		else
+			ft_putendl_fd("^C", STDOUT_FILENO);
 	}
 	if (signum == SIGQUIT)
 	{
-		if (info.pid)
+		if (info.pid != -1)
 		{
 			kill(info.pid, SIGQUIT);
-			ft_putendl_fd("Quit", STDOUT_FILENO);
-			dup2(info.base_in, STDIN_FILENO);
-
+			ft_putendl_fd("^\\Quit: 3", STDOUT_FILENO);
 		}
-		else
-			ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
 	}
 }
 
@@ -54,10 +48,10 @@ void	sighandler_child(int signum)
 {
 	if (signum == SIGINT)
 		ft_exit(NULL, 130, &info);
-	if (signum == SIGQUIT)
-	{
-		ft_exit(NULL, 131, &info);
-	}
+//	if (signum == SIGQUIT)
+//	{
+//		ft_exit(NULL, 131, &info);
+//	}
 }
 
 /*

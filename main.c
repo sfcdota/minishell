@@ -13,8 +13,7 @@
 #include "minishell.h"
 #include "parser/parser.h"
 #include "executor/executor.h"
-
-
+#include "fcntl.h"
 
 int main(int argc, char **argv, char *envp[])
 {
@@ -23,8 +22,10 @@ int main(int argc, char **argv, char *envp[])
 
 	init_info(&info, envp);
 	setsignals(info.pid);
+	//info.base_in = open("/dev/stdin", O_RDONLY | O_NONBLOCK | O_EXLOCK | O_NOCTTY);
 	while (1)
 	{
+		ft_putstr_fd("  \b\b", STDIN_FILENO);
 		if (write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1 ||
 		(res = get_next_line(info.base_in, &line)) == -1)
 		{
@@ -37,8 +38,11 @@ int main(int argc, char **argv, char *envp[])
 			clear_ptr((void **)&line);
 			continue ;
 		}
-		if (res == 0 && !*line)
-			ft_exit("exit", 0, &info);
+		if (res == 0)
+		{
+			if (!*line)
+				ft_exit("exit", 0, &info);
+		}
 		parser(line, &info);
 		execution(&info, info.cmd_list, info.env_list);
 		clear_ptr((void **)&line);

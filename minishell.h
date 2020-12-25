@@ -43,8 +43,8 @@ typedef struct			s_cmd
 	char				*flags;
 	t_list				*arg_list;
 	t_list				*redirection_list;
-	int					std_in;
-	int					std_out;
+	int					in;
+	int					out;
 	int					cmd_delimeter; // 0 for empty, 1 for pipe, 2 for &&, 3 for ||
 }						t_cmd;
 
@@ -60,6 +60,7 @@ typedef struct			s_info
 	t_list				*cmd_list;
 	t_list				*env_list;
 	pid_t				pid;
+	pid_t				pipe_pid;
 	int					*pipe_fd;
 	char 				*line;
 	char				*uncap_cmd;

@@ -63,7 +63,7 @@ int	check_cdpath(t_cmd *cmd, char *path)
 			is_not_found = 0;
 		i++;
 	}
-	ft_putstr_fd(dirs[i], cmd->std_out);
+	ft_putstr_fd(dirs[i], STDOUT_FILENO);
 	while (i--)
 		clear_ptr((void **)&dirs[i]);
 	clear_ptr((void **)dirs);

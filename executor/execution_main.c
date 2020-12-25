@@ -59,31 +59,22 @@ int 	redirection_fds(t_cmd *cmd)
 		redirection = (t_redirection *)(cmd->redirection_list->content);
 		if (redirection->type == 1)
 		{
-			if (cmd->std_in)
-				if (cmd->std_in != 0)
-					close(cmd->std_in);
-				dup2(open(redirection->filename, O_RDONLY), STDIN_FILENO);
-//			if ((info.base_in = open(redirection->filename, O_RDONLY)) == -1)
-//				return (ret_with_msg("minishell: ",redirection->filename,
-//					": No such file or directory", 1));
+			if (cmd->in != -1)
+				close(cmd->in);
+			cmd->in = dup2(STDIN_FILENO, open(redirection->filename, O_RDONLY));
 		}
 		if (redirection->type == 2)
 		{
-			if (cmd->std_out)
-				if (cmd->std_out != 1)
-					close(cmd->std_out);
-			if ((cmd->std_out = open(redirection->filename, O_WRONLY | O_TRUNC | O_APPEND | O_CREAT)) == -1)
-				return (ret_with_msg("minishell: ",redirection->filename,
-					": File creation failed", 1));
+			if (cmd->out != -1)
+				close(cmd->out);
+			cmd->out = dup2(STDOUT_FILENO, open(redirection->filename,
+				O_WRONLY | O_TRUNC | O_APPEND | O_CREAT));
 		}
 		if (redirection->type == 3)
 		{
-			if (cmd->std_out)
-				if (cmd->std_out != 1)
-					close(cmd->std_out);
-			if ((cmd->std_out = open(redirection->filename, O_WRONLY | O_APPEND | O_CREAT)) == -1)
-				return (ret_with_msg("minishell: ",redirection->filename,
-					": File creation failed", 1));
+			if (cmd->out != -1)
+				close(cmd->out);
+			cmd->out = dup2(STDOUT_FILENO, open(redirection->filename, O_WRONLY | O_APPEND | O_CREAT));
 		}
 		cmd->redirection_list = cmd->redirection_list->next;
 	}
@@ -98,7 +89,6 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 {
 	t_cmd	*cmd;
 	int		res;
-
 	while (cmd_list && (cmd = ((t_cmd *)(cmd_list->content)))->name)
 	{
 		//cmd = ((t_cmd *)(cmd_list->content));
@@ -111,11 +101,10 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 				return (1);//error around |
 			info->pipe_fd = ft_calloc(2, sizeof(int));
 			res = pipe(info->pipe_fd);
-			if ((info->pid = fork()) == 0)
+			if ((info->pipe_pid = fork()) == 0)
 			{
-				setsignals(info->pid);
-				close(info->pipe_fd[0]);
-				dup2(info->pipe_fd[1], info->base_in);
+				setsignals(info->pipe_pid);
+				dup2(info->pipe_fd[1], STDOUT_FILENO);
 				res = execute_cmd(cmd, env_list, info);
 				close(info->pipe_fd[1]);
 				exit(res);
@@ -128,17 +117,19 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 			res = execute_cmd(cmd, env_list, info);
 			if(info->pipe_fd)
 			{
-				waitpid(info->pid, &res,
+				waitpid(info->pipe_pid, &res,
 					WUNTRACED);//peredelat' (ili kak to obrabotat oshibki, t.k do etogo moglo bit' ne cmd->cmd_delimeter)
 				close(info->pipe_fd[0]);
 			}
+			info->pid = -1;
+			info->pipe_pid = -1;
 		}
+		if (cmd->in != -1)
+			close(cmd->in);
+		if (cmd->out != -1)
+			close(cmd->out);
 		str_replace(&get_env_by_key("?", env_list)->value, ft_itoa(res));
 		clear_ptr((void **)&info->uncap_cmd);
-		if (cmd->std_in != 0)
-			close(cmd->std_in);
-		if (cmd->std_out != 1)
-			close(cmd->std_out);
 		cmd_list = cmd_list->next;
 	}
 }

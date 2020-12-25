@@ -103,7 +103,7 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 	t_env *env;
 
 	if (!arg_list)
-		print_env_list(env_list, "declare -x ", cmd->std_out);
+		print_env_list(env_list, "declare -x ", STDOUT_FILENO);
 	while (arg_list)
 	{
 		arg = (t_arg *)(arg_list->content);

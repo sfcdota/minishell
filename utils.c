@@ -20,6 +20,7 @@ void init_info(t_info *info, char **envp)
 	info->pipe_fd = NULL;
 	info->line = NULL;
 	info->pid = -1;
+	info->pipe_pid = -1;
 }
 
 t_cmd	*new_cmd()
@@ -31,8 +32,8 @@ t_cmd	*new_cmd()
 	cmd->flags = NULL;
 	cmd->arg_list = NULL;
 	cmd->is_env = 0;
-	cmd->std_in = 0;
-	cmd->std_out = 1;
+	cmd->in = -1;
+	cmd->out = -1;
 	cmd->cmd_delimeter = 0;
 	return (cmd);
 }

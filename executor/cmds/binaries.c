@@ -78,27 +78,26 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 {
 	char		*filename;
 	struct stat	buf;
-	pid_t		pid;
 	int			retval;
 
-	if ((pid = fork()) == 0)
+	if ((info->pid = fork()) == 0)
 	{
 		setsignals(info->pid);
 		if (!stat(cmd->name, &buf))
 		{
 			ft_lstadd_front(&arg_list, ft_lstnew(new_arg(cmd->name, 0)));
-			exit(ret_with_msg("Binary execution had error.", NULL, NULL
+			exit(ret_with_msg(NULL, "Binary execution had error.\n", NULL
 				, execve(cmd->name, arg_list_to_array(cmd->flags, arg_list)
 				, env_list_to_array(env_list)) == -1 ? 1 : 0));
 		}
 		if (!(filename = check_path(cmd, get_env_val_by_key("PATH", env_list))))
 			exit(ret_with_msg(cmd->name, " : ", "No such command.", 1));
 		ft_lstadd_front(&arg_list, ft_lstnew(new_arg(cmd->name, 0)));
-		exit(ret_with_msg("Binary execution had error.", NULL, NULL
+		exit(ret_with_msg(NULL, "Binary execution had error.\n", NULL
 			, execve(filename, arg_list_to_array(cmd->flags, arg_list)
 			, env_list_to_array(env_list)) == -1 ? 1 : 0));
 	}
 	return (ret_with_msg(cmd->name, NULL
 		, " : Fork or wait for fork to execute binary is failed."
-		, pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1));
+		, info->pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1));
 }
