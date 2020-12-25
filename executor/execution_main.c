@@ -62,7 +62,7 @@ int 	redirection_fds(t_cmd *cmd)
 			if (cmd->std_in)
 				if (cmd->std_in != 0)
 					close(cmd->std_in);
-			dup2(open(redirection->filename, O_RDONLY), STDIN_FILENO);
+6			dup2(open(redirection->filename, O_RDONLY), STDIN_FILENO);
 //			if ((info.base_in = open(redirection->filename, O_RDONLY)) == -1)
 //				return (ret_with_msg("minishell: ",redirection->filename,
 //					": No such file or directory", 1));
@@ -105,7 +105,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 		str_replace(&cmd->name, execute_$(cmd->name, env_list));
 		uncapitalize_str(info->uncap_cmd = ft_strdup(cmd->name));
 		redirection_fds(cmd);
-		if (cmd->cmd_delimeter)
+		if (cmd->cmd_delimeter == 1)
 		{
 			if (!cmd_list->next)
 				return (1);//error around |
@@ -115,7 +115,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 			{
 				setsignals(info->pid);
 				close(info->pipe_fd[0]);
-				dup2(info->pipe_fd[1], 1);
+				dup2(info->pipe_fd[1], info->base_in);
 				res = execute_cmd(cmd, env_list, info);
 				close(info->pipe_fd[1]);
 				exit(res);
@@ -140,6 +140,5 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 		if (cmd->std_out != 1)
 			close(cmd->std_out);
 		cmd_list = cmd_list->next;
-		dup(STDIN_FILENO);
 	}
 }
