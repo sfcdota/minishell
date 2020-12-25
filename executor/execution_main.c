@@ -67,17 +67,21 @@ int 	redirection_fds(t_cmd *cmd)
 		{
 			if (cmd->out != -1)
 				close(cmd->out);
-			cmd->out = dup2(STDOUT_FILENO, open(redirection->filename,
-				O_WRONLY | O_TRUNC | O_APPEND | O_CREAT));
+			cmd->out = open(redirection->filename,
+				O_WRONLY | O_TRUNC | O_APPEND | O_CREAT);
 		}
 		if (redirection->type == 3)
 		{
 			if (cmd->out != -1)
 				close(cmd->out);
-			cmd->out = dup2(STDOUT_FILENO, open(redirection->filename, O_WRONLY | O_APPEND | O_CREAT));
+			cmd->out =  open(redirection->filename, O_WRONLY | O_APPEND | O_CREAT);
 		}
 		cmd->redirection_list = cmd->redirection_list->next;
 	}
+	if (cmd->out == - 1)
+		cmd->out = STDOUT_FILENO;
+	if (cmd->in == -1)
+		cmd->in = STDIN_FILENO;
 	return (0);
 }
 
@@ -124,10 +128,12 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 			info->pid = -1;
 			info->pipe_pid = -1;
 		}
-		if (cmd->in != -1)
+		if (cmd->in != STDIN_FILENO)
 			close(cmd->in);
-		if (cmd->out != -1)
+		cmd->in = -1;
+		if (cmd->out != STDOUT_FILENO)
 			close(cmd->out);
+		cmd->out = -1;
 		str_replace(&get_env_by_key("?", env_list)->value, ft_itoa(res));
 		clear_ptr((void **)&info->uncap_cmd);
 		cmd_list = cmd_list->next;

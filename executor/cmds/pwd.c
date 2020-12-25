@@ -23,6 +23,6 @@ int	pwd(t_cmd *cmd)
 
 	if (!(pwd = getcwd(NULL, 228)))
 		return (ret_with_msg(cmd->name, GETCWD_ERROR, NULL, 1));
-	ft_putendl_fd(pwd, STDOUT_FILENO);
+	ft_putendl_fd(pwd, cmd->out);
 	return (0);
 }
