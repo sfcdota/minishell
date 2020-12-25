@@ -36,6 +36,12 @@ char *end_pars02(t_utils *utils, char *arg, t_list *env_list) {
 }
 
 char *end_pars03(t_utils *utils, char *arg, t_list *env_list) {
+    int i;
+    char *tmp;
+
+    tmp = malloc(sizeof(char) * 1);
+    tmp[0] = '\0';
+    i = -1;
     utils->i++;
     if (arg[utils->i] == ' ' || !arg[utils->i])
         utils->tmp = strj(utils->tmp, '$');
@@ -48,3 +54,4 @@ char *end_pars03(t_utils *utils, char *arg, t_list *env_list) {
         utils->env_name[0] = '\0';
     return (utils->tmp);
 }
+

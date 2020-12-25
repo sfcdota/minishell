@@ -19,7 +19,7 @@ int         end_cmd(t_info *info, t_pars *pars, char *line)
     return (1);
 }
 
-int         loop(t_info *info, t_pars *pars, char *line)
+int          loop(t_info *info, t_pars *pars, char *line)
 {
     while (line[pars->i] == ' ')
         pars->i++;
