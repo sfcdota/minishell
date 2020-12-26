@@ -59,28 +59,27 @@ int 	redirection_fds(t_cmd *cmd)
 		redirection = (t_redirection *)(cmd->redirection_list->content);
 		if (redirection->type == 1)
 		{
-			if (cmd->in != -1)
+			if (cmd->in != -2)
 				close(cmd->in);
-			cmd->in = dup2(STDIN_FILENO, open(redirection->filename, O_RDONLY));
+			cmd->in = open(redirection->filename, O_RDONLY, 0666);
 		}
 		if (redirection->type == 2)
 		{
-			if (cmd->out != -1)
+			if (cmd->out != -2)
 				close(cmd->out);
-			cmd->out = open(redirection->filename,
-				O_WRONLY | O_TRUNC | O_APPEND | O_CREAT);
+			cmd->out = open(redirection->filename, O_WRONLY | O_TRUNC | O_APPEND | O_CREAT, 0666);
 		}
 		if (redirection->type == 3)
 		{
-			if (cmd->out != -1)
+			if (cmd->out != -2)
 				close(cmd->out);
-			cmd->out =  open(redirection->filename, O_WRONLY | O_APPEND | O_CREAT);
+			cmd->out =  open(redirection->filename, O_WRONLY | O_APPEND | O_CREAT, 0666);
 		}
 		cmd->redirection_list = cmd->redirection_list->next;
 	}
-	if (cmd->out == - 1)
+	if (cmd->out == -2)
 		cmd->out = STDOUT_FILENO;
-	if (cmd->in == -1)
+	if (cmd->in == -2)
 		cmd->in = STDIN_FILENO;
 	return (0);
 }
@@ -107,6 +106,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 			res = pipe(info->pipe_fd);
 			if ((info->pipe_pid = fork()) == 0)
 			{
+				close(info->pipe_fd[0]);
 				setsignals(info->pipe_pid);
 				dup2(info->pipe_fd[1], STDOUT_FILENO);
 				res = execute_cmd(cmd, env_list, info);

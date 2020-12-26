@@ -32,8 +32,8 @@ t_cmd	*new_cmd()
 	cmd->flags = NULL;
 	cmd->arg_list = NULL;
 	cmd->is_env = 0;
-	cmd->in = -1;
-	cmd->out = -1;
+	cmd->in = -2;
+	cmd->out = -2;
 	cmd->cmd_delimeter = 0;
 	return (cmd);
 }

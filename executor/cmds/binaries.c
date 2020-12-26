@@ -83,19 +83,23 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 	if ((info->pid = fork()) == 0)
 	{
 		setsignals(info->pid);
+		if (cmd->cmd_delimeter == 0)
+		{
+			if (cmd->out != STDOUT_FILENO)
+				dup2(cmd->out, STDOUT_FILENO);
+			if (cmd->in != STDIN_FILENO)
+				dup2(cmd->in, STDIN_FILENO);
+		}
+		ft_lstadd_front(&arg_list, ft_lstnew(new_arg(cmd->name, 0)));
+		filename = check_path(cmd, get_env_val_by_key("PATH", env_list));
+		cmd->name = filename ? filename : cmd->name;
 		if (!stat(cmd->name, &buf))
 		{
-			ft_lstadd_front(&arg_list, ft_lstnew(new_arg(cmd->name, 0)));
 			exit(ret_with_msg(NULL, "Binary execution had error.\n", NULL
 				, execve(cmd->name, arg_list_to_array(cmd->flags, arg_list)
 				, env_list_to_array(env_list)) == -1 ? 1 : 0));
 		}
-		if (!(filename = check_path(cmd, get_env_val_by_key("PATH", env_list))))
-			exit(ret_with_msg(cmd->name, " : ", "No such command.", 1));
-		ft_lstadd_front(&arg_list, ft_lstnew(new_arg(cmd->name, 0)));
-		exit(ret_with_msg(NULL, "Binary execution had error.\n", NULL
-			, execve(filename, arg_list_to_array(cmd->flags, arg_list)
-			, env_list_to_array(env_list)) == -1 ? 1 : 0));
+		exit(ret_with_msg(NULL, "No such command.\n", NULL, 1));
 	}
 	return (ret_with_msg(cmd->name, NULL
 		, " : Fork or wait for fork to execute binary is failed."
