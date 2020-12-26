@@ -61,5 +61,5 @@ char					*to_delimiter(char *envp_string, char delimiter);
 char					*get_substr(char *begin, char *end);
 char					*str_append(char **s1, char *s2);
 char					*str_replace(char **s1, char *s2);
-
+void					uncapitalize_str(char *str);
 #endif

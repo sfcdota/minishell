@@ -16,8 +16,11 @@ char	*ft_strdup(const char *s)
 {
 	unsigned char *t;
 
-	t = ft_calloc(ft_strlen(s) + 1, sizeof(char));
-	if (t)
-		return (ft_memmove(t, s, ft_strlen(s) + 1));
+	if (s)
+	{
+		t = ft_calloc(ft_strlen(s) + 1, sizeof(char));
+		if (t)
+			return (ft_memmove(t, s, ft_strlen(s) + 1));
+	}
 	return (NULL);
 }

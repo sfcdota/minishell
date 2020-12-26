@@ -94,14 +94,12 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 		filename = check_path(cmd, get_env_val_by_key("PATH", env_list));
 		cmd->name = filename ? filename : cmd->name;
 		if (!stat(cmd->name, &buf))
-		{
-			exit(ret_with_msg(NULL, "Binary execution had error.\n", NULL
-				, execve(cmd->name, arg_list_to_array(cmd->flags, arg_list)
-				, env_list_to_array(env_list)) == -1 ? 1 : 0));
-		}
-		exit(ret_with_msg(NULL, "No such command.\n", NULL, 1));
+			exit(execve(cmd->name, arg_list_to_array(cmd->flags, arg_list)
+				, env_list_to_array(env_list)) == -1 ? 1 : errno);
+		exit(1);
 	}
 	return (ret_with_msg(cmd->name, NULL
-		, " : Fork or wait for fork to execute binary is failed."
-		, info->pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1));
+		, " : No such command / Execute binary is failed."
+		, (info->pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1 ||
+		retval != 0) ? 1 : errno));
 }

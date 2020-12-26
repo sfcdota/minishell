@@ -56,7 +56,8 @@ int	exit_(t_list *arg_list, t_list *env_list, t_info *info)
 	if (arg_list)
 	{
 		arg = ((t_arg *)(arg_list->content));
-		code = execute_$(arg->name, env_list);
+		code =  pure_$(arg->name, info);
+		code = execute_$(code, env_list);
 		ft_putendl_fd("exit", STDOUT_FILENO);
 		kek = ft_atoi(code);
 		if (!is_str_numeric(code) || (*code == '-' && !kek)
@@ -67,5 +68,5 @@ int	exit_(t_list *arg_list, t_list *env_list, t_info *info)
 		ft_exit(NULL, kek % 256, info);
 	}
 	else
-		ft_exit(NULL, 0, info);
+		ft_exit(NULL, errno, info);
 }

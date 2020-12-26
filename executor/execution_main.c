@@ -14,19 +14,6 @@
 #include "fcntl.h"
 
 /*
-** Modifying str to lower register symbols
-*/
-
-void	uncapitalize_str(char *str)
-{
-	while (str && *str)
-	{
-		ft_tolower(*str);
-		str++;
-	}
-}
-
-/*
 ** Executes command by comparing command name
 */
 
@@ -92,49 +79,52 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 {
 	t_cmd	*cmd;
 	int		res;
-	while (cmd_list && (cmd = ((t_cmd *)(cmd_list->content)))->name)
+	while (cmd_list)
 	{
-		//cmd = ((t_cmd *)(cmd_list->content));
+		cmd = ((t_cmd *)(cmd_list->content));
+		str_replace(&cmd->name, pure_$(cmd->name, info));
 		str_replace(&cmd->name, execute_$(cmd->name, env_list));
 		uncapitalize_str(info->uncap_cmd = ft_strdup(cmd->name));
 		redirection_fds(cmd);
-		if (cmd->cmd_delimeter == 1)
+		if (cmd->name)
 		{
-			if (!cmd_list->next)
-				return (1);//error around |
-			info->pipe_fd = ft_calloc(2, sizeof(int));
-			res = pipe(info->pipe_fd);
-			if ((info->pipe_pid = fork()) == 0)
+			if (cmd->cmd_delimeter == 1)
 			{
-				close(info->pipe_fd[0]);
-				setsignals(info->pipe_pid);
-				dup2(info->pipe_fd[1], STDOUT_FILENO);
-				res = execute_cmd(cmd, env_list, info);
+				if (!cmd_list->next)
+					return (1);//error around |
+				info->pipe_fd = ft_calloc(2, sizeof(int));
+				res = pipe(info->pipe_fd);
+				if ((info->pipe_pid = fork()) == 0)
+				{
+					close(info->pipe_fd[0]);
+					setsignals(info->pipe_pid);
+					dup2(info->pipe_fd[1], STDOUT_FILENO);
+					res = execute_cmd(cmd, env_list, info);
+					close(info->pipe_fd[1]);
+					exit(res);
+				}
 				close(info->pipe_fd[1]);
-				exit(res);
-			}
-			close(info->pipe_fd[1]);
-			dup2(info->pipe_fd[0], 0);
-		}
-		else
-		{
-			res = execute_cmd(cmd, env_list, info);
-			if(info->pipe_fd)
+				dup2(info->pipe_fd[0], 0);
+			} else
 			{
-				waitpid(info->pipe_pid, &res,
-					WUNTRACED);//peredelat' (ili kak to obrabotat oshibki, t.k do etogo moglo bit' ne cmd->cmd_delimeter)
-				close(info->pipe_fd[0]);
+				res = execute_cmd(cmd, env_list, info);
+				if (info->pipe_fd)
+				{
+					waitpid(info->pipe_pid, &res,
+						WUNTRACED);//peredelat' (ili kak to obrabotat oshibki, t.k do etogo moglo bit' ne cmd->cmd_delimeter)
+					close(info->pipe_fd[0]);
+				}
+				info->pid = -1;
+				info->pipe_pid = -1;
 			}
-			info->pid = -1;
-			info->pipe_pid = -1;
+			if (cmd->in != STDIN_FILENO)
+				close(cmd->in);
+			cmd->in = -1;
+			if (cmd->out != STDOUT_FILENO)
+				close(cmd->out);
+			cmd->out = -1;
+			str_replace(&get_env_by_key("?", env_list)->value, ft_itoa(res));
 		}
-		if (cmd->in != STDIN_FILENO)
-			close(cmd->in);
-		cmd->in = -1;
-		if (cmd->out != STDOUT_FILENO)
-			close(cmd->out);
-		cmd->out = -1;
-		str_replace(&get_env_by_key("?", env_list)->value, ft_itoa(res));
 		clear_ptr((void **)&info->uncap_cmd);
 		cmd_list = cmd_list->next;
 	}

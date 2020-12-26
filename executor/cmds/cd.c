@@ -40,7 +40,7 @@ int	go_to_dir(char *path, t_list *env_list)
 	if (oldpwd->is_hidden == 2)
 		oldpwd->is_hidden = 0;
 	pwd->value = getcwd(NULL, 228);
-	return (0);
+	return (errno);
 }
 
 /*
@@ -86,7 +86,8 @@ int	cd(t_cmd *cmd, t_list *args, t_list *env_list)
 	&& !check_cdpath(cmd, out))
 		return (0);
 	if (!args || !ft_strcmp("~", arg->name) || !ft_strcmp("--", arg->name))
-		return (go_to_dir(get_env_val_by_key("HOME", env_list), env_list));
+		return (ret_with_msg(cmd->name, ": Something went wrong.", NULL,
+			go_to_dir(get_env_val_by_key("HOME", env_list), env_list)));
 	else
 	{
 		if (!(ft_strcmp("-", arg->name)))
@@ -94,6 +95,7 @@ int	cd(t_cmd *cmd, t_list *args, t_list *env_list)
 			, get_env_val_by_key("PWD", env_list), ": OLDPWD is not set"
 			, go_to_dir(get_env_val_by_key("OLDPWD", env_list), env_list)));
 	}
+	str_replace(&arg->name, pure_$(arg->name, &info));
 	str_replace(&arg->name, execute_$(arg->name, env_list));
 	return (ret_with_msg(cmd->name, NULL
 		, ": directory not found or unistd.h chdir function failed"

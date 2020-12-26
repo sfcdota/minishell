@@ -23,6 +23,7 @@ int	unset(t_list *arg_list, t_list *env_list)
 	while (arg_list)
 	{
 		arg = (t_arg *)(arg_list->content);
+		str_replace(&arg->name, pure_$(arg->name, &info));
 		str_replace(&arg->name, execute_$(arg->name, env_list));
 		//extra_argument(arg->name, arg_list, arg);
 		if (!ft_strcmp("PWD", arg->name) || !ft_strcmp("OLDPWD", arg->name) ||
@@ -33,5 +34,5 @@ int	unset(t_list *arg_list, t_list *env_list)
 				, get_env_list_by_key(arg->name, env_list), clear_env);
 		arg_list = arg_list->next;
 	}
-	return (0);
+	return (errno);
 }

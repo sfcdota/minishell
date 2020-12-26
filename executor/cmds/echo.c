@@ -23,6 +23,7 @@ int	echo(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 	while (arg_list)
 	{
 		arg = ((t_arg *)((arg_list)->content));
+		str_replace(&arg->name, pure_$(arg->name, &info));
 		str_replace(&arg->name, execute_$(arg->name, env_list));
 		if (!arg->name || write(cmd->out, arg->name, ft_strlen(arg->name)) == -1)
 			return (ret_with_msg("echo: ", "unistd write function failed"
@@ -32,5 +33,5 @@ int	echo(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 		arg_list = arg_list->next;
 	}
 	return (ret_with_msg("echo: ", NULL, "unistd write function failed",
-		!cmd->flags && write(cmd->out, "\n", 1) == -1));
+		(!cmd->flags && write(cmd->out, "\n", 1) == -1)) ? 1 : errno);
 }

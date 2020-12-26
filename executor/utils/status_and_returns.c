@@ -21,14 +21,16 @@
 int		ret_with_msg(char *message_prefix, char *message, char *message_suffix
 , int is_failed)
 {
-	if (is_failed)
+	if (is_failed == 1)
 	{
 		ft_putstr_fd(message_prefix, STDOUT_FILENO);
 		ft_putstr_fd(message, STDOUT_FILENO);
 		ft_putendl_fd(message_suffix, STDOUT_FILENO);
 	}
-	else
+	else if (!is_failed)
 		ft_putendl_fd(message, STDOUT_FILENO);
+	else
+		strerror(is_failed);
 	return (is_failed);
 }
 

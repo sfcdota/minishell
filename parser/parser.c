@@ -50,6 +50,8 @@ char    *pure_$(char *arg, t_info *info)
 {
     t_utils *utils;
 
+    if (!arg)
+    	return (NULL);
     utils = malloc(sizeof(t_utils));
     utils_init(utils);
     while (arg[++utils->i])
@@ -97,6 +99,6 @@ void	parser(char *command, t_info *info)
 {
     if (!command)
         return ;
-    command = pure_$(command, info);
+//    command = pure_$(command, info);
     cmd_count(command, info);
 }

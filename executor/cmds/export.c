@@ -107,6 +107,7 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 	while (arg_list)
 	{
 		arg = (t_arg *)(arg_list->content);
+		str_replace(&arg->name, pure_$(arg->name, &info));
 		str_replace(&arg->name, execute_$(arg->name, env_list));
 		temp = to_delimiter(arg->name, '=');
 //		if (extra_argument(temp ? temp + 1 : temp, arg_list, arg));
@@ -128,5 +129,5 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 			return (ret_with_msg("export : ", arg->name, ": not a valid identifier", 1));//var is not correct
 		arg_list = arg_list->next;
 	}
-	return (0);
+	return (errno);
 }
