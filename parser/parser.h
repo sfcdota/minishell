@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ljerrica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/25 09:55:24 by ljerrica          #+#    #+#             */
+/*   Updated: 2020/12/25 09:55:27 by ljerrica         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSER_H
 # define PARSER_H
 # include "../minishell.h"
@@ -25,7 +37,6 @@ t_arg		*new_arg(char *name, int is_env);
 t_cmd		*new_cmd(void);
 void        utils_init(t_utils *utils);
 int         own_strchr(char *str, char ch);
-void        end_pars(t_info *info);
 char	    *get_env_value_by_key(char *key, t_list *env_list);
 char        *get_env(int *i, char *arg, t_list *env_list);
 char        *execute_$(char *arg, t_list *env_list);
@@ -43,6 +54,5 @@ int         redirection_out(t_info *info, t_pars *pars, char *line);
 int         redirection_in(t_info *info, t_pars *pars, char *line);
 int         loop(t_info *info, t_pars *pars, char *line);
 char        *pure_$(char *arg, t_info *info);
-char        *fixe_line(char *arg);
 
 #endif
