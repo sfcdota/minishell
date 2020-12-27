@@ -60,16 +60,10 @@ char		*end_pars02(t_utils *utils, char *arg, t_list *env_list)
 
 char		*end_pars03(t_utils *utils, char *arg, t_list *env_list)
 {
-	int		i;
-	char	*tmp;
-
-	tmp = malloc(sizeof(char) * 1);
-	tmp[0] = '\0';
-	i = -1;
 	utils->i++;
 	if (arg[utils->i] == ' ' || !arg[utils->i])
 		utils->tmp = strj(utils->tmp, '$');
-	else
+	else if (arg[utils->i] < 48 || arg[utils->i] > 57)
 	{
 		utils->env_name = ft_strdup(get_env(&utils->i, arg, env_list));
 		utils->tmp = ft_strjoin(utils->tmp, utils->env_name);
