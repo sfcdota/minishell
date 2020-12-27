@@ -15,7 +15,7 @@
 t_list				*ft_lstnew(void *content)
 {
 	t_list *t;
-	
+
 	t = malloc(sizeof(t_list));
 	if (t)
 	{

@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbach <cbach@student.21-school.ru>         +#+  +:+       +#+        */
+/*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/24 17:16:26 by cbach             #+#    #+#             */
-/*   Updated: 2020/11/08 20:03:53 by cbach            ###   ########.fr       */
+/*   Updated: 2020/12/27 14:56:08 by cbach            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
- 
+
 void	ft_bzero(void *s, size_t n)
 {
 	unsigned char	*t;

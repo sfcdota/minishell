@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbach <cbach@student.21-school.ru>         +#+  +:+       +#+        */
+/*   By: cbach <cbach@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/17 02:06:30 by cbach             #+#    #+#             */
-/*   Updated: 2020/11/08 20:04:07 by cbach            ###   ########.fr       */
+/*   Updated: 2020/12/27 14:56:32 by cbach            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define LIBFT_H
 # include <stdlib.h>
 
-typedef struct	 	s_list
+typedef struct		s_list
 {
 	void			*content;
 	struct s_list	*next;

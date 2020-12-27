@@ -14,38 +14,41 @@
 #include "parser/parser.h"
 #include "executor/executor.h"
 
-int main(int argc, char **argv, char *envp[])
+int	main(int argc, char **argv, char *envp[])
 {
-	char *line;
 	int res;
 
-	init_info(&info, envp);
-	setsignals(info.pid);
-	res = 1;
+	init_info(&g_info, envp);
+	setsignals(g_info.pid);
 	while (1)
 	{
-		if ((write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1) ||
-		(res = get_next_line(info.base_in, &line)) == -1)
+		if ((write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1)
+		|| (res = get_next_line(g_info.base_in, &g_info.line)) == -1)
 		{
-			str_replace(&get_env_by_key("?", info.env_list)->value, ft_itoa(errno));
+			str_replace(&get_env_by_key("?", g_info.env_list)->value,
+				ft_itoa(errno));
 			strerror(errno);
 			continue ;
 		}
 		if (res > MAX_CMD_LENGTH)
 		{
-			ft_putendl_fd("Cmd length over the max value of 262144 symbols", STDOUT_FILENO);
-			clear_ptr((void **)&line);
+			ft_putendl_fd("Cmd length over  262144 symbols", STDOUT_FILENO);
+			clear_ptr((void **)&g_info.line);
 			continue ;
 		}
-//		if (res == 0)
-//			ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
-		if (res == 0 && !*line)
-			ft_exit("exit", 0, &info);
+		if (res == 0 && !*g_info.line)
+			ft_exit("exit", 0, &g_info);
 		if (res == 0)
 			ft_putstr_fd("\n", STDOUT_FILENO);
-		parser(line, &info);
-		execution(&info, info.cmd_list, info.env_list);
-		clear_ptr((void **)&line);
-		ft_lstclear(&info.cmd_list, clear_cmd);
+		parser(g_info.line, &g_info);
+		execution(&g_info, g_info.cmd_list, g_info.env_list);
+		clear_ptr((void **)&g_info.line);
+		ft_lstclear(&g_info.cmd_list, clear_cmd);
 	}
 }
+
+/*
+** maybe for ^D
+** if (res == 0)
+** 	ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
+*/

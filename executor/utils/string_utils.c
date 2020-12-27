@@ -62,7 +62,7 @@ char	*get_substr(char *begin, char *end)
 }
 
 /*
-** Concats two strings into the first argument with memory free of only 
+** Concats two strings into the first argument with memory free of only
 ** an old value
 */
 
@@ -83,8 +83,14 @@ char	*str_append(char **s1, char *s2)
 
 char	*str_replace(char **s1, char *s2)
 {
+	if (!s2)
+		return (*s1);
+	if (!ft_strcmp(*s1, s2))
+	{
+		clear_ptr((void **)&s2);
+		return (*s1);
+	}
 	clear_ptr((void **)s1);
-	*s1 = ft_strdup(s2);
-	clear_ptr((void **)&s2);
+	*s1 = s2;
 	return (*s1);
 }

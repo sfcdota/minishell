@@ -34,12 +34,13 @@ char	*check_path(t_cmd *cmd, char *path)
 		if (!stat(dirs[i], &buf))
 		{
 			temp = dirs[i];
+			i--;
 			break ;
 		}
 		i++;
 	}
-	while (i--)
-		clear_ptr((void **)&dirs[i]);
+	while (i >= 0)
+		clear_ptr((void **)&dirs[i--]);
 	clear_ptr((void **)dirs);
 	return (temp);
 }
@@ -76,10 +77,11 @@ char	**arg_list_to_array(char *flags, t_list *arg_list)
 
 int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 {
-	char		*filename;
+	int 		res;
 	struct stat	buf;
 	int			retval;
 
+	res = 0;
 	if ((info->pid = fork()) == 0)
 	{
 		setsignals(info->pid);
@@ -90,16 +92,14 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 			if (cmd->in != STDIN_FILENO)
 				dup2(cmd->in, STDIN_FILENO);
 		}
-		ft_lstadd_front(&arg_list, ft_lstnew(new_arg(cmd->name, 0)));
-		filename = check_path(cmd, get_env_val_by_key("PATH", env_list));
-		cmd->name = filename ? filename : cmd->name;
+		ft_lstadd_front(&cmd->arg_list, ft_lstnew(new_arg(cmd->name, 0)));
+		cmd->name = check_path(cmd, get_env_val_by_key("PATH", env_list));
 		if (!stat(cmd->name, &buf))
-			exit(execve(cmd->name, arg_list_to_array(cmd->flags, arg_list)
-				, env_list_to_array(env_list)) == -1 ? 1 : errno);
+			exit(res = execve(cmd->name, arg_list_to_array(cmd->flags,
+				cmd->arg_list), env_list_to_array(env_list)) == -1 ? 1 : errno);
 		exit(1);
 	}
-	return (ret_with_msg(cmd->name, NULL
-		, " : No such command / Execute binary is failed."
-		, (info->pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1 ||
-		retval != 0) ? 1 : errno));
+	return (ret_with_msg(cmd->name, NULL, " : No such command / Execute binary"
+		" is failed.", (info->pid == -1 || waitpid(info->pid, &retval,
+			WUNTRACED) == -1 || retval != 0) ? 1 : errno));
 }

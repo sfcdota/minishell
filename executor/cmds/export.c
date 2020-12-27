@@ -78,7 +78,7 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 	while (arg_list)
 	{
 		arg = (t_arg *)(arg_list->content);
-		str_replace(&arg->name, pure_$(arg->name, &info));
+		str_replace(&arg->name, pure_$(arg->name, &g_info));
 		str_replace(&arg->name, execute_$(arg->name, env_list));
 		temp = to_delimiter(arg->name, '=');
 		if (is_correct_var(arg->name))

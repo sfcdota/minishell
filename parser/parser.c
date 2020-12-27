@@ -99,6 +99,6 @@ void	parser(char *command, t_info *info)
 {
     if (!command)
         return ;
-//    command = pure_$(command, info);
+//    command = pure_$(command, g_info);
     cmd_count(command, info);
 }

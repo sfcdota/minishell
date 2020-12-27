@@ -16,16 +16,17 @@
 # include "utils/utils.h"
 # include "cmds/commands.h"
 # include "../parser/parser.h"
+
 /*
 **		MAIN SHELL COMMAND
 */
-int execution(t_info *info, t_list *cmd_list, t_list *env_list);
+int		execution(t_info *info, t_list *cmd_list, t_list *env_list);
 
 /*
 **		SIGNAL FUNCTIONSS
 */
-void sighandler(int signum);
-void sighandler_child(int signum);
-void setsignals(pid_t pid);
+void	sighandler(int signum);
+void	sighandler_child(int signum);
+void	setsignals(pid_t pid);
 
 #endif

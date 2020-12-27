@@ -12,7 +12,7 @@
 
 #include "executor/executor.h"
 
-void init_info(t_info *info, char **envp)
+void			init_info(t_info *info, char **envp)
 {
 	info->cmd_list = NULL;
 	info->env_list = envs_to_list(envp);
@@ -23,7 +23,7 @@ void init_info(t_info *info, char **envp)
 	info->pipe_pid = -1;
 }
 
-t_cmd	*new_cmd()
+t_cmd			*new_cmd(void)
 {
 	t_cmd *cmd;
 
@@ -38,7 +38,7 @@ t_cmd	*new_cmd()
 	return (cmd);
 }
 
-t_arg *new_arg(char *name, int is_env)
+t_arg			*new_arg(char *name, int is_env)
 {
 	t_arg *arg;
 
@@ -48,7 +48,7 @@ t_arg *new_arg(char *name, int is_env)
 	return (arg);
 }
 
-t_redirection *new_redirection(char *filename, int type)
+t_redirection	*new_redirection(char *filename, int type)
 {
 	t_redirection *redirection;
 
@@ -58,7 +58,8 @@ t_redirection *new_redirection(char *filename, int type)
 	return (redirection);
 }
 
-void	ft_lst_elem_delete(t_list **lst, t_list *elem, void (*del)(void *))
+void			ft_lst_elem_delete(t_list **lst, t_list *elem,
+	void (*del)(void *))
 {
 	if (lst && *lst && elem)
 	{

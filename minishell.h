@@ -23,36 +23,41 @@
 # define SHELL_PREFIX "minishell> "
 # define MAX_CMD_LENGTH 262144
 
-
 typedef struct			s_arg
 {
 	char				*name;
 	int					is_env;
 }						t_arg;
 
+/*
+** type: 0 for empty, 1 = <, 2 = <<, 3 = >, 4 = >>
+*/
 typedef struct			s_redirection
 {
-	char 				*filename;
-	int 				type; // 0 for empty, 1 = <, 2 = <<, 3 = >, 4 = >>
+	char				*filename;
+	int					type;
 }						t_redirection;
 
+/*
+** cmd_delimiter: 0 for empty, 1 for pipe, 2 for &&, 3 for ||
+*/
 typedef struct			s_cmd
 {
 	char				*name;
-	int 				is_env;
+	int					is_env;
 	char				*flags;
 	t_list				*arg_list;
 	t_list				*redirection_list;
 	int					in;
 	int					out;
-	int					cmd_delimeter; // 0 for empty, 1 for pipe, 2 for &&, 3 for ||
+	int					cmd_delimeter;
 }						t_cmd;
 
 typedef struct			s_env
 {
 	char				*key;
 	char				*value;
-	int 				is_hidden;
+	int					is_hidden;
 }						t_env;
 
 typedef struct			s_info
@@ -62,17 +67,18 @@ typedef struct			s_info
 	pid_t				pid;
 	pid_t				pipe_pid;
 	int					*pipe_fd;
-	char 				*line;
+	char				*line;
 	char				*uncap_cmd;
 	int					status;
-	int 				base_in;
+	int					base_in;
 }						t_info;
 
-t_info info;
+t_info					g_info;
 
-t_arg *new_arg(char *name, int is_env);
-t_cmd	*new_cmd(void);
-void init_info(t_info *info, char **envp);
-t_redirection *new_redirection(char *filename, int type);
-void	ft_lst_elem_delete(t_list **lst, t_list *elem, void (*del)(void *));
+t_arg					*new_arg(char *name, int is_env);
+t_cmd					*new_cmd(void);
+void					init_info(t_info *info, char **envp);
+t_redirection			*new_redirection(char *filename, int type);
+void					ft_lst_elem_delete(t_list **lst, t_list *elem,
+	void (*del)(void *));
 #endif

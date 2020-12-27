@@ -68,7 +68,7 @@ void	clear_cmd(void *cmd_content)
 }
 
 /*
-** Clear(free) info(shell) structure
+** Clear(free) g_info(shell) structure
 */
 
 void	clear_all(t_info *info)

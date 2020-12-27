@@ -45,7 +45,6 @@ int	ft_exit(char *message, int status, t_info *info)
 int	exit_(t_list *arg_list, t_list *env_list, t_info *info)
 {
 	t_arg			*arg;
-	char			*code;
 	long long int	kek;
 
 	if (arg_list && arg_list->next)
@@ -56,14 +55,14 @@ int	exit_(t_list *arg_list, t_list *env_list, t_info *info)
 	if (arg_list)
 	{
 		arg = ((t_arg *)(arg_list->content));
-		code =  pure_$(arg->name, info);
-		code = execute_$(code, env_list);
+		str_replace(&arg->name, pure_$(arg->name, info));
+		str_replace(&arg->name, execute_$(arg->name, env_list));
 		ft_putendl_fd("exit", STDOUT_FILENO);
-		kek = ft_atoi(code);
-		if (!is_str_numeric(code) || (*code == '-' && !kek)
-		|| (*code != '-' && kek == -1))
+		kek = ft_atoi(arg->name);
+		if (!is_str_numeric(arg->name) || (*arg->name == '-' && !kek)
+		|| (*arg->name != '-' && kek == -1))
 			ft_exit(NULL
-				, ret_with_msg("exit: ", code, ": numeric argument required", 2)
+				, ret_with_msg("exit: ", arg->name, ": numeric argument required", 2)
 				, info);
 		ft_exit(NULL, kek % 256, info);
 	}

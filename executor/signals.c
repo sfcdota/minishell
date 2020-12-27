@@ -21,9 +21,9 @@ void	sighandler(int signum)
 	ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
 	if (signum == SIGINT)
 	{
-		if (info.pid == -1)
+		if (g_info.pid == -1)
 		{
-			dup2(STDIN_FILENO, info.base_in);
+			dup2(STDIN_FILENO, g_info.base_in);
 			ft_putstr_fd("\n", STDOUT_FILENO);
 			ft_putstr_fd(SHELL_PREFIX, STDOUT_FILENO);
 		}
@@ -32,9 +32,9 @@ void	sighandler(int signum)
 	}
 	if (signum == SIGQUIT)
 	{
-		if (info.pid != -1)
+		if (g_info.pid != -1)
 		{
-			kill(info.pid, SIGQUIT);
+			kill(g_info.pid, SIGQUIT);
 			ft_putendl_fd("^\\Quit: 3", STDOUT_FILENO);
 		}
 	}
@@ -47,11 +47,11 @@ void	sighandler(int signum)
 void	sighandler_child(int signum)
 {
 	if (signum == SIGINT)
-		ft_exit(NULL, 130, &info);
-//	if (signum == SIGQUIT)
-//	{
-//		ft_exit(NULL, 131, &info);
-//	}
+		ft_exit(NULL, 130, &g_info);
+	if (signum == SIGQUIT)
+	{
+		ft_exit(NULL, 131, &g_info);
+	}
 }
 
 /*
@@ -73,14 +73,10 @@ void	setsignals(pid_t pid)
 }
 
 /*
- *
- * SIGQUIT (ctrl + \) in main : does nothing, in child : print "^\Quit" and exits (must be a core dump, but no funcs allowed for that),
- * maybe it's possible to implement with kill
- *
- *
- * SIGINT (ctrl + c) in child : print ^C and exits, in main : print ^C and wait for the next line
- *
- *
- * EOF (ctrl + d) in child : does nothing, in main : print "exit" and exits
- *
- */
+** SIGQUIT (ctrl + \) in main : does nothing, in child : print "^\Quit" and
+** exits (must be a core dump, but no funcs allowed for that),
+** maybe it's possible to implement with kill
+** SIGINT (ctrl + c) in child : print ^C and exits, in main : print ^C and
+** wait for the next line
+** EOF (ctrl + d) in child : does nothing, in main : print "exit" and exits
+*/
