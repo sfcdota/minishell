@@ -14,11 +14,6 @@
 
 int		quote(t_info *info, t_pars *pars, char *line)
 {
-//	if (line[pars->i + 1] == '\'')
-//	{
-//		pars->i++;
-//		return (1);
-//	}
 	pars->str = strj(pars->str, line[pars->i++]);
 	while (line[pars->i] != 39 && pars->i < pars->len)
 		pars->str = strj(pars->str, line[pars->i++]);
@@ -30,11 +25,6 @@ int		quote(t_info *info, t_pars *pars, char *line)
 
 int		dquote(t_info *info, t_pars *pars, char *line)
 {
-//	if (line[pars->i + 1] == '"')
-//	{
-//		pars->i++;
-//		return (1);
-//	}
 	pars->str = strj(pars->str, line[pars->i++]);
 	while (line[pars->i] != 34 && pars->i < pars->len)
 	{
