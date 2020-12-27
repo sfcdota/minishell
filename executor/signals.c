@@ -23,7 +23,7 @@ void	sighandler(int signum)
 	{
 		if (g_info.pid == -1)
 		{
-			dup2(STDIN_FILENO, g_info.base_in);
+//			dup2(STDIN_FILENO, g_info.base_in);
 			ft_putstr_fd("\n", STDOUT_FILENO);
 			ft_putstr_fd(SHELL_PREFIX, STDOUT_FILENO);
 		}
@@ -47,10 +47,10 @@ void	sighandler(int signum)
 void	sighandler_child(int signum)
 {
 	if (signum == SIGINT)
-		ft_exit(NULL, 130, &g_info);
+		ft_exit(NULL, 128 + signum, &g_info);
 	if (signum == SIGQUIT)
 	{
-		ft_exit(NULL, 131, &g_info);
+		ft_exit(NULL, 128 + signum, &g_info);
 	}
 }
 

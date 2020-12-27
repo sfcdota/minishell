@@ -14,6 +14,23 @@
 #include "parser/parser.h"
 #include "executor/executor.h"
 
+//t_error			*new_error(int code, char *value)
+//{
+//	t_error	*error;
+//
+//	if ((error = ft_calloc(sizeof(t_error), 1)))
+//	{
+//		error->code = code;
+//		error->value = value;
+//	}
+//	return (error);
+//}
+//
+//t_list	init_errors(t_info *info)
+//{
+//	ft_lstadd_back(&info->error_list, ft_lstnew(new_error()));
+//}
+
 int	main(int argc, char **argv, char *envp[])
 {
 	int res;
@@ -44,6 +61,9 @@ int	main(int argc, char **argv, char *envp[])
 		execution(&g_info, g_info.cmd_list, g_info.env_list);
 		clear_ptr((void **)&g_info.line);
 		ft_lstclear(&g_info.cmd_list, clear_cmd);
+		ft_putstr_fd("\n\nwith status = ", STDOUT_FILENO);
+		ft_putstr_fd(get_env_val_by_key("?", g_info.env_list), STDOUT_FILENO);
+		ft_putendl_fd("\n", STDOUT_FILENO);
 	}
 }
 

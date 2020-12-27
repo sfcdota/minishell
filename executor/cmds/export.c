@@ -101,5 +101,5 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 			return (ret_with_msg("export : ", arg->name, ": not a valid identifier", 1));//var is not correct
 		arg_list = arg_list->next;
 	}
-	return (errno);
+	return (0);
 }

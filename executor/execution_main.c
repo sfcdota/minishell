@@ -79,6 +79,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 	int		res;
 	
 	res = 0;
+	int status = 0;
 	while (cmd_list)
 	{
 		cmd = ((t_cmd *)(cmd_list->content));
@@ -108,12 +109,15 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 			}
 			else
 			{
-				res = execute_cmd(cmd, env_list, info);
+				status = execute_cmd(cmd, env_list, info);
 				if (info->pipe_fd)
 				{
 					waitpid(info->pipe_pid, &res, WUNTRACED);
 					close(info->pipe_fd[0]);
+					res = WEXITSTATUS(res);
 				}
+				if (res && !status)
+					status = res;
 				info->pid = -1;
 				info->pipe_pid = -1;
 			}
@@ -123,9 +127,8 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 			if (cmd->out != STDOUT_FILENO)
 				close(cmd->out);
 			cmd->out = -1;
-			if (res)
-				str_replace(&get_env_by_key("?", env_list)->value,
-					ft_itoa(res));
+			str_replace(&get_env_by_key("?", env_list)->value,
+					ft_itoa(status));
 		}
 		clear_ptr((void **)&info->uncap_cmd);
 		cmd_list = cmd_list->next;
