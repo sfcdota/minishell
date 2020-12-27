@@ -87,7 +87,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 		{
 			str_replace(&cmd->name, pure_$(cmd->name, info));
 			str_replace(&cmd->name, execute_$(cmd->name, env_list));
-			uncapitalize_str(str_replace(&info->uncap_cmd, cmd->name));
+			uncapitalize_str(str_replace(&info->uncap_cmd, ft_strdup(cmd->name)));
 			if (cmd->cmd_delimeter == 1)
 			{
 				if (!cmd_list->next)
