@@ -38,7 +38,7 @@ t_env	*get_env_by_key(char *key, t_list *env_list)
 {
 	t_env *env;
 
-	while (env_list)
+	while (env_list && key)
 	{
 		env = (t_env *)(env_list->content);
 		if (!ft_strcmp(key, env->key))

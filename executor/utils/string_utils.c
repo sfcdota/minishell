@@ -35,7 +35,7 @@ int		ft_strcmp(const char *s1, const char *s2)
 
 char	*to_delimiter(char *envp_string, char delimiter)
 {
-	while (*envp_string && *envp_string != delimiter)
+	while (envp_string && *envp_string && *envp_string != delimiter)
 		envp_string++;
 	return (envp_string);
 }
@@ -51,9 +51,11 @@ char	*get_substr(char *begin, char *end)
 {
 	char *out;
 
+	if (!begin && !end)
+		return (NULL);
 	if (!end)
 		end = to_delimiter(begin, '\0');
-	if (!begin || !*begin || !(out = ft_calloc(sizeof(char), end - begin + 1)))
+	if (!begin || !(out = ft_calloc(sizeof(char), end - begin + 1)))
 		return (NULL);
 	ft_strlcpy(out, begin, end - begin + 1);
 	return (out);
@@ -81,12 +83,8 @@ char	*str_append(char **s1, char *s2)
 
 char	*str_replace(char **s1, char *s2)
 {
-	if (!ft_strcmp(*s1, s2))
-	{
-		clear_ptr((void **)&s2);
-		return (*s1);
-	}
 	clear_ptr((void **)s1);
-	*s1 = s2;	
+	*s1 = ft_strdup(s2);
+	clear_ptr((void **)&s2);
 	return (*s1);
 }

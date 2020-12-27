@@ -60,7 +60,7 @@ t_redirection *new_redirection(char *filename, int type)
 
 void	ft_lst_elem_delete(t_list **lst, t_list *elem, void (*del)(void *))
 {
-	if (lst && *lst)
+	if (lst && *lst && elem)
 	{
 		if (*lst == elem)
 		{
