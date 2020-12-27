@@ -23,18 +23,25 @@ PARSER_DIR = parser
 
 EXECUTOR_DIR = executor
 
+EXECUTOR_CMDS_DIR = $(EXECUTOR_DIR)/cmds
 
-HEADERS =										\
-				$(wildcard $(LIBFT_DIR)/*.h)	\
-				$(wildcard $(GNL_DIR)/*.h)		\
-				$(wildcard $(MINISHELL_DIR)/*.h)\
-				$(wildcard $(PARSER_DIR)/*.h)	\
-				$(wildcard $(EXECUTOR_DIR)/*.h)
+EXECUTOR_UTILS_DIR = $(EXECUTOR_DIR)/utils
 
-SRC = 		$(wildcard $(GNL_DIR)/*.c)			\
-			$(wildcard $(MINISHELL_DIR)/*.c)	\
-			$(wildcard $(PARSER_DIR)/*.c)		\
-			$(wildcard $(EXECUTOR_DIR)/*.c)
+HEADERS =											\
+			$(wildcard $(LIBFT_DIR)/*.h)			\
+			$(wildcard $(GNL_DIR)/*.h)				\
+			$(wildcard $(MINISHELL_DIR)/*.h)		\
+			$(wildcard $(PARSER_DIR)/*.h)			\
+			$(wildcard $(EXECUTOR_DIR)/*.h)			\
+			$(wildcard $(EXECUTOR_CMDS_DIR)/*.h)	\
+			$(wildcard $(EXECUTOR_UTILS_DIR)/*.h)	
+
+SRC = 		$(wildcard $(GNL_DIR)/*.c)				\
+			$(wildcard $(MINISHELL_DIR)/*.c)		\
+			$(wildcard $(PARSER_DIR)/*.c)			\
+			$(wildcard $(EXECUTOR_DIR)/*.c)			\
+			$(wildcard $(EXECUTOR_CMDS_DIR)/*.c)	\
+			$(wildcard $(EXECUTOR_UTILS_DIR)/*.c)
 
 
 OBJ = 		$(patsubst %.c, %.o, $(SRC))
@@ -57,6 +64,7 @@ make_libft:
 	$(MAKE) -C $(LIBFT_DIR) all
 
 $(NAME): $(OBJ_FILES)
+	echo $(OBJ_FILES)
 	@gcc $(FLAGS) $(OBJ_FILES) -L${LIBFT_DIR} -lft -o $(NAME)
 
 bonus:
@@ -80,6 +88,6 @@ fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean
 
 norm:
-	@norminette ${SRC} ${HEAD}
+	@norminette -R CheckForbiddenSourceHeader ${SRC} ${HEAD}
 
 re: fclean all

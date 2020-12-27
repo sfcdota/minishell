@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "../executor.h"
 
 /*
 ** Trying to move to path directory with changing PWD & OLDPWD values

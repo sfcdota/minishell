@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "../executor.h"
 #define GETCWD_ERROR " : Internal error. Lib func getcwd got error."
 
 /*

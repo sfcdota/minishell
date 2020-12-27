@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "../executor.h"
 
 /*
 ** Adds new environment variable (t_env) to environment list with param values

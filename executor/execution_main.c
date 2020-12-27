@@ -123,7 +123,8 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 			if (cmd->out != STDOUT_FILENO)
 				close(cmd->out);
 			cmd->out = -1;
-			str_replace(&get_env_by_key("?", env_list)->value, ft_itoa(res));
+			if (res)
+				str_replace(&get_env_by_key("?", env_list)->value, ft_itoa(res));
 		}
 		clear_ptr((void **)&info->uncap_cmd);
 		cmd_list = cmd_list->next;

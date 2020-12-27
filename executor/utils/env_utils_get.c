@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "../executor.h"
 
 /*
 ** Gets environment variable value from environment list by key(dictionary-like)

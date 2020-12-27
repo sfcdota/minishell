@@ -13,7 +13,6 @@
 #include "minishell.h"
 #include "parser/parser.h"
 #include "executor/executor.h"
-#include "fcntl.h"
 
 int main(int argc, char **argv, char *envp[])
 {
@@ -28,7 +27,8 @@ int main(int argc, char **argv, char *envp[])
 		if ((write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1) ||
 		(res = get_next_line(info.base_in, &line)) == -1)
 		{
-			errno_set(&info);
+			str_replace(&get_env_by_key("?", info.env_list)->value, ft_itoa(errno));
+			strerror(errno);
 			continue ;
 		}
 		if (res > MAX_CMD_LENGTH)
