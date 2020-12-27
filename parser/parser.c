@@ -15,6 +15,7 @@
 int cmd_count(char *line, t_info *info)
 {
     t_pars	*pars;
+    int status;
 
     pars = malloc(sizeof(t_pars));
     pars->cmd1 = new_cmd();
@@ -24,9 +25,10 @@ int cmd_count(char *line, t_info *info)
     pars->i = -1;
     while (line[++pars->i])
     {
-        if (loop(info, pars, line) == -1)
-            return (-1);
-        if (pars->str[0] && (line[pars->i + 1] == ' ' || line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
+        if ((status = loop(info, pars, line)) > 1)
+            return (status);
+        if (pars->str[0] && (pars->i >= pars->len || line[pars->i + 1] == ' ' ||
+        	line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
             cmd_update(pars);
     }
     if (pars->str[0])
@@ -60,9 +62,10 @@ char    *pure_$(char *arg, t_info *info)
         else if (arg[utils->i] == '\'')
         {
             utils->tmp = strj(utils->tmp, arg[utils->i]);
-            while (arg[++utils->i] != '\'' || !arg[utils->i])
+            while (arg[++utils->i] && arg[utils->i] != '\'')
                 utils->tmp = strj(utils->tmp, arg[utils->i]);
-            utils->tmp = strj(utils->tmp, arg[utils->i]);
+            if (arg[utils->i])
+	            utils->tmp = strj(utils->tmp, arg[utils->i]);
             if (!arg[utils->i])
                 return (utils->tmp);
         }
@@ -95,10 +98,9 @@ char    *execute_$(char *arg, t_list *env_list)
     return (utils->tmp);
 }
 
-void	parser(char *command, t_info *info)
+int	parser(char *command, t_info *info)
 {
     if (!command)
-        return ;
-//    command = pure_$(command, g_info);
-    cmd_count(command, info);
+        return (1);
+    return (cmd_count(command, info));
 }

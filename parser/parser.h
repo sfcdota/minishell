@@ -30,7 +30,7 @@ typedef struct s_utils
     int     i;
 }           t_utils;
 
-void		parser(char *command, t_info *info);
+int		parser(char *command, t_info *info);
 int			cmd_count(char *cmd, t_info *info);
 char		*strj(char *s1, char s2);
 t_arg		*new_arg(char *name, int is_env);

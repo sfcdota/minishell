@@ -34,36 +34,39 @@ int				end_cmd(t_info *info, t_pars *pars, char *line)
 static int		loop_utils(t_info *info, t_pars *pars, char *line)
 {
 	if (line[pars->i] == '"' && dquote(info, pars, line) == -1)
-		return (-1);
+		return (3);
 	else if (pars->i + 2 < pars->len &&
 			line[pars->i] == '&' && line[pars->i + 1] == '&' &&
 			logical_and(info, pars, line) == -1)
-		return (-1);
+		return (4);
 	else if (line[pars->i] == '|' && pipes(info, pars, line) == -1)
-		return (-1);
+		return (5);
 	else if (line[pars->i] == ';' && end_cmd(info, pars, line) == -1)
-		return (-1);
+		return (8);
 	else if (line[pars->i] == '<' && redirection_out(info, pars, line) == -1)
-		return (-1);
+		return (9);
 	else if (line[pars->i] == '>' && redirection_in(info, pars, line) == -1)
-		return (-1);
+		return (7);
 	return (1);
 }
 
 int				loop(t_info *info, t_pars *pars, char *line)
 {
+	int status;
+
 	while (line[pars->i] == ' ')
 		pars->i++;
 	if (own_strchr("\\#=()*", line[pars->i]))
-		return (-1);
+		return (2);
 	if (line[pars->i] == '\'' && quote(info, pars, line) == -1)
-		return (-1);
+		return (6);
 	else if (!own_strchr("\"' |;<>()#*&\\", line[pars->i]))
 	{
 		while (!own_strchr("'\"()#*& |;\\<>", line[pars->i]) && line[pars->i])
 			pars->str = strj(pars->str, line[pars->i++]);
 		pars->i--;
 	}
-	loop_utils(info, pars, line);
+	if ((status = loop_utils(info, pars, line)) > 1)
+		return (status);
 	return (1);
 }
