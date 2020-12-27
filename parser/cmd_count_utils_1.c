@@ -70,6 +70,7 @@ int		logical_and(t_info *info, t_pars *pars, char *line)
 	pars->str = malloc(sizeof(char) * 1);
 	*pars->str = '\0';
 	pars->i--;
+	return (1);
 }
 
 int		pipes(t_info *info, t_pars *pars, char *line)
@@ -94,4 +95,5 @@ int		pipes(t_info *info, t_pars *pars, char *line)
 	pars->str = malloc(sizeof(char) * 1);
 	*pars->str = '\0';
 	pars->i--;
+	return (1);
 }
