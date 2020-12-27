@@ -16,7 +16,7 @@
 ** Check if str is num
 */
 
-int	is_str_numeric(char *s)
+int		is_str_numeric(char *s)
 {
 	if (s && *s == '-')
 		s++;
@@ -31,7 +31,7 @@ int	is_str_numeric(char *s)
 ** with extra message before exit
 */
 
-int	ft_exit(char *message, int status, t_info *info)
+void	ft_exit(char *message, int status, t_info *info)
 {
 	clear_all(info);
 	ft_putendl_fd(message, STDOUT_FILENO);
@@ -42,7 +42,7 @@ int	ft_exit(char *message, int status, t_info *info)
 ** Exit execution
 */
 
-int	exit_(t_list *arg_list, t_list *env_list, t_info *info)
+int		exit_(t_list *arg_list, t_list *env_list, t_info *info)
 {
 	t_arg			*arg;
 	long long int	kek;
@@ -68,4 +68,5 @@ int	exit_(t_list *arg_list, t_list *env_list, t_info *info)
 	}
 	else
 		ft_exit(NULL, errno, info);
+	return (errno);
 }

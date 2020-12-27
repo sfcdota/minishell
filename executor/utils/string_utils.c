@@ -85,7 +85,7 @@ char	*str_replace(char **s1, char *s2)
 {
 	if (!s2)
 		return (*s1);
-	if (!ft_strcmp(*s1, s2))
+	if (*s1 && !ft_strcmp(*s1, s2))
 	{
 		clear_ptr((void **)&s2);
 		return (*s1);

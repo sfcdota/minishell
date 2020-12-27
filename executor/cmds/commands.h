@@ -29,6 +29,6 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info);
 **					USABLE UTILS FROM COMMANDS FUNCTIONS
 */
 void	print_env_list(t_list *env_list, char *prefix, int std_out);
-int		ft_exit(char *message, int status, t_info *info);
+void	ft_exit(char *message, int status, t_info *info);
 
 #endif
