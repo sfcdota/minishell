@@ -14,8 +14,12 @@
 
 char		*end_pars01(t_utils *utils, char *arg)
 {
+    char *tmp;
+
 	utils->i++;
+	tmp = utils->tmp;
 	utils->tmp = ft_strjoin(utils->tmp, utils->env_name);
+	free(tmp);
 	while (arg[utils->i] != '\'')
 		utils->tmp = strj(utils->tmp, arg[utils->i++]);
 	return (utils->tmp);
@@ -23,6 +27,8 @@ char		*end_pars01(t_utils *utils, char *arg)
 
 static char	*end_pars02_utils(t_utils *utils, char *arg, t_list *env_list)
 {
+    char    *tmp;
+
 	if (arg[utils->i] == '$')
 	{
 		utils->i++;
@@ -34,7 +40,9 @@ static char	*end_pars02_utils(t_utils *utils, char *arg, t_list *env_list)
 			utils->i++;
 		}
 	}
+	tmp = utils->tmp;
 	utils->tmp = ft_strjoin(utils->tmp, utils->env_name);
+	free(tmp);
 	utils->env_name = NULL;
 	return (utils->tmp);
 }
@@ -60,13 +68,17 @@ char		*end_pars02(t_utils *utils, char *arg, t_list *env_list)
 
 char		*end_pars03(t_utils *utils, char *arg, t_list *env_list)
 {
+    char *tmp;
+
 	utils->i++;
 	if (arg[utils->i] == ' ' || !arg[utils->i])
 		utils->tmp = strj(utils->tmp, '$');
 	else if (arg[utils->i] < 48 || arg[utils->i] > 57)
 	{
 		utils->env_name = ft_strdup(get_env(&utils->i, arg, env_list));
+		tmp = utils->tmp;
 		utils->tmp = ft_strjoin(utils->tmp, utils->env_name);
+		free(tmp);
 	}
 	free(utils->env_name);
 	utils->env_name = malloc(sizeof(char) * 1);

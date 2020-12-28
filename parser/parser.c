@@ -109,3 +109,9 @@ int			parser(char *command, t_info *info)
 	command = pure_d(command, info);
 	return (cmd_count(command, info));
 }
+/*
+ *end_pars02
+ * execute_d
+ * pure_d
+ *
+ */
