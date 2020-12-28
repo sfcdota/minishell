@@ -34,5 +34,5 @@ int	unset(t_list *arg_list, t_list *env_list)
 				, get_env_list_by_key(arg->name, env_list), clear_env);
 		arg_list = arg_list->next;
 	}
-	return (errno);
+	return (0);
 }

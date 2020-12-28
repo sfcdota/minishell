@@ -60,10 +60,17 @@ typedef struct			s_env
 	int					is_hidden;
 }						t_env;
 
+typedef struct			s_error
+{
+	int					code;
+	char				*value;
+}						t_error;
+
 typedef struct			s_info
 {
 	t_list				*cmd_list;
 	t_list				*env_list;
+	t_list				*error_list;
 	pid_t				pid;
 	pid_t				pipe_pid;
 	int					*pipe_fd;
@@ -81,4 +88,5 @@ void					init_info(t_info *info, char **envp);
 t_redirection			*new_redirection(char *filename, int type);
 void					ft_lst_elem_delete(t_list **lst, t_list *elem,
 	void (*del)(void *));
+t_list					init_errors(t_info *info);
 #endif

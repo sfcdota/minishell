@@ -40,7 +40,7 @@ int	go_to_dir(char *path, t_list *env_list)
 	if (oldpwd->is_hidden == 2)
 		oldpwd->is_hidden = 0;
 	pwd->value = getcwd(NULL, 228);
-	return (errno);
+	return (0);
 }
 
 /*

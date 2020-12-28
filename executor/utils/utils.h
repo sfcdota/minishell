@@ -22,6 +22,8 @@ void					clear_env(void *env_content);
 void					clear_arg(void *arg_content);
 void					clear_cmd(void *cmd_content);
 void					clear_all(t_info *info);
+void					clear_error(void *error_content);
+
 
 /*
 **						ENVIRONMENT FUNCTIONS

@@ -62,11 +62,11 @@ int		exit_(t_list *arg_list, t_list *env_list, t_info *info)
 		if (!is_str_numeric(arg->name) || (*arg->name == '-' && !kek)
 		|| (*arg->name != '-' && kek == -1))
 			ft_exit(NULL
-				, ret_with_msg("exit: ", arg->name, ": numeric argument required", 2)
+				, ret_with_msg("exit: ", arg->name, ": numeric argument required", 255)
 				, info);
 		ft_exit(NULL, kek % 256, info);
 	}
 	else
-		ft_exit(NULL, errno, info);
-	return (errno);
+		ft_exit(NULL, 0, info);
+	return (0);
 }

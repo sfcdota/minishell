@@ -33,5 +33,5 @@ int	echo(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 		arg_list = arg_list->next;
 	}
 	return (ret_with_msg("echo: ", NULL, "unistd write function failed",
-		(!cmd->flags && write(cmd->out, "\n", 1) == -1)) ? 1 : errno);
+		(!cmd->flags && write(cmd->out, "\n", 1) == -1)) ? 1 : 0);
 }

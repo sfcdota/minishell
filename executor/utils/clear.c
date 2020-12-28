@@ -52,6 +52,18 @@ void	clear_arg(void *arg_content)
 	clear_ptr((void **)&arg);
 }
 
+///*
+//** Clear(free) errors list
+//*/
+//
+//void	clear_error(void *error_content)
+//{
+//	t_error *error;
+//
+//	error = (t_error *)error_content;
+//	clear_ptr((void **)&error->value);
+//}
+
 /*
 ** Clear(free) commands list
 */
@@ -61,9 +73,13 @@ void	clear_cmd(void *cmd_content)
 	t_cmd *cmd;
 
 	cmd = (t_cmd *)cmd_content;
-	clear_ptr((void **)&cmd->name);
+	//clear_ptr((void **)&cmd->name);
 	clear_ptr((void **)&cmd->flags);
 	ft_lstclear(&cmd->arg_list, clear_arg);
+	if (cmd->in != 0 && cmd->in != -2 && cmd->in != -1)
+		close(cmd->in);
+	if (cmd->out != 1 && cmd->out != -2 && cmd->out != -1)
+		close(cmd->out);
 	clear_ptr((void **)&cmd);
 }
 
@@ -75,10 +91,13 @@ void	clear_all(t_info *info)
 {
 	ft_lstclear(&info->cmd_list, clear_cmd);
 	ft_lstclear(&info->env_list, clear_env);
+//	ft_lstclear(&info->error_list, clear_error);
 	if (info->pipe_fd)
 	{
-		close(info->pipe_fd[0]);
-		close(info->pipe_fd[1]);
+		if (info->pipe_fd[0])
+			close(info->pipe_fd[0]);
+		if (info->pipe_fd[1])
+			close(info->pipe_fd[1]);
 	}
 	clear_ptr((void **)&info->pipe_fd);
 	clear_ptr((void **)&info->line);
