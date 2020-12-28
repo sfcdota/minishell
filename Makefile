@@ -53,7 +53,7 @@ else
 OBJ_FILES = $(OBJ)
 endif
 
-.PHONY: all bonus clean fclean re make_libft norm
+.PHONY: all bonus clean fclean re make_libft
 
 
 all: make_libft $(NAME)
@@ -64,7 +64,6 @@ make_libft:
 	$(MAKE) -C $(LIBFT_DIR) all
 
 $(NAME): $(OBJ_FILES)
-	echo $(OBJ_FILES)
 	@gcc $(FLAGS) $(OBJ_FILES) -L${LIBFT_DIR} -lft -o $(NAME)
 
 bonus:
@@ -87,7 +86,7 @@ fclean: clean
 	@rm -f $(NAME)
 	$(MAKE) -C $(LIBFT_DIR) fclean
 
-norm:
-	@norminette -R CheckForbiddenSourceHeader ${SRC} ${HEAD}
-
 re: fclean all
+
+valgrind:
+	valgrind --leak-check=full --show-leak-kinds=all -s --track-fds=yes ./minishell

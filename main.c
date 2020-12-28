@@ -14,6 +14,13 @@
 #include "parser/parser.h"
 #include "executor/executor.h"
 
+void	small_error(int status, char *message)
+{
+	str_replace(&get_env_by_key("?", g_info.env_list)->value,
+		ft_itoa(status));
+	ft_putendl_fd(message, STDOUT_FILENO);
+}
+
 int		main(int argc, char **argv, char *envp[])
 {
 	int res;
@@ -25,9 +32,7 @@ int		main(int argc, char **argv, char *envp[])
 		if ((write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1)
 		|| (res = get_next_line(g_info.base_in, &g_info.line)) == -1)
 		{
-			str_replace(&get_env_by_key("?", g_info.env_list)->value,
-				ft_itoa(errno));
-			ft_putstr_fd(strerror(errno), STDOUT_FILENO);
+			small_error(errno, strerror(errno));
 			continue ;
 		}
 		if (res == 0 && !*g_info.line)
@@ -36,9 +41,7 @@ int		main(int argc, char **argv, char *envp[])
 			ft_putstr_fd("\n", STDOUT_FILENO);
 		if ((parser(g_info.line, &g_info)) == -1)
 		{
-			str_replace(&get_env_by_key("?", g_info.env_list)->value,
-				ft_itoa(258));
-			ft_putendl_fd("Unexpected token", STDOUT_FILENO);
+			small_error(258, "Unexpected token");
 			continue ;
 		}
 		execution(&g_info, g_info.cmd_list, g_info.env_list);

@@ -33,7 +33,7 @@ void	set_fds(t_cmd *cmd)
 	{
 		if (cmd->out != -2)
 			close(cmd->out);
-		cmd->out = open(redirection->filename, redirection->type == 2 ? 
+		cmd->out = open(redirection->filename, redirection->type == 2 ?
 		O_WRONLY | O_TRUNC | O_APPEND | O_CREAT
 		: O_WRONLY | O_APPEND | O_CREAT, 0777);
 	}
