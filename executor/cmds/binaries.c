@@ -36,14 +36,11 @@ char	*check_path(t_cmd *cmd, char *path)
 			temp = ft_strdup(dirs[i]);
 			break ;
 		}
-		errno = 0;
 		i++;
 	}
 	while (i >= 0)
 		clear_ptr((void **)&dirs[i--]);
 	clear_ptr((void **)dirs);
-	if (errno)
-		clear_ptr((void **) &temp);
 	return (temp);
 }
 
@@ -95,7 +92,7 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 		}
 		ft_lstadd_front(&cmd->arg_list, ft_lstnew(new_arg(cmd->name, 0)));
 		if ((temp = check_path(cmd, get_env_val_by_key("PATH", env_list))))
-			cmd->name = str_replace(&cmd->name, temp);
+			str_replace(&cmd->name, temp);
 		if (!stat(cmd->name, &buf))
 			ft_exit(NULL, execve(cmd->name, arg_list_to_array(cmd->flags,
 				cmd->arg_list), env_list_to_array(env_list)) == -1 ? 126 : 0, &g_info);

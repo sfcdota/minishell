@@ -73,6 +73,7 @@ char    *pure_$(char *arg, t_info *info)
             utils->tmp = strj(utils->tmp, arg[utils->i]);
         tmp = ft_strdup(utils->tmp);
         utils_free(utils);
+        free(utils);
     return (tmp);
 }
 
@@ -99,6 +100,7 @@ char    *execute_$(char *arg, t_list *env_list)
     }
     tmp = ft_strdup(utils->tmp);
     utils_free(utils);
+    free(utils);
     return (tmp);
 }
 

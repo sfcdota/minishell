@@ -85,16 +85,16 @@ char	*str_append(char **s1, char *s2)
 ** And returns 1st argument (pointer to begin of char array)
 */
 
-char	*str_replace(char **s1, char *s2)
+void	str_replace(char **s1, char *s2)
 {
 	if (!s2)
-		return (*s1);
+		return ;
 	if (!ft_strcmp(*s1, s2))
 	{
 		clear_ptr((void **)&s2);
-		return (*s1);
+		return ;
 	}
 	clear_ptr((void **)s1);
 	*s1 = s2;
-	return (*s1);
+	return ;
 }
