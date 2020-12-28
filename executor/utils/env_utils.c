@@ -114,11 +114,23 @@ char	**env_list_to_array(t_list *env_list)
 ** Prints char** envp array
 */
 
-void	print_env_array(char **envp)
+void	export_env(t_arg *arg, char *tmp, t_list *env_list)
 {
-	while (*envp)
+	char	*temp_arg;
+	t_env	*env;
+
+	if ((temp_arg = get_substr(arg->name, tmp)) && *temp_arg)
 	{
-		ft_putendl_fd(*envp, 1);
-		envp++;
+		if ((env = get_env_by_key(temp_arg, env_list)))
+		{
+			str_replace(&temp_arg, get_substr(tmp ? tmp + 1 : tmp, NULL));
+			if (ft_strcmp(env->value, temp_arg))
+				str_replace(&env->value, temp_arg);
+		}
+		else
+			add_env(&env_list, temp_arg, tmp && *tmp ?
+			get_substr(tmp + 1, NULL) : NULL, 0);
 	}
+	else
+		clear_ptr((void **)&temp_arg);
 }

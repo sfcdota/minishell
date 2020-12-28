@@ -18,11 +18,11 @@
 
 int	go_to_dir(char *path, t_list *env_list)
 {
-	t_env *pwd;
-	t_env *oldpwd;
-	char *temp;
-	int i;
-	
+	t_env	*pwd;
+	t_env	*oldpwd;
+	char	*temp;
+	int		i;
+
 	i = ft_strlen(path);
 	while (i && path[i - 1] == '/')
 		i--;
@@ -101,4 +101,3 @@ int	cd(t_cmd *cmd, t_list *args, t_list *env_list)
 		, ": directory not found or unistd.h chdir function failed"
 		, go_to_dir(arg->name, env_list)));
 }
- 

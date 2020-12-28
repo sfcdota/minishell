@@ -21,7 +21,6 @@
 # include <errno.h>
 # include <string.h>
 # define SHELL_PREFIX "minishell> "
-# define MAX_CMD_LENGTH 262144
 
 typedef struct			s_arg
 {

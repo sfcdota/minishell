@@ -63,3 +63,12 @@ int		str_line_len(const char *s)
 	}
 	return (is_found ? -len : len);
 }
+
+void	gnl_eof(char *buf, int status)
+{
+	if (status && buf && *buf && buf[str_len(buf) - 1] != '\n'
+		&& str_len(buf) != BUFFER_SIZE)
+	{
+		write(STDIN_FILENO, "  \b\b", 4);
+	}
+}

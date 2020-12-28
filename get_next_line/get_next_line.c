@@ -121,11 +121,7 @@ int		get_next_line(int fd, char **line)
 	else
 		status = read(fd,
 		buf = ft_calloc_gnl(sizeof(unsigned char), (buf_size + 1)), buf_size);
-	if (status && buf && *buf && buf[str_len(buf) - 1] != '\n'
-		&& str_len(buf) != BUFFER_SIZE)
-	{
-		write(STDIN_FILENO, "  \b\b", 4);
-	}
+	gnl_eof(buf, status);
 	return (status != -1 ? read_line(fd, line, buf, &buffer_remains[fd])
 	: destroy(buf, NULL, NULL, status));
 }
