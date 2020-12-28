@@ -95,6 +95,7 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 		ft_lstadd_front(&cmd->arg_list, ft_lstnew(new_arg(cmd->name, 0)));
 		if ((temp = check_path(cmd, get_env_val_by_key("PATH", env_list))))
 			str_replace(&cmd->name, temp);
+		clear_ptr((void **)&temp);
 		if (!stat(cmd->name, &buf))
 		{
 			temp2 = env_list_to_array(env_list);
