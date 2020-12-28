@@ -107,6 +107,7 @@ char	**env_list_to_array(t_list *env_list)
 		str_append(&out[j], env->value);
 		env_list = env_list->next;
 	}
+	out[i] = NULL;
 	return (out);
 }
 

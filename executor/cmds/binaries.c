@@ -59,15 +59,21 @@ char	**arg_list_to_array(char *flags, t_list *arg_list)
 		ft_lstadd_back(&arg_list, ft_lstnew(new_arg(ft_strdup(flags), 0)));
 	}
 	j = 0;
-	i = ft_lstsize(arg_list);
-	arg_array = ft_calloc(sizeof(char *), i + 1);
-	while (arg_list)
+	if ((i = ft_lstsize(arg_list)))
 	{
-		arg_array[j] = ft_strdup(((t_arg *)(arg_list->content))->name);
-		j++;
-		arg_list = arg_list->next;
+		arg_array = ft_calloc(sizeof(char *), i + 1);
+		while (arg_list)
+		{
+			arg_array[j] = ft_strdup(((t_arg *) (arg_list->content))->name);
+			if (!arg_array[j] && 
+			ft_strcmp(((t_arg *)(arg_list->content))->name, NULL))
+				break ;
+			j++;
+			arg_list = arg_list->next;
+		}
+		arg_array[j] = NULL;
 	}
-	return (arg_array);
+	return (i ? arg_array : NULL);
 }
 
 void	set_redirs(t_cmd *cmd)
@@ -83,12 +89,17 @@ void	set_redirs(t_cmd *cmd)
 
 void	clear_two_dimensional_char_array(char **arr)
 {
-	if (!arr || !*arr)
+	int i;
+	
+	i = 0;
+	if (!arr)
 		return ;
-	while (*arr)
+	if (!*arr)
+		return clear_ptr((void **)arr);
+	while (arr[i])
 	{
-		clear_ptr((void **)(&(*arr)));
-		(*arr)++;
+		clear_ptr((void **)(arr[i]));
+		i++;
 	}
 	clear_ptr((void **)arr);
 }
@@ -117,7 +128,7 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 			retval = execve(cmd->name, temp3, temp2);
 			clear_two_dimensional_char_array(temp2);
 			clear_two_dimensional_char_array(temp3);
-			ft_exit(NULL, retval == -1 ? 126 : 0, &g_info);
+			ft_exit(NULL, retval == -1 ? errno : 0, &g_info);
 		}
 		return (ret_with_msg(cmd->name, NULL, " Execute binary is failed.",
 		(info->pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1 ||

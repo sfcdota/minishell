@@ -35,6 +35,9 @@ void	ft_exit(char *message, int status, t_info *info)
 {
 	clear_all(info);
 	ft_putendl_fd(message, STDOUT_FILENO);
+	close(STDOUT_FILENO);
+	close(STDIN_FILENO);
+	close(STDERR_FILENO);
 	exit(status);
 }
 
