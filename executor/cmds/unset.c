@@ -12,7 +12,7 @@
 
 #include "../executor.h"
 
-int		is_var(char *s)
+int	is_var(char *s)
 {
 	if (!s)
 		return (0);
