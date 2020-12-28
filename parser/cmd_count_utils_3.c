@@ -36,7 +36,7 @@ int				end_cmd(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 static int		loop_utils(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 {
 	if (line[pars->i] == '"' && dquote(info, pars, line) == -1)
-		return (3);
+		return (-1);
 	else if (pars->i + 2 < pars->len &&
 			line[pars->i] == '&' && line[pars->i + 1] == '&' &&
 			logical_and(info, pars, line, cmd) == -1)

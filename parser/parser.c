@@ -105,17 +105,10 @@ char		*execute_d(char *arg, t_list *env_list)
 int			parser(char *command, t_info *info)
 {
 	int res;
-	
+
 	if (!command)
 		return (1);
-	command = pure_d(command, info);
 	res = cmd_count(command, info);
 	free(command);
 	return (res);
 }
-/*
- *end_pars02
- * execute_d
- * pure_d
- *
- */

@@ -14,7 +14,7 @@
 
 char		*end_pars01(t_utils *utils, char *arg)
 {
-    char *tmp;
+	char *tmp;
 
 	utils->i++;
 	tmp = utils->tmp;
@@ -27,12 +27,14 @@ char		*end_pars01(t_utils *utils, char *arg)
 
 static char	*end_pars02_utils(t_utils *utils, char *arg, t_list *env_list)
 {
-    char    *tmp;
+	char	*tmp;
 
 	if (arg[utils->i] == '$')
 	{
 		utils->i++;
-		if (arg[utils->i] == ' ' || !arg[utils->i])
+		if (own_strchr(" '\"", arg[utils->i]) || !arg[utils->i])
+			utils->tmp = strj(utils->tmp, '$');
+		else if (arg[utils->i] == ' ' || !arg[utils->i])
 			utils->tmp = strj(utils->tmp, '$');
 		else
 		{
@@ -66,12 +68,31 @@ char		*end_pars02(t_utils *utils, char *arg, t_list *env_list)
 	return (utils->tmp);
 }
 
+static int	end_dquote(int i, char *line)
+{
+	int cnt;
+	int j;
+
+	j = 0;
+	cnt = 0;
+	while (i - j >= 0)
+		if (line[i - j++] == '"')
+			cnt++;
+	return (cnt);
+}
+
 char		*end_pars03(t_utils *utils, char *arg, t_list *env_list)
 {
-    char *tmp;
+	char *tmp;
 
 	utils->i++;
-	if (arg[utils->i] == ' ' || !arg[utils->i])
+	if ((own_strchr(" '\"", arg[utils->i]) &&
+	end_dquote(utils->i, arg) % 2 == 1) || !arg[utils->i])
+	{
+		utils->tmp = strj(utils->tmp, '$');
+		utils->i--;
+	}
+	else if (arg[utils->i] == ' ' || !arg[utils->i])
 		utils->tmp = strj(utils->tmp, '$');
 	else if (arg[utils->i] < 48 || arg[utils->i] > 57)
 	{

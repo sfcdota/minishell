@@ -29,6 +29,11 @@ char	*get_env(int *i, char *arg, t_list *env_list)
 			env_name = strj(env_name, arg[j++]);
 	}
 	*i = --j;
+	if (!env_name[0])
+	{
+		free(env_name);
+		return (ft_strdup(""));
+	}
 	return (get_env_value_by_key(env_name, env_list));
 }
 
