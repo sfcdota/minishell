@@ -12,6 +12,8 @@
 
 #include "../executor.h"
 
+void			*ft_clear_split(char **t, int i);
+
 /*
 ** Checks PATH env variable for binary name of cmd->name
 */
@@ -36,14 +38,11 @@ char	*check_path(t_cmd *cmd, char *path)
 			temp = ft_strdup(dirs[i]);
 			break ;
 		}
-		errno = 0;
 		i++;
 	}
-	while (i >= 0)
-		clear_ptr((void **)&dirs[i--]);
-	clear_ptr((void **)dirs);
-	if (errno)
-		clear_ptr((void **) &temp);
+	if (!dirs[i])
+	    i--;
+	ft_clear_split(dirs, i);
 	return (temp);
 }
 
@@ -82,7 +81,7 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 	struct stat	buf;
 	int			retval;
 	char		*temp;
-
+	char 		**temp2;
 	if ((info->pid = fork()) == 0)
 	{
 		setsignals(info->pid);
@@ -95,10 +94,16 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 		}
 		ft_lstadd_front(&cmd->arg_list, ft_lstnew(new_arg(cmd->name, 0)));
 		if ((temp = check_path(cmd, get_env_val_by_key("PATH", env_list))))
-			cmd->name = str_replace(&cmd->name, temp);
+			str_replace(&cmd->name, temp);
+		clear_ptr((void **)&temp);
 		if (!stat(cmd->name, &buf))
-			ft_exit(NULL, execve(cmd->name, arg_list_to_array(cmd->flags,
-				cmd->arg_list), env_list_to_array(env_list)) == -1 ? 126 : 0, &g_info);
+		{
+			temp2 = env_list_to_array(env_list);
+			retval = execve(cmd->name, arg_list_to_array(cmd->flags,
+				cmd->arg_list), temp2);
+			clear_two_dimensional_char_array(temp2);
+			ft_exit(NULL, retval == -1 ? 126 : 0, &g_info);
+		}
 		ft_exit(NULL, 127, &g_info);
 	}
 	return (ret_with_msg(cmd->name, NULL, " : No such command / Execute binary"

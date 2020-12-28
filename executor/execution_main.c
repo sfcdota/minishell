@@ -88,7 +88,8 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 		{
 			str_replace(&cmd->name, pure_$(cmd->name, info));
 			str_replace(&cmd->name, execute_$(cmd->name, env_list));
-			uncapitalize_str(str_replace(&info->uncap_cmd, ft_strdup(cmd->name)));
+            str_replace(&info->uncap_cmd, ft_strdup(cmd->name));
+			uncapitalize_str(info->uncap_cmd);
 			if (cmd->cmd_delimeter == 1)
 			{
 				if (!cmd_list->next)
@@ -102,7 +103,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 					dup2(info->pipe_fd[1], STDOUT_FILENO);
 					res = execute_cmd(cmd, env_list, info);
 					close(info->pipe_fd[1]);
-					exit(res);
+					ft_exit(NULL, res, &g_info);
 				}
 				close(info->pipe_fd[1]);
 				dup2(info->pipe_fd[0], 0);
