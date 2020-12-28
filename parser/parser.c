@@ -21,14 +21,14 @@ int cmd_count(char *line, t_info *info)
     cmd = new_cmd();
     while (line[++pars->i])
     {
-        if ((loop(info, pars, line, cmd)) == -1)
+        if ((loop(info, pars, line, &cmd)) == -1)
             return (-1);
         if (pars->str[0] && (pars->i >= pars->len || line[pars->i + 1] == ' ' ||
         	line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
-            cmd_update(pars, cmd);
+            cmd_update(pars, &cmd);
     }
     if (pars->str[0])
-        cmd_update(pars, cmd);
+        cmd_update(pars, &cmd);
     ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd));
     free(pars->str);
     free(pars);
@@ -105,7 +105,29 @@ char    *execute_d(char *arg, t_list *env_list)
 
 int	parser(char *command, t_info *info)
 {
+    t_cmd           *cmd;
+    t_arg	        *arg;
+    t_redirection   *redirection;
+
     if (!command)
         return (1);
+
+//        if (info->cmd_list)
+//        while (info->cmd_list)
+//        {
+//            cmd = info->cmd_list->content;
+//            cmd->name = execute_d(cmd->name, info->env_list);
+//            while (cmd->arg_list)
+//            {
+//                arg = cmd->arg_list->content;
+//                cmd->arg_list = cmd->arg_list->next;
+//            }
+//            while (cmd->redirection_list)
+//            {
+//                redirection = cmd->redirection_list->content;
+//                cmd->redirection_list = cmd->redirection_list->next;
+//            }
+//            info->cmd_list = info->cmd_list->next;
+//        }
     return (cmd_count(command, info));
 }

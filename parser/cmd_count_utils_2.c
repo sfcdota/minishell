@@ -30,7 +30,7 @@ static int	redirection_out_utils(t_info *info, t_pars *pars, char *line)
 	return (1);
 }
 
-int			redirection_out(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
+int			redirection_out(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 {
 	if (pars->str[0])
 	{
@@ -44,7 +44,7 @@ int			redirection_out(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
 		return (-1);
 	if (redirection_out_utils(info, pars, line) == -1)
 		return (-1);
-	ft_lstadd_back(&cmd->redirection_list,
+	ft_lstadd_back(&(*cmd)->redirection_list,
 				ft_lstnew(new_redirection(ft_strdup(pars->str), 1)));
 	if (pars->str)
 	{
@@ -56,7 +56,7 @@ int			redirection_out(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
 	return (1);
 }
 
-static int	redirection_in_utils(t_pars *pars, char *line, t_cmd *cmd)
+static int	redirection_in_utils(t_pars *pars, char *line, t_cmd **cmd)
 {
 	if (pars->str[0])
 	{
@@ -101,7 +101,7 @@ static int	redirection_in_loop(t_info *info, t_pars *pars, char *line)
 	return (1);
 }
 
-int			redirection_in(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
+int			redirection_in(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 {
 	if (redirection_in_utils(pars, line, cmd) == -1)
 		return (-1);
@@ -109,7 +109,7 @@ int			redirection_in(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
 		return (-1);
 	if (pars->str[0])
 	{
-		ft_lstadd_back(&cmd->redirection_list,
+		ft_lstadd_back(&(*cmd)->redirection_list,
 				ft_lstnew(new_redirection(ft_strdup(pars->str), pars->type)));
 		free(pars->str);
 		pars->str = malloc(sizeof(char) * 1);
