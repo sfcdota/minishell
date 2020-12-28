@@ -26,5 +26,7 @@ void	unname_command(t_cmd *cmd, t_list *env_list, t_info *info)
 {
 	str_replace(&cmd->name, pure_d(cmd->name, &g_info));
 	str_replace(&cmd->name, execute_d(cmd->name, env_list));
+	clear_ptr((void **)info->uncap_cmd);
+	info->uncap_cmd = ft_strdup(cmd->name);
 	uncapitalize_str(info->uncap_cmd);
 }

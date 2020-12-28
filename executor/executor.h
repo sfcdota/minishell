@@ -21,7 +21,7 @@
 **		MAIN SHELL COMMAND
 */
 int		execution(t_info *info, t_list *cmd_list, t_list *env_list);
-
+int		execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info);
 /*
 **		SIGNAL FUNCTIONSS
 */

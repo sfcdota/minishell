@@ -10,51 +10,40 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-** Executes command by comparing command name
-*/
+#include "../executor.h"
+#include "fcntl.h"
 
-int		execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info)
+void	set_fds(t_cmd *cmd)
 {
-	if (!ft_strcmp(info->uncap_cmd, "echo"))
-		return (echo(cmd, cmd->arg_list, env_list));
-	else if (!ft_strcmp(info->uncap_cmd, "cd"))
-		return (cd(cmd, cmd->arg_list, env_list));
-	else if (!ft_strcmp(info->uncap_cmd, "pwd"))
-		return (pwd(cmd));
-	else if (!ft_strcmp(info->uncap_cmd, "export"))
-		return (export(cmd, cmd->arg_list, env_list));
-	else if (!ft_strcmp(info->uncap_cmd, "unset"))
-		return (unset(cmd->arg_list, env_list));
-	else if (!ft_strcmp(info->uncap_cmd, "env"))
-		return (env(cmd, cmd->arg_list, env_list));
-	else if (!ft_strcmp(info->uncap_cmd, "exit"))
-		return (exit_(cmd->arg_list, env_list, info));
-	else
-		return (binary(cmd, cmd->arg_list, env_list, info));
+	t_redirection *redirection;
+
+	redirection = (t_redirection *)(cmd->redirection_list->content);
+	if (!redirection->filename || !*(redirection->filename))
+	{
+		cmd->redirection_list = cmd->redirection_list->next;
+		return ;
+	}
+	if (redirection->type == 1)
+	{
+		if (cmd->in != -2)
+			close(cmd->in);
+		cmd->in = open(redirection->filename, O_RDONLY, 0777);
+	}
+	if (redirection->type == 2 || redirection->type == 3)
+	{
+		if (cmd->out != -2)
+			close(cmd->out);
+		cmd->out = open(redirection->filename, redirection->type == 2 ? 
+		O_WRONLY | O_TRUNC | O_APPEND | O_CREAT
+		: O_WRONLY | O_APPEND | O_CREAT, 0777);
+	}
 }
 
 void	redirection_fds(t_cmd *cmd)
 {
-	t_redirection *redirection;
-
 	while (cmd->redirection_list)
 	{
-		redirection = (t_redirection *)(cmd->redirection_list->content);
-		if (redirection->type == 1)
-		{
-			if (cmd->in != -2)
-				close(cmd->in);
-			cmd->in = open(redirection->filename, O_RDONLY, 0777);
-		}
-		if (redirection->type == 2 || redirection->type == 3)
-		{
-			if (cmd->out != -2)
-				close(cmd->out);
-			cmd->out = open(redirection->filename, redirection->type == 2 ?
-			O_WRONLY | O_TRUNC | O_APPEND | O_CREAT
-			: O_WRONLY | O_APPEND | O_CREAT, 0777);
-		}
+		set_fds(cmd);
 		cmd->redirection_list = cmd->redirection_list->next;
 	}
 	if (cmd->out == -2)

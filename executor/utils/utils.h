@@ -67,7 +67,6 @@ t_arg					*unname_argument(t_list *arg_list, t_list *env_list);
 void					unname_command(t_cmd *cmd, t_list *env_list,
 	t_info *info);
 
-int						execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info);
 void					redirection_fds(t_cmd *cmd);
 int						pipe_init(t_cmd *cmd, t_list *cmd_list,
 	t_list *env_list, t_info *info);

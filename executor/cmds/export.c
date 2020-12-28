@@ -83,6 +83,7 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 		{
 			status = ret_with_msg("export : ", arg->name,
 				": not a valid identifier", 1);
+			arg_list = arg_list->next;
 			continue;
 		}
 		export_env(arg, tmp, env_list);
