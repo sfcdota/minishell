@@ -40,6 +40,8 @@ int				redirection_out(t_info *info, t_pars *pars, char *line)
 	while (line[pars->i] == ' ' || line[pars->i] == '<')
 		if (line[pars->i++] == '<')
 			return (-1);
+	if (pars->i >= pars->len)
+		return (-1);
 	if (redirection_out_utils(info, pars, line) == -1)
 		return (-1);
 	ft_lstadd_back(&pars->cmd1->redirection_list,
@@ -66,6 +68,8 @@ static int		redirection_in_utils(t_info *info, t_pars *pars, char *line)
 	while (line[pars->i] == ' ' || line[pars->i] == '>')
 		if (line[pars->i++] == '>')
 			return (-1);
+	if (pars->i >= pars->len)
+		return (-1);
 	if (ft_strlen(pars->str) == 1)
 		pars->type = 2;
 	else

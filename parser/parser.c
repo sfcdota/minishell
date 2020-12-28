@@ -15,7 +15,6 @@
 int cmd_count(char *line, t_info *info)
 {
     t_pars	*pars;
-    int status;
 
     pars = malloc(sizeof(t_pars));
     pars->cmd1 = new_cmd();
@@ -25,8 +24,8 @@ int cmd_count(char *line, t_info *info)
     pars->i = -1;
     while (line[++pars->i])
     {
-        if ((status = loop(info, pars, line)) > 1)
-            return (status);
+        if ((loop(info, pars, line)) == -1)
+            return (-1);
         if (pars->str[0] && (pars->i >= pars->len || line[pars->i + 1] == ' ' ||
         	line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
             cmd_update(pars);

@@ -61,8 +61,10 @@ int		logical_and(t_info *info, t_pars *pars, char *line)
 	}
 	pars->i += 2;
 	while (own_strchr("& ", line[pars->i]))
-		if (line[pars->i++] == '&' || pars->i == pars->len)
+		if (line[pars->i++] == '&')
 			return (-1);
+	if (!pars->cmd1->name || pars->i >= pars->len)
+		return (-1);
 	pars->cmd1->cmd_delimeter = 2;
 	ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars->cmd1));
 	pars->cmd1 = new_cmd();
@@ -76,15 +78,15 @@ int		logical_and(t_info *info, t_pars *pars, char *line)
 int		pipes(t_info *info, t_pars *pars, char *line)
 {
 	if (pars->str[0])
-	{
 		cmd_update(pars);
-	}
 	pars->str = strj(pars->str, line[pars->i++]);
 	if (line[pars->i] == '|')
 		pars->str = strj(pars->str, line[pars->i++]);
 	while (own_strchr("| ", line[pars->i]))
-		if (line[pars->i++] == '|' || pars->i == pars->len || !pars->cmd1->name)
+		if (line[pars->i++] == '|')
 			return (-1);
+	if (pars->i >= pars->len || !pars->cmd1->name)
+		return (-1);
 	if (ft_strlen(pars->str) == 1)
 		pars->cmd1->cmd_delimeter = 1;
 	else if (ft_strlen(pars->str) == 2)

@@ -20,8 +20,10 @@ int				end_cmd(t_info *info, t_pars *pars, char *line)
 	}
 	pars->i++;
 	while (own_strchr("; ", line[pars->i]) && pars->i < pars->len)
-		if (line[pars->i++] == ';' || !pars->cmd1->name)
+		if (line[pars->i++] == ';')
 			return (-1);
+	if (!pars->cmd1->name)
+		return (-1);
 	if (pars->i != pars->len)
 	{
 		ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars->cmd1));
@@ -38,36 +40,34 @@ static int		loop_utils(t_info *info, t_pars *pars, char *line)
 	else if (pars->i + 2 < pars->len &&
 			line[pars->i] == '&' && line[pars->i + 1] == '&' &&
 			logical_and(info, pars, line) == -1)
-		return (4);
+		return (-1);
 	else if (line[pars->i] == '|' && pipes(info, pars, line) == -1)
-		return (5);
+		return (-1);
 	else if (line[pars->i] == ';' && end_cmd(info, pars, line) == -1)
-		return (8);
+		return (-1);
 	else if (line[pars->i] == '<' && redirection_out(info, pars, line) == -1)
-		return (9);
+		return (-1);
 	else if (line[pars->i] == '>' && redirection_in(info, pars, line) == -1)
-		return (7);
+		return (-1);
 	return (1);
 }
 
 int				loop(t_info *info, t_pars *pars, char *line)
 {
-	int status;
-
 	while (line[pars->i] == ' ')
 		pars->i++;
 	if (own_strchr("\\#=()*", line[pars->i]))
-		return (2);
+		return (-1);
 	if (line[pars->i] == '\'' && quote(info, pars, line) == -1)
-		return (6);
+		return (-1);
 	else if (!own_strchr("\"' |;<>()#*&\\", line[pars->i]))
 	{
 		while (!own_strchr("'\"()#*& |;\\<>", line[pars->i]) && line[pars->i])
 			pars->str = strj(pars->str, line[pars->i++]);
 		pars->i--;
 	}
-	if ((status = loop_utils(info, pars, line)) > 1)
-		return (status);
+	if (loop_utils(info, pars, line) == -1)
+		return (-1);
 	return (1);
 }
 
