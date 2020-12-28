@@ -12,122 +12,99 @@
 
 #include "parser.h"
 
-int cmd_count(char *line, t_info *info)
+int			cmd_count(char *line, t_info *info)
 {
-    t_pars	*pars;
-    t_cmd	*cmd;
+	t_pars	*pars;
+	t_cmd	*cmd;
 
-    pars = pars_init(line);
-    cmd = new_cmd();
-    while (line[++pars->i])
-    {
-        if ((loop(info, pars, line, &cmd)) == -1)
-            return (-1);
-        if (pars->str[0] && (pars->i >= pars->len || line[pars->i + 1] == ' ' ||
-        	line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
-            cmd_update(pars, &cmd);
-    }
-    if (pars->str[0])
-        cmd_update(pars, &cmd);
-    ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd));
-    free(pars->str);
-    free(pars);
-    return (1);
+	pars = pars_init(line);
+	cmd = new_cmd();
+	while (line[++pars->i])
+	{
+		if ((loop(info, pars, line, &cmd)) == -1)
+			return (-1);
+		if (pars->str[0] && (pars->i >= pars->len || line[pars->i + 1] == ' ' ||
+					line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
+			cmd_update(pars, &cmd);
+	}
+	if (pars->str[0])
+		cmd_update(pars, &cmd);
+	ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd));
+	free(pars->str);
+	free(pars);
+	return (1);
 }
 
-t_utils *utils_init()
+t_utils		*utils_init(void)
 {
 	t_utils *utils;
 
 	utils = malloc(sizeof(t_utils) * 1);
-    utils->i = -1;
-    utils->tmp = (char *)malloc(sizeof(char) * 1);
-    utils->tmp[0] = '\0';
-    utils->env_name = (char *)malloc(sizeof(char) * 1);
-    utils->env_name[0] = '\0';
-    return (utils);
+	utils->i = -1;
+	utils->tmp = (char *)malloc(sizeof(char) * 1);
+	utils->tmp[0] = '\0';
+	utils->env_name = (char *)malloc(sizeof(char) * 1);
+	utils->env_name[0] = '\0';
+	return (utils);
 }
 
-char    *pure_d(char *arg, t_info *info)
+char		*pure_d(char *arg, t_info *info)
 {
-    t_utils *utils;
-    char *tmp;
+	t_utils	*utils;
+	char	*tmp;
 
-    if (!arg)
-    	return (NULL);
-    utils = utils_init();
-    while (arg[++utils->i])
-        if (arg[utils->i] == '$')
-            utils->tmp = end_pars03(utils, arg, info->env_list);
-        else if (arg[utils->i] == '\'')
-        {
-            utils->tmp = strj(utils->tmp, arg[utils->i]);
-            while (arg[++utils->i] && arg[utils->i] != '\'')
-                utils->tmp = strj(utils->tmp, arg[utils->i]);
-            if (arg[utils->i])
-	            utils->tmp = strj(utils->tmp, arg[utils->i]);
-            if (!arg[utils->i])
-                return (utils->tmp);
-        }
-        else
-            utils->tmp = strj(utils->tmp, arg[utils->i]);
-        tmp = ft_strdup(utils->tmp);
-        utils_free(utils);
-        free(utils);
-    return (tmp);
+	if (!arg)
+		return (NULL);
+	utils = utils_init();
+	while (arg[++utils->i])
+		if (arg[utils->i] == '$')
+			utils->tmp = end_pars03(utils, arg, info->env_list);
+		else if (arg[utils->i] == '\'')
+		{
+			utils->tmp = strj(utils->tmp, arg[utils->i]);
+			while (arg[++utils->i] && arg[utils->i] != '\'')
+				utils->tmp = strj(utils->tmp, arg[utils->i]);
+			if (arg[utils->i])
+				utils->tmp = strj(utils->tmp, arg[utils->i]);
+			if (!arg[utils->i])
+				return (utils->tmp);
+		}
+		else
+			utils->tmp = strj(utils->tmp, arg[utils->i]);
+	tmp = ft_strdup(utils->tmp);
+	utils_free(utils);
+	free(utils);
+	return (tmp);
 }
 
-
-char    *execute_d(char *arg, t_list *env_list)
+char		*execute_d(char *arg, t_list *env_list)
 {
-    t_utils *utils;
-    char	*tmp;
+	t_utils	*utils;
+	char	*tmp;
 
-    utils = utils_init();
-    if (!arg)
-        return (NULL);
-    while (arg[++utils->i])
-    {
-        if (arg[utils->i] == '\'')
-            utils->tmp  = end_pars01(utils, arg);
-        else if (arg[utils->i] == '"')
-            utils->tmp = end_pars02(utils, arg, env_list);
-        else if (arg[utils->i] == '$')
-            utils->tmp = end_pars03(utils, arg, env_list);
-        else
-            utils->tmp = strj(utils->tmp, arg[utils->i]);
-    }
-    tmp = ft_strdup(utils->tmp);
-    utils_free(utils);
-    free(utils);
-    return (tmp);
+	utils = utils_init();
+	if (!arg)
+		return (NULL);
+	while (arg[++utils->i])
+	{
+		if (arg[utils->i] == '\'')
+			utils->tmp = end_pars01(utils, arg);
+		else if (arg[utils->i] == '"')
+			utils->tmp = end_pars02(utils, arg, env_list);
+		else if (arg[utils->i] == '$')
+			utils->tmp = end_pars03(utils, arg, env_list);
+		else
+			utils->tmp = strj(utils->tmp, arg[utils->i]);
+	}
+	tmp = ft_strdup(utils->tmp);
+	utils_free(utils);
+	free(utils);
+	return (tmp);
 }
 
-int	parser(char *command, t_info *info)
+int			parser(char *command, t_info *info)
 {
-    t_cmd           *cmd;
-    t_arg	        *arg;
-    t_redirection   *redirection;
-
-    if (!command)
-        return (1);
-
-//        if (info->cmd_list)
-//        while (info->cmd_list)
-//        {
-//            cmd = info->cmd_list->content;
-//            cmd->name = execute_d(cmd->name, info->env_list);
-//            while (cmd->arg_list)
-//            {
-//                arg = cmd->arg_list->content;
-//                cmd->arg_list = cmd->arg_list->next;
-//            }
-//            while (cmd->redirection_list)
-//            {
-//                redirection = cmd->redirection_list->content;
-//                cmd->redirection_list = cmd->redirection_list->next;
-//            }
-//            info->cmd_list = info->cmd_list->next;
-//        }
-    return (cmd_count(command, info));
+	if (!command)
+		return (1);
+	return (cmd_count(command, info));
 }
