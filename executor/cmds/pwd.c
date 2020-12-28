@@ -24,5 +24,6 @@ int	pwd(t_cmd *cmd)
 	if (!(pwd = getcwd(NULL, 228)))
 		return (ret_with_msg(cmd->name, GETCWD_ERROR, NULL, 1));
 	ft_putendl_fd(pwd, cmd->out);
+	clear_ptr((void **)&pwd);
 	return (0);
 }

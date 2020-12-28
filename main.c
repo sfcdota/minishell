@@ -33,6 +33,7 @@ int		main(int argc, char **argv, char *envp[])
 		|| (res = get_next_line(g_info.base_in, &g_info.line)) == -1)
 		{
 			small_error(errno, strerror(errno));
+			clear_ptr((void **)&res);
 			continue ;
 		}
 		if (res == 0 && !*g_info.line)
