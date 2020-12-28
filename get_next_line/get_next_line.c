@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "../libft/libft.h"
 
 char	*str_dup(char *s)
 {
@@ -84,6 +85,11 @@ int		read_line(int fd, char **line, char *buf, char **buffer_remains)
 			free(buf);
 			buf = ft_calloc_gnl(sizeof(char), (BUFFER_SIZE + 1));
 			status = read(fd, buf, BUFFER_SIZE);
+			if (buf[str_len(buf) - 1] != '\n'
+			&& str_len(buf) != BUFFER_SIZE)
+			{
+				write(STDIN_FILENO, "  \b\b", 4);
+			}
 		}
 	}
 	*buffer_remains = str_dup(&buf[1 - index]);
@@ -115,6 +121,11 @@ int		get_next_line(int fd, char **line)
 	else
 		status = read(fd,
 		buf = ft_calloc_gnl(sizeof(unsigned char), (buf_size + 1)), buf_size);
+	if (status && buf[str_len(buf) - 1] != '\n'
+		&& str_len(buf) != BUFFER_SIZE)
+	{
+		write(STDIN_FILENO, "  \b\b", 4);
+	}
 	return (status != -1 ? read_line(fd, line, buf, &buffer_remains[fd])
 	: destroy(buf, NULL, NULL, status));
 }

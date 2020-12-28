@@ -58,7 +58,7 @@ int	main(int argc, char **argv, char *envp[])
 		if (res == 0)
 			ft_putstr_fd("\n", STDOUT_FILENO);
 		res = parser(g_info.line, &g_info);
-		if (res != 1)
+		if (res == -1)
 			str_replace(&get_env_by_key("?", g_info.env_list)->value,
 				ft_itoa(258));
 		execution(&g_info, g_info.cmd_list, g_info.env_list);
