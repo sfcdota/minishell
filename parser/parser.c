@@ -48,7 +48,7 @@ t_utils *utils_init()
     return (utils);
 }
 
-char    *pure_$(char *arg, t_info *info)
+char    *pure_d(char *arg, t_info *info)
 {
     t_utils *utils;
     char *tmp;
@@ -78,7 +78,7 @@ char    *pure_$(char *arg, t_info *info)
 }
 
 
-char    *execute_$(char *arg, t_list *env_list)
+char    *execute_d(char *arg, t_list *env_list)
 {
     t_utils *utils;
     char	*tmp;

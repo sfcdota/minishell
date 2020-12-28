@@ -23,7 +23,6 @@ void	sighandler(int signum)
 	{
 		if (g_info.pid == -1)
 		{
-//			dup2(STDIN_FILENO, g_info.base_in);
 			ft_putstr_fd("\n", STDOUT_FILENO);
 			ft_putstr_fd(SHELL_PREFIX, STDOUT_FILENO);
 		}

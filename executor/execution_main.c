@@ -86,8 +86,8 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 		redirection_fds(cmd);
 		if (cmd->name)
 		{
-			str_replace(&cmd->name, pure_$(cmd->name, info));
-			str_replace(&cmd->name, execute_$(cmd->name, env_list));
+			str_replace(&cmd->name, pure_d(cmd->name, info));
+			str_replace(&cmd->name, execute_d(cmd->name, env_list));
             str_replace(&info->uncap_cmd, ft_strdup(cmd->name));
 			uncapitalize_str(info->uncap_cmd);
 			if (cmd->cmd_delimeter == 1)

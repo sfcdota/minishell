@@ -69,4 +69,6 @@ void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst,
 void *(*f)(void *), void (*del)(void *));
 
+void				*ft_clear_split(char **t, int i);
+
 #endif

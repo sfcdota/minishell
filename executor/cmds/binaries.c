@@ -12,8 +12,6 @@
 
 #include "../executor.h"
 
-void			*ft_clear_split(char **t, int i);
-
 /*
 ** Checks PATH env variable for binary name of cmd->name
 */
@@ -24,7 +22,7 @@ void	check_path(t_cmd *cmd, char *path)
 	struct stat	buf;
 	int			i;
 	int 		is_found;
-	
+
 	i = 0;
 	is_found = 0;
 	if (!(dirs = ft_split(path, ':')))
@@ -41,7 +39,6 @@ void	check_path(t_cmd *cmd, char *path)
 				is_found = 1;
 			}
 		}
-//		ft_putendl_fd(dirs[i], STDOUT_FILENO);
 		i++;
 	}
 	ft_clear_split(dirs, i);
