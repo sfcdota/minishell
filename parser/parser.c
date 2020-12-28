@@ -15,36 +15,37 @@
 int cmd_count(char *line, t_info *info)
 {
     t_pars	*pars;
+    t_cmd	*cmd;
 
-    pars = malloc(sizeof(t_pars));
-    pars->cmd1 = new_cmd();
-    pars->len = ft_strlen(line);
-    pars->str = malloc(sizeof(char));
-    *(pars->str) = '\0';
-    pars->i = -1;
+    pars = pars_init(line);
+    cmd = new_cmd();
     while (line[++pars->i])
     {
-        if ((loop(info, pars, line)) == -1)
+        if ((loop(info, pars, line, cmd)) == -1)
             return (-1);
         if (pars->str[0] && (pars->i >= pars->len || line[pars->i + 1] == ' ' ||
         	line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
-            cmd_update(pars);
+            cmd_update(pars, cmd);
     }
     if (pars->str[0])
-        cmd_update(pars);
-    ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars->cmd1));
-    pars->cmd1 = new_cmd();
+        cmd_update(pars, cmd);
+    ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd));
     free(pars->str);
+    free(pars);
     return (1);
 }
 
-void utils_init(t_utils *utils)
+t_utils *utils_init()
 {
+	t_utils *utils;
+
+	utils = malloc(sizeof(t_utils) * 1);
     utils->i = -1;
     utils->tmp = (char *)malloc(sizeof(char) * 1);
     utils->tmp[0] = '\0';
     utils->env_name = (char *)malloc(sizeof(char) * 1);
     utils->env_name[0] = '\0';
+    return (utils);
 }
 
 char    *pure_$(char *arg, t_info *info)
@@ -54,8 +55,7 @@ char    *pure_$(char *arg, t_info *info)
 
     if (!arg)
     	return (NULL);
-    utils = malloc(sizeof(t_utils));
-    utils_init(utils);
+    utils = utils_init();
     while (arg[++utils->i])
         if (arg[utils->i] == '$')
             utils->tmp = end_pars03(utils, arg, info->env_list);
@@ -73,6 +73,7 @@ char    *pure_$(char *arg, t_info *info)
             utils->tmp = strj(utils->tmp, arg[utils->i]);
         tmp = ft_strdup(utils->tmp);
         utils_free(utils);
+        free(utils);
     return (tmp);
 }
 
@@ -82,8 +83,7 @@ char    *execute_$(char *arg, t_list *env_list)
     t_utils *utils;
     char	*tmp;
 
-    utils = malloc(sizeof(t_utils));
-    utils_init(utils);
+    utils = utils_init();
     if (!arg)
         return (NULL);
     while (arg[++utils->i])
@@ -99,6 +99,7 @@ char    *execute_$(char *arg, t_list *env_list)
     }
     tmp = ft_strdup(utils->tmp);
     utils_free(utils);
+    free(utils);
     return (tmp);
 }
 

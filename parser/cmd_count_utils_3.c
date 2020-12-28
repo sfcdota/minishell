@@ -12,47 +12,49 @@
 
 #include "parser.h"
 
-int				end_cmd(t_info *info, t_pars *pars, char *line)
+int				end_cmd(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
 {
 	if (pars->str[0])
 	{
-		cmd_update(pars);
+		cmd_update(pars, cmd);
 	}
 	pars->i++;
 	while (own_strchr("; ", line[pars->i]) && pars->i < pars->len)
 		if (line[pars->i++] == ';')
 			return (-1);
-	if (!pars->cmd1->name)
+	if (!cmd->name)
 		return (-1);
 	if (pars->i != pars->len)
 	{
-		ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars->cmd1));
-		pars->cmd1 = new_cmd();
+		ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd));
+		cmd = new_cmd();
 	}
 	pars->i--;
 	return (1);
 }
 
-static int		loop_utils(t_info *info, t_pars *pars, char *line)
+static int		loop_utils(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
 {
 	if (line[pars->i] == '"' && dquote(info, pars, line) == -1)
 		return (3);
 	else if (pars->i + 2 < pars->len &&
 			line[pars->i] == '&' && line[pars->i + 1] == '&' &&
-			logical_and(info, pars, line) == -1)
+			logical_and(info, pars, line, cmd) == -1)
 		return (-1);
-	else if (line[pars->i] == '|' && pipes(info, pars, line) == -1)
+	else if (line[pars->i] == '|' && pipes(info, pars, line, cmd) == -1)
 		return (-1);
-	else if (line[pars->i] == ';' && end_cmd(info, pars, line) == -1)
+	else if (line[pars->i] == ';' && end_cmd(info, pars, line, cmd) == -1)
 		return (-1);
-	else if (line[pars->i] == '<' && redirection_out(info, pars, line) == -1)
+	else if (line[pars->i] == '<' &&
+			redirection_out(info, pars, line, cmd) == -1)
 		return (-1);
-	else if (line[pars->i] == '>' && redirection_in(info, pars, line) == -1)
+	else if (line[pars->i] == '>' &&
+			redirection_in(info, pars, line, cmd) == -1)
 		return (-1);
 	return (1);
 }
 
-int				loop(t_info *info, t_pars *pars, char *line)
+int				loop(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
 {
 	while (line[pars->i] == ' ')
 		pars->i++;
@@ -66,13 +68,25 @@ int				loop(t_info *info, t_pars *pars, char *line)
 			pars->str = strj(pars->str, line[pars->i++]);
 		pars->i--;
 	}
-	if (loop_utils(info, pars, line) == -1)
+	if (loop_utils(info, pars, line, cmd) == -1)
 		return (-1);
 	return (1);
 }
 
-void 			utils_free(t_utils *utils)
+void			utils_free(t_utils *utils)
 {
 	free(utils->tmp);
 	free(utils->env_name);
+}
+
+t_pars			*pars_init(char *line)
+{
+	t_pars *pars;
+
+	pars = malloc(sizeof(t_pars) * 1);
+	pars->len = ft_strlen(line);
+	pars->str = malloc(sizeof(char));
+	*(pars->str) = '\0';
+	pars->i = -1;
+	return (pars);
 }

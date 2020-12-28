@@ -20,7 +20,6 @@ typedef struct s_parser
 	int     type;
 	char	*str;
 	size_t	len;
-	t_cmd	*cmd1;
 }			t_pars;
 
 typedef struct s_utils
@@ -35,7 +34,7 @@ int			cmd_count(char *cmd, t_info *info);
 char		*strj(char *s1, char s2);
 t_arg		*new_arg(char *name, int is_env);
 t_cmd		*new_cmd(void);
-void        utils_init(t_utils *utils);
+t_utils		*utils_init();
 int         own_strchr(char *str, char ch);
 char	    *get_env_value_by_key(char *key, t_list *env_list);
 char        *get_env(int *i, char *arg, t_list *env_list);
@@ -46,14 +45,15 @@ char        *end_pars02(t_utils *utils, char *arg, t_list *env_list);
 char        *end_pars03(t_utils *utils, char *arg, t_list *env_list);
 int         quote(t_info *info, t_pars *pars, char *line);
 int         dquote(t_info *info, t_pars *pars, char *line);
-void        cmd_update(t_pars *pars);
-int         logical_and(t_info *info, t_pars *pars, char *line);
-int         pipes(t_info *info, t_pars *pars, char *line);
-int         end_cmd(t_info *info, t_pars *pars, char *line);
-int         redirection_out(t_info *info, t_pars *pars, char *line);
-int         redirection_in(t_info *info, t_pars *pars, char *line);
-int         loop(t_info *info, t_pars *pars, char *line);
+void        cmd_update(t_pars *pars, t_cmd *cmd);
+int         logical_and(t_info *info, t_pars *pars, char *line, t_cmd *cmd);
+int         pipes(t_info *info, t_pars *pars, char *line, t_cmd *cmd);
+int         end_cmd(t_info *info, t_pars *pars, char *line, t_cmd *cmd);
+int         redirection_out(t_info *info, t_pars *pars, char *line, t_cmd *cmd);
+int         redirection_in(t_info *info, t_pars *pars, char *line, t_cmd *cmd);
+int         loop(t_info *info, t_pars *pars, char *line, t_cmd *cmd);
 char        *pure_$(char *arg, t_info *info);
 void 		utils_free(t_utils *utils);
+t_pars		*pars_init(char *line);
 
 #endif

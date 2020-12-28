@@ -38,36 +38,36 @@ int		dquote(t_info *info, t_pars *pars, char *line)
 	return (1);
 }
 
-void	cmd_update(t_pars *pars)
+void	cmd_update(t_pars *pars, t_cmd *cmd)
 {
-	if (!pars->cmd1->name)
-		pars->cmd1->name = ft_strdup(pars->str);
-	else if (!pars->cmd1->flags && !pars->cmd1->arg_list
+	if (!cmd->name)
+		cmd->name = ft_strdup(pars->str);
+	else if (!cmd->flags && !cmd->arg_list
 			&& !ft_strncmp("-n", pars->str, 2))
-		pars->cmd1->flags = ft_strdup(pars->str);
+		cmd->flags = ft_strdup(pars->str);
 	else
-		ft_lstadd_back(&pars->cmd1->arg_list,
+		ft_lstadd_back(&cmd->arg_list,
 					ft_lstnew(new_arg(ft_strdup(pars->str), 0)));
 	free(pars->str);
 	pars->str = malloc(sizeof(char) * 1);
 	pars->str[0] = '\0';
 }
 
-int		logical_and(t_info *info, t_pars *pars, char *line)
+int		logical_and(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
 {
 	if (pars->str[0])
 	{
-		cmd_update(pars);
+		cmd_update(pars, cmd);
 	}
 	pars->i += 2;
 	while (own_strchr("& ", line[pars->i]))
 		if (line[pars->i++] == '&')
 			return (-1);
-	if (!pars->cmd1->name || pars->i >= pars->len)
+	if (!cmd->name || pars->i >= pars->len)
 		return (-1);
-	pars->cmd1->cmd_delimeter = 2;
-	ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars->cmd1));
-	pars->cmd1 = new_cmd();
+	cmd->cmd_delimeter = 2;
+	ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd));
+	cmd = new_cmd();
 	free(pars->str);
 	pars->str = malloc(sizeof(char) * 1);
 	*pars->str = '\0';
@@ -75,24 +75,24 @@ int		logical_and(t_info *info, t_pars *pars, char *line)
 	return (1);
 }
 
-int		pipes(t_info *info, t_pars *pars, char *line)
+int		pipes(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
 {
 	if (pars->str[0])
-		cmd_update(pars);
+		cmd_update(pars, cmd);
 	pars->str = strj(pars->str, line[pars->i++]);
 	if (line[pars->i] == '|')
 		pars->str = strj(pars->str, line[pars->i++]);
 	while (own_strchr("| ", line[pars->i]))
 		if (line[pars->i++] == '|')
 			return (-1);
-	if (pars->i >= pars->len || !pars->cmd1->name)
+	if (pars->i >= pars->len || !cmd->name)
 		return (-1);
 	if (ft_strlen(pars->str) == 1)
-		pars->cmd1->cmd_delimeter = 1;
+		cmd->cmd_delimeter = 1;
 	else if (ft_strlen(pars->str) == 2)
-		pars->cmd1->cmd_delimeter = 3;
-	ft_lstadd_back(&(info->cmd_list), ft_lstnew(pars->cmd1));
-	pars->cmd1 = new_cmd();
+		cmd->cmd_delimeter = 3;
+	ft_lstadd_back(&(info->cmd_list), ft_lstnew(cmd));
+	cmd = new_cmd();
 	free(pars->str);
 	pars->str = malloc(sizeof(char) * 1);
 	*pars->str = '\0';

@@ -12,7 +12,7 @@
 
 #include "parser.h"
 
-static int		redirection_out_utils(t_info *info, t_pars *pars, char *line)
+static int	redirection_out_utils(t_info *info, t_pars *pars, char *line)
 {
 	while (!own_strchr("()#&* |;\\<>", line[pars->i]) && line[pars->i])
 	{
@@ -30,11 +30,11 @@ static int		redirection_out_utils(t_info *info, t_pars *pars, char *line)
 	return (1);
 }
 
-int				redirection_out(t_info *info, t_pars *pars, char *line)
+int			redirection_out(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
 {
 	if (pars->str[0])
 	{
-		cmd_update(pars);
+		cmd_update(pars, cmd);
 	}
 	pars->i++;
 	while (line[pars->i] == ' ' || line[pars->i] == '<')
@@ -44,7 +44,7 @@ int				redirection_out(t_info *info, t_pars *pars, char *line)
 		return (-1);
 	if (redirection_out_utils(info, pars, line) == -1)
 		return (-1);
-	ft_lstadd_back(&pars->cmd1->redirection_list,
+	ft_lstadd_back(&cmd->redirection_list,
 				ft_lstnew(new_redirection(ft_strdup(pars->str), 1)));
 	if (pars->str)
 	{
@@ -56,11 +56,11 @@ int				redirection_out(t_info *info, t_pars *pars, char *line)
 	return (1);
 }
 
-static int		redirection_in_utils(t_info *info, t_pars *pars, char *line)
+static int	redirection_in_utils(t_pars *pars, char *line, t_cmd *cmd)
 {
 	if (pars->str[0])
 	{
-		cmd_update(pars);
+		cmd_update(pars, cmd);
 	}
 	pars->str = strj(pars->str, line[pars->i++]);
 	if (line[pars->i] == '>')
@@ -83,7 +83,7 @@ static int		redirection_in_utils(t_info *info, t_pars *pars, char *line)
 	return (1);
 }
 
-static int		redirection_in_loop(t_info *info, t_pars *pars, char *line)
+static int	redirection_in_loop(t_info *info, t_pars *pars, char *line)
 {
 	while (!own_strchr("()#*& |;\\<>", line[pars->i]) && pars->i < pars->len)
 	{
@@ -101,15 +101,15 @@ static int		redirection_in_loop(t_info *info, t_pars *pars, char *line)
 	return (1);
 }
 
-int				redirection_in(t_info *info, t_pars *pars, char *line)
+int			redirection_in(t_info *info, t_pars *pars, char *line, t_cmd *cmd)
 {
-	if (redirection_in_utils(info, pars, line) == -1)
+	if (redirection_in_utils(pars, line, cmd) == -1)
 		return (-1);
 	if (redirection_in_loop(info, pars, line) == -1)
 		return (-1);
 	if (pars->str[0])
 	{
-		ft_lstadd_back(&pars->cmd1->redirection_list,
+		ft_lstadd_back(&cmd->redirection_list,
 				ft_lstnew(new_redirection(ft_strdup(pars->str), pars->type)));
 		free(pars->str);
 		pars->str = malloc(sizeof(char) * 1);
