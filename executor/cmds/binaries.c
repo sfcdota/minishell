@@ -12,6 +12,8 @@
 
 #include "../executor.h"
 
+void			*ft_clear_split(char **t, int i);
+
 /*
 ** Checks PATH env variable for binary name of cmd->name
 */
@@ -39,10 +41,8 @@ char	*check_path(t_cmd *cmd, char *path)
 		i++;
 	}
 	if (!dirs[i])
-		i--;
-	while (i >= 0)
-		clear_ptr((void **)&dirs[i--]);
-	clear_ptr((void **)dirs);
+	    i--;
+	ft_clear_split(dirs, i);
 	return (temp);
 }
 
