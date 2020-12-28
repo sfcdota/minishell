@@ -27,7 +27,7 @@ int				end_cmd(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 	if (pars->i != pars->len)
 	{
 		ft_lstadd_back(&(info->cmd_list), ft_lstnew((*cmd)));
-		cmd = new_cmd();
+		(*cmd) = new_cmd();
 	}
 	pars->i--;
 	return (1);
