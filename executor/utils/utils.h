@@ -22,9 +22,6 @@ void					clear_env(void *env_content);
 void					clear_arg(void *arg_content);
 void					clear_cmd(void *cmd_content);
 void					clear_all(t_info *info);
-void					clear_error(void *error_content);
-void					clear_two_dimensional_char_array(char **arr);
-
 
 /*
 **						ENVIRONMENT FUNCTIONS
@@ -36,7 +33,7 @@ t_env					*add_env(t_list **env_list, char *key, char *value
 void					sort_envs(t_list *env_list);
 t_list					*envs_to_list(char *envp[]);
 char					**env_list_to_array(t_list *env_list);
-void					print_env_array(char **envp);
+void					export_env(t_arg *arg, char *tmp, t_list *env_list);
 
 /*
 **						ENVIRONMENT "GET" FUNCTIONS
@@ -65,4 +62,16 @@ char					*get_substr(char *begin, char *end);
 char					*str_append(char **s1, char *s2);
 void					str_replace(char **s1, char *s2);
 void					uncapitalize_str(char *str);
+
+t_arg					*unname_argument(t_list *arg_list, t_list *env_list);
+void					unname_command(t_cmd *cmd, t_list *env_list,
+	t_info *info);
+
+int						execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info);
+void					redirection_fds(t_cmd *cmd);
+int						pipe_init(t_cmd *cmd, t_list *cmd_list,
+	t_list *env_list, t_info *info);
+int						pipe_end(t_cmd *cmd, t_list *env_list, t_info *info,
+	int input_res);
+void					return_fds(t_cmd *cmd);
 #endif

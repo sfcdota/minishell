@@ -20,7 +20,7 @@
 void	print_env_list(t_list *env_list, char *prefix, int std_out)
 {
 	t_env *env;
-	
+
 	while (env_list)
 	{
 		if (!(env = (t_env *)(env_list->content))->is_hidden)
@@ -68,40 +68,25 @@ int		is_correct_var(char *s)
 
 int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 {
-	t_arg *arg;
-	char *temp;
-	char *temp_arg;
-	t_env *env;
+	t_arg	*arg;
+	char	*tmp;
+	int		status;
 
+	status = 0;
 	if (!arg_list)
 		print_env_list(env_list, "declare -x ", cmd->out);
 	while (arg_list)
 	{
-		arg = (t_arg *)(arg_list->content);
-		str_replace(&arg->name, pure_d(arg->name, &g_info));
-		str_replace(&arg->name, execute_d(arg->name, env_list));
-		temp = to_delimiter(arg->name, '=');
-		if (is_correct_var(arg->name))
+		arg = unname_argument(arg_list, env_list);
+		tmp = to_delimiter(arg->name, '=');
+		if (!is_correct_var(arg->name))
 		{
-			temp_arg = get_substr(arg->name, temp);
-			if (temp_arg && *temp_arg)
-			{
-				if ((env = get_env_by_key(temp_arg, env_list)))
-				{
-					str_replace(&temp_arg,
-						get_substr(temp ? temp + 1 : temp, NULL));
-					if (ft_strcmp(env->value, temp_arg))
-						str_replace(&env->value, temp_arg);
-				} else
-					add_env(&env_list, temp_arg, temp && *temp ?
-						get_substr(temp + 1, NULL) : NULL, 0);
-			}
-			else
-				clear_ptr((void **)&temp_arg);
+			status = ret_with_msg("export : ", arg->name,
+				": not a valid identifier", 1);
+			continue;
 		}
-		else
-			return (ret_with_msg("export : ", arg->name, ": not a valid identifier", 1));//var is not correct
+		export_env(arg, tmp, env_list);
 		arg_list = arg_list->next;
 	}
-	return (0);
+	return (status);
 }

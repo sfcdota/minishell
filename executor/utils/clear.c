@@ -52,18 +52,6 @@ void	clear_arg(void *arg_content)
 	clear_ptr((void **)&arg);
 }
 
-///*
-//** Clear(free) errors list
-//*/
-//
-//void	clear_error(void *error_content)
-//{
-//	t_error *error;
-//
-//	error = (t_error *)error_content;
-//	clear_ptr((void **)&error->value);
-//}
-
 /*
 ** Clear(free) commands list
 */
@@ -91,7 +79,6 @@ void	clear_all(t_info *info)
 {
 	ft_lstclear(&info->cmd_list, clear_cmd);
 	ft_lstclear(&info->env_list, clear_env);
-//	ft_lstclear(&info->error_list, clear_error);
 	if (info->pipe_fd)
 	{
 		if (info->pipe_fd[0])
@@ -104,20 +91,4 @@ void	clear_all(t_info *info)
 	clear_ptr((void **)&info->uncap_cmd);
 	if (info->base_in != -1)
 		close(info->base_in);
-}
-
-/*
-**
-*/
-
-void	clear_two_dimensional_char_array(char **arr)
-{
-	if (!arr || !*arr)
-		return ;
-	while (*arr)
-	{
-		clear_ptr((void **)(&(*arr)));
-		(*arr)++;
-	}
-	clear_ptr((void **)arr);
 }

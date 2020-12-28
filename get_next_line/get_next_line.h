@@ -28,5 +28,5 @@ int		str_line_len(const char *s);
 char	*str_join(char *s1, char *s2, int length);
 int		read_line(int fd, char **line, char *buf, char **buffer_remains);
 int		get_next_line(int fd, char **line);
-
+void	gnl_eof(char *buf, int status);
 #endif

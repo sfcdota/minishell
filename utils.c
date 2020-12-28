@@ -16,7 +16,6 @@ void			init_info(t_info *info, char **envp)
 {
 	info->cmd_list = NULL;
 	info->env_list = envs_to_list(envp);
-//	info->error_list = init_errors(info);
 	info->base_in = dup(STDIN_FILENO);
 	info->pipe_fd = NULL;
 	info->line = NULL;
