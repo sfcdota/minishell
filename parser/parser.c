@@ -51,6 +51,7 @@ void utils_init(t_utils *utils)
 char    *pure_$(char *arg, t_info *info)
 {
     t_utils *utils;
+    char *tmp;
 
     if (!arg)
     	return (NULL);
@@ -71,13 +72,16 @@ char    *pure_$(char *arg, t_info *info)
         }
         else
             utils->tmp = strj(utils->tmp, arg[utils->i]);
-    return (utils->tmp);
+        tmp = ft_strdup(utils->tmp);
+        utils_free(utils);
+    return (tmp);
 }
 
 
 char    *execute_$(char *arg, t_list *env_list)
 {
     t_utils *utils;
+    char	*tmp;
 
     utils = malloc(sizeof(t_utils));
     utils_init(utils);
@@ -94,8 +98,9 @@ char    *execute_$(char *arg, t_list *env_list)
         else
             utils->tmp = strj(utils->tmp, arg[utils->i]);
     }
-    free(utils->env_name);
-    return (utils->tmp);
+    tmp = ft_strdup(utils->tmp);
+    utils_free(utils);
+    return (tmp);
 }
 
 int	parser(char *command, t_info *info)

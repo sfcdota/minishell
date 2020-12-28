@@ -54,5 +54,6 @@ int         redirection_out(t_info *info, t_pars *pars, char *line);
 int         redirection_in(t_info *info, t_pars *pars, char *line);
 int         loop(t_info *info, t_pars *pars, char *line);
 char        *pure_$(char *arg, t_info *info);
+void 		utils_free(t_utils *utils);
 
 #endif

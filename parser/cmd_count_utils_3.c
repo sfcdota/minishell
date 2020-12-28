@@ -70,3 +70,9 @@ int				loop(t_info *info, t_pars *pars, char *line)
 		return (status);
 	return (1);
 }
+
+void 			utils_free(t_utils *utils)
+{
+	free(utils->tmp);
+	free(utils->env_name);
+}
