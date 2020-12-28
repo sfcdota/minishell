@@ -31,7 +31,6 @@ t_cmd			*new_cmd(void)
 	cmd->name = NULL;
 	cmd->flags = NULL;
 	cmd->arg_list = NULL;
-	cmd->is_env = 0;
 	cmd->in = -2;
 	cmd->out = -2;
 	cmd->cmd_delimeter = 0;

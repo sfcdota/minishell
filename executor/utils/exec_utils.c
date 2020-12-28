@@ -13,21 +13,18 @@
 #include "../executor.h"
 #include "fcntl.h"
 
-void	set_fds(t_cmd *cmd)
+int		set_fds(t_cmd *cmd, t_redirection *redirection)
 {
-	t_redirection *redirection;
+	struct stat	buf;
 
-	redirection = (t_redirection *)(cmd->redirection_list->content);
 	if (!redirection->filename || !*(redirection->filename))
-	{
-		cmd->redirection_list = cmd->redirection_list->next;
-		return ;
-	}
+		return 0;
 	if (redirection->type == 1)
 	{
 		if (cmd->in != -2)
 			close(cmd->in);
-		cmd->in = open(redirection->filename, O_RDONLY, 0777);
+		if ((cmd->in = open(redirection->filename, O_RDONLY, 0777)) == -1)
+			return (ret_with_msg(cmd->name, ": ", "No such file or directory", 1));
 	}
 	if (redirection->type == 2 || redirection->type == 3)
 	{
@@ -37,19 +34,29 @@ void	set_fds(t_cmd *cmd)
 		O_WRONLY | O_TRUNC | O_APPEND | O_CREAT
 		: O_WRONLY | O_APPEND | O_CREAT, 0777);
 	}
+	if (!ft_strcmp(redirection->filename, cmd->name) && stat(cmd->name, &buf))
+		return (ret_with_msg(cmd->name, NULL, strerror(errno), errno));
+	return 0;
 }
 
-void	redirection_fds(t_cmd *cmd)
+int		redirection_fds(t_cmd *cmd)
 {
-	while (cmd->redirection_list)
+	t_list *redir_list;
+	int res;
+	
+	redir_list = cmd->redirection_list;
+	res = 0;
+	while (redir_list && !res)
 	{
-		set_fds(cmd);
-		cmd->redirection_list = cmd->redirection_list->next;
+		res = set_fds(cmd, (t_redirection *)(redir_list->content));
+		redir_list = redir_list->next;
 	}
+	ft_lstclear(&cmd->redirection_list, clear_redirection);
 	if (cmd->out == -2)
 		cmd->out = STDOUT_FILENO;
 	if (cmd->in == -2)
 		cmd->in = STDIN_FILENO;
+	return (res);
 }
 
 int		pipe_init(t_cmd *cmd, t_list *cmd_list, t_list *env_list, t_info *info)
@@ -58,7 +65,10 @@ int		pipe_init(t_cmd *cmd, t_list *cmd_list, t_list *env_list, t_info *info)
 
 	if (!cmd_list->next)
 		return (258);
+	if (info->last_piped)
+		clear_ptr((void **)&info->pipe_fd);
 	info->pipe_fd = ft_calloc(2, sizeof(int));
+	info->last_piped = 1;
 	res = pipe(info->pipe_fd);
 	if ((info->pipe_pid = fork()) == 0)
 	{
@@ -67,7 +77,7 @@ int		pipe_init(t_cmd *cmd, t_list *cmd_list, t_list *env_list, t_info *info)
 		dup2(info->pipe_fd[1], STDOUT_FILENO);
 		res = execute_cmd(cmd, env_list, info);
 		close(info->pipe_fd[1]);
-		ft_exit(NULL, res, &g_info);
+		ft_exit(NULL, res, info);
 	}
 	close(info->pipe_fd[1]);
 	dup2(info->pipe_fd[0], 0);

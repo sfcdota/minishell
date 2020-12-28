@@ -47,12 +47,10 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 	int		status;
 
 	res = 0;
-	status = 0;
 	while (cmd_list)
 	{
 		cmd = ((t_cmd *)(cmd_list->content));
-		redirection_fds(cmd);
-		if (cmd->name)
+		if (!(status = redirection_fds(cmd)) && cmd->name)
 		{
 			unname_command(cmd, env_list, info);
 			if (cmd->cmd_delimeter == 1)
@@ -60,8 +58,8 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 			else
 				status = pipe_end(cmd, env_list, info, res);
 			return_fds(cmd);
-			str_replace(&get_env_by_key("?", env_list)->value, ft_itoa(status));
 		}
+		str_replace(&get_env_by_key("?", env_list)->value, ft_itoa(status));
 		clear_ptr((void **)&info->uncap_cmd);
 		cmd_list = cmd_list->next;
 	}

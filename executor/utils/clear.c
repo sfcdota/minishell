@@ -64,6 +64,7 @@ void	clear_cmd(void *cmd_content)
 	clear_ptr((void **)&cmd->name);
 	clear_ptr((void **)&cmd->flags);
 	ft_lstclear(&cmd->arg_list, clear_arg);
+	ft_lstclear(&cmd->redirection_list, clear_redirection);
 	if (cmd->in != 0 && cmd->in != -2 && cmd->in != -1)
 		close(cmd->in);
 	if (cmd->out != 1 && cmd->out != -2 && cmd->out != -1)

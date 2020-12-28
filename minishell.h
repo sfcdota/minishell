@@ -43,7 +43,6 @@ typedef struct			s_redirection
 typedef struct			s_cmd
 {
 	char				*name;
-	int					is_env;
 	char				*flags;
 	t_list				*arg_list;
 	t_list				*redirection_list;
@@ -69,7 +68,7 @@ typedef struct			s_info
 {
 	t_list				*cmd_list;
 	t_list				*env_list;
-	t_list				*error_list;
+	int					last_piped;
 	pid_t				pid;
 	pid_t				pipe_pid;
 	int					*pipe_fd;
