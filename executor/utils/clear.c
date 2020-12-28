@@ -73,7 +73,7 @@ void	clear_cmd(void *cmd_content)
 	t_cmd *cmd;
 
 	cmd = (t_cmd *)cmd_content;
-	//clear_ptr((void **)&cmd->name);
+	clear_ptr((void **)&cmd->name);
 	clear_ptr((void **)&cmd->flags);
 	ft_lstclear(&cmd->arg_list, clear_arg);
 	if (cmd->in != 0 && cmd->in != -2 && cmd->in != -1)
@@ -102,6 +102,8 @@ void	clear_all(t_info *info)
 	clear_ptr((void **)&info->pipe_fd);
 	clear_ptr((void **)&info->line);
 	clear_ptr((void **)&info->uncap_cmd);
+	if (info->base_in != -1)
+		close(info->base_in);
 }
 
 /*

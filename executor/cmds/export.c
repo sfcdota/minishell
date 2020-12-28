@@ -96,6 +96,8 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 					add_env(&env_list, temp_arg, temp && *temp ?
 						get_substr(temp + 1, NULL) : NULL, 0);
 			}
+			else
+				clear_ptr((void **)&temp_arg);
 		}
 		else
 			return (ret_with_msg("export : ", arg->name, ": not a valid identifier", 1));//var is not correct

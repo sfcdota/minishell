@@ -21,18 +21,18 @@ int	go_to_dir(char *path, t_list *env_list)
 	t_env *pwd;
 	t_env *oldpwd;
 	char *temp;
-	char *temp_path;
-
-	temp_path = path;
-	while (temp_path && *temp_path)
-		temp_path++;
-	temp_path--;
-	while(*temp_path == '/')
-		temp_path--;
-	temp_path++;
-	temp = get_substr(path, temp_path);
+	int i;
+	
+	i = ft_strlen(path);
+	while (i && path[i - 1] == '/')
+		i--;
+	temp = get_substr(path, path + sizeof(char) * (i + 1));
 	if (chdir(temp))
+	{
+		clear_ptr((void **)&temp);
 		return (1);
+	}
+	clear_ptr((void **)&temp);
 	pwd = get_env_by_key("PWD", env_list);
 	oldpwd = get_env_by_key("OLDPWD", env_list);
 	clear_ptr((void **)&oldpwd->value);
@@ -86,7 +86,7 @@ int	cd(t_cmd *cmd, t_list *args, t_list *env_list)
 	&& !check_cdpath(cmd, out))
 		return (0);
 	if (!args || !ft_strcmp("~", arg->name) || !ft_strcmp("--", arg->name))
-		return (ret_with_msg(cmd->name, ": Something went wrong.", NULL,
+		return (ret_with_msg(cmd->name, NULL, ": Something went wrong.",
 			go_to_dir(get_env_val_by_key("HOME", env_list), env_list)));
 	else
 	{

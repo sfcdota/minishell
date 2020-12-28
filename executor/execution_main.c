@@ -107,6 +107,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 				}
 				close(info->pipe_fd[1]);
 				dup2(info->pipe_fd[0], 0);
+				close(info->pipe_fd[0]);
 			}
 			else
 			{
