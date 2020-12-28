@@ -103,3 +103,19 @@ void	clear_all(t_info *info)
 	clear_ptr((void **)&info->line);
 	clear_ptr((void **)&info->uncap_cmd);
 }
+
+/*
+**
+*/
+
+void	clear_two_dimensional_char_array(char **arr)
+{
+	if (!arr || !*arr)
+		return ;
+	while (*arr)
+	{
+		clear_ptr((void **)(&(*arr)));
+		(*arr)++;
+	}
+	clear_ptr((void **)arr);
+}
