@@ -23,7 +23,8 @@ int		ret_with_msg(char *message_prefix, char *message, char *message_suffix
 {
 	if (is_failed)
 	{
-		if (is_failed == 1 || is_failed == 126 || is_failed == 127)
+		if (is_failed == 1 || is_failed == 126 || is_failed == 127 ||
+		is_failed == 255)
 			ft_putstr_fd(message_prefix, STDOUT_FILENO);
 		ft_putstr_fd(message, STDOUT_FILENO);
 		if (is_failed == 1)
@@ -31,6 +32,8 @@ int		ret_with_msg(char *message_prefix, char *message, char *message_suffix
 		if (is_failed == 126)
 			ft_putendl_fd(": Permission denied.", STDOUT_FILENO);
 		if (is_failed == 127)
+			ft_putendl_fd(": Command not found.", STDOUT_FILENO);
+		if (is_failed == 255)
 			ft_putendl_fd(": Command not found.", STDOUT_FILENO);
 	}
 	else

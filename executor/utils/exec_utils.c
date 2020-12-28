@@ -18,13 +18,14 @@ int		set_fds(t_cmd *cmd, t_redirection *redirection)
 	struct stat	buf;
 
 	if (!redirection->filename || !*(redirection->filename))
-		return 0;
+		return (0);
 	if (redirection->type == 1)
 	{
 		if (cmd->in != -2)
 			close(cmd->in);
 		if ((cmd->in = open(redirection->filename, O_RDONLY, 0777)) == -1)
-			return (ret_with_msg(cmd->name, ": ", "No such file or directory", 1));
+			return (ret_with_msg(cmd->name, ": ",
+				"No such file or directory", 1));
 	}
 	if (redirection->type == 2 || redirection->type == 3)
 	{
@@ -36,14 +37,14 @@ int		set_fds(t_cmd *cmd, t_redirection *redirection)
 	}
 	if (!ft_strcmp(redirection->filename, cmd->name) && stat(cmd->name, &buf))
 		return (ret_with_msg(cmd->name, NULL, strerror(errno), errno));
-	return 0;
+	return (0);
 }
 
 int		redirection_fds(t_cmd *cmd)
 {
-	t_list *redir_list;
-	int res;
-	
+	t_list	*redir_list;
+	int		res;
+
 	redir_list = cmd->redirection_list;
 	res = 0;
 	while (redir_list && !res)

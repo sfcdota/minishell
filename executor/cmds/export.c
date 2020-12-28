@@ -81,7 +81,7 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 		tmp = to_delimiter(arg->name, '=');
 		if (!is_correct_var(arg->name))
 		{
-			status = ret_with_msg("export : ", arg->name,
+			status = ret_with_msg("export: ", arg->name,
 				": not a valid identifier", 1);
 			arg_list = arg_list->next;
 			continue;
