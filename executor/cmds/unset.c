@@ -18,9 +18,9 @@
 
 int	unset(t_list *arg_list, t_list *env_list)
 {
-	t_arg *arg;
-	int status;
-	
+	t_arg	*arg;
+	int		status;
+
 	status = 0;
 	while (arg_list)
 	{

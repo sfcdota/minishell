@@ -21,6 +21,12 @@ void	small_error(int status, char *message)
 	ft_putendl_fd(message, STDOUT_FILENO);
 }
 
+void	clear_next(void)
+{
+	clear_ptr((void **)&g_info.line);
+	ft_lstclear(&g_info.cmd_list, clear_cmd);
+}
+
 int		main(int argc, char **argv, char *envp[])
 {
 	int res;
@@ -46,8 +52,7 @@ int		main(int argc, char **argv, char *envp[])
 			continue ;
 		}
 		execution(&g_info, g_info.cmd_list, g_info.env_list);
-		clear_ptr((void **)&g_info.line);
-		ft_lstclear(&g_info.cmd_list, clear_cmd);
+		clear_next();
 	}
 }
 

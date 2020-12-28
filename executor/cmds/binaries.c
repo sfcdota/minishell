@@ -64,10 +64,9 @@ char	**arg_list_to_array(char *flags, t_list *arg_list)
 		arg_array = ft_calloc(sizeof(char *), i + 1);
 		while (arg_list)
 		{
-			arg_array[j] = ft_strdup(((t_arg *) (arg_list->content))->name);
-			if (!arg_array[j] && 
-			ft_strcmp(((t_arg *)(arg_list->content))->name, NULL))
-				break ;
+			arg_array[j] = ft_strdup(((t_arg *)(arg_list->content))->name);
+			if (!arg_array[j] && ((t_arg *)(arg_list->content))->name)
+				return (ft_clear_split(arg_array, j));
 			j++;
 			arg_list = arg_list->next;
 		}
@@ -90,12 +89,12 @@ void	set_redirs(t_cmd *cmd)
 void	clear_two_dimensional_char_array(char **arr)
 {
 	int i;
-	
+
 	i = 0;
 	if (!arr)
 		return ;
 	if (!*arr)
-		return clear_ptr((void **)arr);
+		return (clear_ptr((void **)arr));
 	while (arr[i])
 	{
 		clear_ptr((void **)(arr[i]));
@@ -116,23 +115,23 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 	char		**temp3;
 
 	check_path(cmd, get_env_val_by_key("PATH", env_list));
-	if (!stat(cmd->name, &buf))
+	if ((retval = !stat(cmd->name, &buf)))
 	{
 		if ((info->pid = fork()) == 0)
 		{
 			setsignals(info->pid);
-			ft_lstadd_front(&cmd->arg_list, ft_lstnew(new_arg(cmd->name, 0)));
+			ft_lstadd_front(&cmd->arg_list, ft_lstnew(
+				new_arg(ft_strdup(cmd->name), 0)));
 			temp2 = env_list_to_array(env_list);
 			temp3 = arg_list_to_array(cmd->flags, cmd->arg_list);
 			set_redirs(cmd);
 			retval = execve(cmd->name, temp3, temp2);
-			clear_two_dimensional_char_array(temp2);
-			clear_two_dimensional_char_array(temp3);
+			ft_clear_split(temp2, ft_lstsize(env_list));
+			ft_clear_split(temp3, ft_lstsize(arg_list));
 			ft_exit(NULL, retval == -1 ? errno : 0, &g_info);
 		}
-		return (ret_with_msg(cmd->name, NULL, " Execute binary is failed.",
-		(info->pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1 ||
-		retval != 0) ? WEXITSTATUS(retval) : 0));
 	}
-	return (ret_with_msg(cmd->name, NULL, NULL, 127));
+	return (ret_with_msg(cmd->name, NULL, strerror(errno), (retval == -1 ||
+		info->pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1 ||
+		retval != 0) ? WEXITSTATUS(retval) : 0));
 }
