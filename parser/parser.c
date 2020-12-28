@@ -109,6 +109,5 @@ int			parser(char *command, t_info *info)
 	if (!command)
 		return (1);
 	res = cmd_count(command, info);
-	free(command);
 	return (res);
 }
