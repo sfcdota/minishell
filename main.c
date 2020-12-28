@@ -57,7 +57,10 @@ int	main(int argc, char **argv, char *envp[])
 			ft_exit("exit", 0, &g_info);
 		if (res == 0)
 			ft_putstr_fd("\n", STDOUT_FILENO);
-		parser(g_info.line, &g_info);
+		res = parser(g_info.line, &g_info);
+		if (res != 1)
+			str_replace(&get_env_by_key("?", g_info.env_list)->value,
+				ft_itoa(258));
 		execution(&g_info, g_info.cmd_list, g_info.env_list);
 		clear_ptr((void **)&g_info.line);
 		ft_lstclear(&g_info.cmd_list, clear_cmd);
