@@ -38,7 +38,8 @@ int		unname_command(t_cmd *cmd, t_list *env_list, t_list **cmd_list,
 		check_path(cmd, get_env_val_by_key("PATH", env_list, 0));
 		if ((stat(cmd->name, &buf)))
 		{
-			*cmd_list = next_non_pipe(*cmd_list);
+			*cmd_list = next_non_pipe((*cmd_list)->next ? (*cmd_list)->next :
+				*cmd_list);
 			return (ret_with_msg(cmd->name, NULL, NULL, 127));
 		}
 	}

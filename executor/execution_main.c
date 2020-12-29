@@ -65,6 +65,7 @@ t_list	*next_non_pipe(t_list *cmd_list)
 		if (!cmd_list->next)
 			return (NULL);
 		cmd = ((t_cmd *)(cmd_list->content));
+		redirection_fds(cmd);
 		if (cmd->cmd_delimeter != 1)
 			break ;
 		cmd_list = cmd_list->next;
