@@ -99,7 +99,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 		}
 		str_replace(&get_env_by_key("?", env_list, 0)->value, ft_itoa(status));
 		clear_ptr((void **)&info->uncap_cmd);
-		cmd_list = cmd_list->next;
+		cmd_list = cmd_list ? cmd_list->next : cmd_list;
 	}
 	return (res);
 }
