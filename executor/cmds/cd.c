@@ -136,7 +136,7 @@ int	cd(t_cmd *cmd, t_list *args, t_list *env_list)
 	int		res;
 
 	if (args && args->next)
-		return (ret_with_msg(cmd->name, ": too much arguments", NULL, 1));
+		return (ret_with_msg(cmd->name, ": too much arguments\n", NULL, 1));
 	arg = args ? unname_argument(cmd->arg_list, env_list) : NULL;
 	if ((out = get_env_val_by_key("CDPATH", env_list, 0))
 	&& !check_cdpath(cmd, out, arg, env_list))

@@ -76,7 +76,12 @@ char		*pure_d(char *arg, t_info *info)
 			if (arg[utils->i])
 				utils->tmp = strj(utils->tmp, arg[utils->i]);
 			if (!arg[utils->i])
-				return (utils->tmp);
+			{
+				tmp = ft_strdup(utils->tmp);
+				utils_free(utils);
+				free(utils);
+				return (tmp);
+			}
 		}
 		else
 			utils->tmp = strj(utils->tmp, arg[utils->i]);
