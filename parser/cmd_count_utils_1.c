@@ -17,9 +17,9 @@ int		quote(t_info *info, t_pars *pars, char *line)
 	pars->str = strj(pars->str, line[pars->i++]);
 	while (line[pars->i] != 39 && pars->i < pars->len)
 		pars->str = strj(pars->str, line[pars->i++]);
+    if (pars->i == pars->len)
+        return (-1);
 	pars->str = strj(pars->str, line[pars->i]);
-	if (pars->i == pars->len)
-		return (-1);
 	return (1);
 }
 
@@ -32,9 +32,9 @@ int		dquote(t_info *info, t_pars *pars, char *line)
 			pars->i++;
 		pars->str = strj(pars->str, line[pars->i++]);
 	}
+    if (pars->i == pars->len)
+        return (-1);
 	pars->str = strj(pars->str, line[pars->i]);
-	if (pars->i == pars->len)
-		return (-1);
 	return (1);
 }
 
