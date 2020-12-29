@@ -85,7 +85,7 @@ int		read_line(int fd, char **line, char *buf, char **buffer_remains)
 			free(buf);
 			buf = ft_calloc_gnl(sizeof(char), (BUFFER_SIZE + 1));
 			status = read(fd, buf, BUFFER_SIZE);
-			if (*buf && buf[str_len(buf) - 1] != '\n'
+			if (buf && *buf && buf[str_len(buf) - 1] != '\n'
 			&& str_len(buf) != BUFFER_SIZE)
 			{
 				write(STDIN_FILENO, "  \b\b", 4);
