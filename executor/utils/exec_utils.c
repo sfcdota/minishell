@@ -82,7 +82,7 @@ int		pipe_init(t_cmd *cmd, t_list *cmd_list, t_list *env_list, t_info *info)
 		ft_exit(NULL, res, info);
 	}
 	close(info->pipe_fd[1]);
-	dup2(info->pipe_fd[0], 0);
+	dup2(info->pipe_fd[0], STDIN_FILENO);
 	close(info->pipe_fd[0]);
 	return (res);
 }
@@ -97,8 +97,9 @@ int		pipe_end(t_cmd *cmd, t_list *env_list, t_info *info, int input_res)
 	if (info->pipe_fd)
 	{
 		waitpid(info->pipe_pid, &res, WUNTRACED);
-		close(info->pipe_fd[0]);
 		res = WEXITSTATUS(res);
+		clear_ptr((void **)&info->pipe_fd);
+		dup2(info->base_in, STDIN_FILENO);
 	}
 	if (res && !status)
 		status = res;

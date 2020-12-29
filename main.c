@@ -38,7 +38,7 @@ int		main(int argc, char **argv, char *envp[])
 	while (1)
 	{
 		if ((write(STDOUT_FILENO, SHELL_PREFIX, ft_strlen(SHELL_PREFIX)) == -1)
-		|| (res = get_next_line(g_info.base_in, &g_info.line)) == -1)
+		|| (res = get_next_line(STDIN_FILENO, &g_info.line)) == -1)
 		{
 			small_error(errno, strerror(errno));
 			continue ;
