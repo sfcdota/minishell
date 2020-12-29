@@ -12,27 +12,27 @@
 
 #include "parser.h"
 
-int		quote(t_info *info, t_pars *pars, char *line)
+int		quote(t_pars *pars, char *line)
 {
 	pars->str = strj(pars->str, line[pars->i++]);
-	while (line[pars->i] != 39 && pars->i < pars->len)
+	while (line[pars->i] != 39 && pars->i < (int)pars->len)
 		pars->str = strj(pars->str, line[pars->i++]);
-	if (pars->i == pars->len)
+	if (pars->i == (int)pars->len)
 		return (-1);
 	pars->str = strj(pars->str, line[pars->i]);
 	return (1);
 }
 
-int		dquote(t_info *info, t_pars *pars, char *line)
+int		dquote(t_pars *pars, char *line)
 {
 	pars->str = strj(pars->str, line[pars->i++]);
-	while (line[pars->i] != 34 && pars->i < pars->len)
+	while (line[pars->i] != 34 && pars->i < (int)pars->len)
 	{
 		if (line[pars->i] == 92 && line[pars->i + 1] == 34)
 			pars->i++;
 		pars->str = strj(pars->str, line[pars->i++]);
 	}
-	if (pars->i == pars->len)
+	if (pars->i == (int)pars->len)
 		return (-1);
 	pars->str = strj(pars->str, line[pars->i]);
 	return (1);
@@ -64,7 +64,7 @@ int		logical_and(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 	while (own_strchr("& ", line[pars->i]))
 		if (line[pars->i++] == '&')
 			return (-1);
-	if (!(*cmd)->name || pars->i >= pars->len)
+	if (!(*cmd)->name || pars->i >= (int)pars->len)
 		return (-1);
 	(*cmd)->cmd_delimeter = 2;
 	ft_lstadd_back(&(info->cmd_list), ft_lstnew((*cmd)));
@@ -87,7 +87,7 @@ int		pipes(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 	while (own_strchr("| ", line[pars->i]))
 		if (line[pars->i++] == '|')
 			return (-1);
-	if (pars->i >= pars->len || !(*cmd)->name)
+	if (pars->i >= (int)pars->len || !(*cmd)->name)
 		return (-1);
 	if (ft_strlen(pars->str) == 1)
 		(*cmd)->cmd_delimeter = 1;

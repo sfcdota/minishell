@@ -13,7 +13,7 @@
 project(minishell)
 cmake_minimum_required(VERSION 3.12)
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_FLAGS "-D BUFFER_SIZE=128")
+set(CMAKE_C_FLAGS "-D BUFFER_SIZE=128 -Wall -Wextra -Werror")
 
 #Utils sources
 file(GLOB gnl "./get_next_line/*.c")

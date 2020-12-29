@@ -29,8 +29,8 @@ int			cmd_count(char *line, t_info *info)
 			free(pars);
 			return (-1);
 		}
-		if (pars->str[0] && (pars->i >= pars->len || line[pars->i + 1] == ' ' ||
-					line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
+		if (pars->str[0] && (pars->i >= (int)pars->len || line[pars->i + 1] ==
+			' ' || line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
 			cmd_update(pars, &cmd);
 	}
 	if (pars->str[0])
@@ -113,11 +113,13 @@ char		*execute_d(char *arg, t_list *env_list)
 
 int			parser(char *command, t_info *info)
 {
-	int res;
+	int		res;
+	char	*temp;
 
 	if (!command)
 		return (1);
-	command = pure_d(command, info);
-	res = cmd_count(command, info);
+	temp = pure_d(command, info);
+	res = cmd_count(temp, info);
+	clear_ptr((void **)&temp);
 	return (res);
 }

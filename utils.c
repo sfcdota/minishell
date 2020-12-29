@@ -12,7 +12,7 @@
 
 #include "executor/executor.h"
 
-void init_info(t_info *info, char **envp, int argc, char **argv)
+void			init_info(t_info *info, char **envp, int argc, char **argv)
 {
 	if (argc != 1 && argv)
 		ft_exit("Minishell arguments do not allowed", 1, info);

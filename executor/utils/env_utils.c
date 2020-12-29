@@ -78,9 +78,9 @@ t_list	*envs_to_list(char *envp[])
 	add_env(&env_list, ft_strdup("?"), ft_strdup("0"), 1);
 	add_env(&env_list, ft_strdup("~"), ft_strdup(get_env_val_by_key("HOME",
 		env_list, 0)), 1);
-	if (!get_env_val_by_key("PWD", env_list, 0))
+	if (!get_env_val_by_key("PWD", env_list, 1))
 		add_env(&env_list, ft_strdup("PWD"), getcwd(NULL, 228), 0);
-	if (!get_env_val_by_key("OLDPWD", env_list, 0))
+	if (!get_env_val_by_key("OLDPWD", env_list, 1))
 		add_env(&env_list, ft_strdup("OLDPWD"), NULL, 2);
 	sort_envs(env_list);
 	return (env_list);

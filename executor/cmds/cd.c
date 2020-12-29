@@ -46,11 +46,11 @@ int		go_to_dir(char *path, t_list *env_list)
 	if ((oldpwd = get_env_by_key("OLDPWD", env_list, 1)))
 	{
 		clear_ptr((void **)&oldpwd->value);
-		oldpwd->value = pwd ? pwd->value : NULL;
+		oldpwd->value = pwd && pwd->is_hidden != 2 ? pwd->value : NULL;
+		pwd->is_hidden == 2 ? clear_ptr((void **)&pwd->value) : NULL;
 		oldpwd->is_hidden = oldpwd->is_hidden == 2 ? 1 : oldpwd->is_hidden;
 	}
-	else
-		add_env(&env_list, ft_strdup("OLDPWD"), pwd->value, 1);
+	pwd->is_hidden = pwd->is_hidden == 2 ? 1 : pwd->is_hidden;
 	pwd->value = getcwd(NULL, 228);
 	return (0);
 }
