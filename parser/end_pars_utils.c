@@ -74,7 +74,7 @@ static int	end_dquote(int i, char *line)
 	int cnt;
 	int j;
 
-	j = 0;
+	j = 1;
 	cnt = 0;
 	while (i - j >= 0)
 		if (line[i - j++] == '"')
@@ -87,12 +87,10 @@ char		*end_pars03(t_utils *utils, char *arg, t_list *env_list)
 	char *tmp;
 
 	utils->i++;
-	if ((own_strchr(" '\"", arg[utils->i]) &&
-	end_dquote(utils->i, arg) % 2 == 1) || !arg[utils->i])
-	{
-		utils->tmp = strj(utils->tmp, '$');
+	if (((own_strchr(" '\"", arg[utils->i]) &&
+	end_dquote(utils->i, arg) % 2 == 1) || !arg[utils->i]) &&
+	(utils->tmp = strj(utils->tmp, '$')))
 		utils->i--;
-	}
 	else if (arg[utils->i] == ' ' || !arg[utils->i])
 		utils->tmp = strj(utils->tmp, '$');
 	else if (arg[utils->i] < 48 || arg[utils->i] > 57)
@@ -106,7 +104,8 @@ char		*end_pars03(t_utils *utils, char *arg, t_list *env_list)
 		free(tmp);
 	}
 	free(utils->env_name);
-	utils->env_name = malloc(sizeof(char) * 1);
+	if (!(utils->env_name = malloc(sizeof(char) * 1)))
+		return (NULL);
 	utils->env_name[0] = '\0';
 	return (utils->tmp);
 }

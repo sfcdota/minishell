@@ -17,8 +17,8 @@ int		quote(t_info *info, t_pars *pars, char *line)
 	pars->str = strj(pars->str, line[pars->i++]);
 	while (line[pars->i] != 39 && pars->i < pars->len)
 		pars->str = strj(pars->str, line[pars->i++]);
-    if (pars->i == pars->len)
-        return (-1);
+	if (pars->i == pars->len)
+		return (-1);
 	pars->str = strj(pars->str, line[pars->i]);
 	return (1);
 }
@@ -32,8 +32,8 @@ int		dquote(t_info *info, t_pars *pars, char *line)
 			pars->i++;
 		pars->str = strj(pars->str, line[pars->i++]);
 	}
-    if (pars->i == pars->len)
-        return (-1);
+	if (pars->i == pars->len)
+		return (-1);
 	pars->str = strj(pars->str, line[pars->i]);
 	return (1);
 }
@@ -49,7 +49,8 @@ void	cmd_update(t_pars *pars, t_cmd **cmd)
 		ft_lstadd_back(&(*cmd)->arg_list,
 					ft_lstnew(new_arg(ft_strdup(pars->str), 0)));
 	free(pars->str);
-	pars->str = malloc(sizeof(char) * 1);
+	if (!(pars->str = malloc(sizeof(char) * 1)))
+		return ;
 	pars->str[0] = '\0';
 }
 
@@ -69,7 +70,8 @@ int		logical_and(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 	ft_lstadd_back(&(info->cmd_list), ft_lstnew((*cmd)));
 	(*cmd) = new_cmd();
 	free(pars->str);
-	pars->str = malloc(sizeof(char) * 1);
+	if (!(pars->str = malloc(sizeof(char) * 1)))
+		return (-1);
 	*pars->str = '\0';
 	pars->i--;
 	return (1);
@@ -94,7 +96,8 @@ int		pipes(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 	ft_lstadd_back(&(info->cmd_list), ft_lstnew((*cmd)));
 	*cmd = new_cmd();
 	free(pars->str);
-	pars->str = malloc(sizeof(char) * 1);
+	if (!(pars->str = malloc(sizeof(char) * 1)))
+		return (-1);
 	*pars->str = '\0';
 	pars->i--;
 	return (1);

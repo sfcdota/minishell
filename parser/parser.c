@@ -45,11 +45,14 @@ t_utils		*utils_init(void)
 {
 	t_utils *utils;
 
-	utils = malloc(sizeof(t_utils) * 1);
+	if (!(utils = malloc(sizeof(t_utils) * 1)))
+		return (NULL);
 	utils->i = -1;
-	utils->tmp = (char *)malloc(sizeof(char) * 1);
+	if (!(utils->tmp = (char *)malloc(sizeof(char) * 1)))
+		return (NULL);
 	utils->tmp[0] = '\0';
-	utils->env_name = (char *)malloc(sizeof(char) * 1);
+	if (!(utils->env_name = (char *)malloc(sizeof(char) * 1)))
+		return (NULL);
 	utils->env_name[0] = '\0';
 	return (utils);
 }

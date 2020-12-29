@@ -83,9 +83,11 @@ t_pars			*pars_init(char *line)
 {
 	t_pars *pars;
 
-	pars = malloc(sizeof(t_pars) * 1);
+	if (!(pars = malloc(sizeof(t_pars) * 1)))
+		return (NULL);
 	pars->len = ft_strlen(line);
-	pars->str = malloc(sizeof(char));
+	if (!(pars->str = malloc(sizeof(char))))
+		return (NULL);
 	*(pars->str) = '\0';
 	pars->i = -1;
 	return (pars);

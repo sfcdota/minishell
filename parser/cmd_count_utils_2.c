@@ -49,7 +49,8 @@ int			redirection_out(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 	if (pars->str)
 	{
 		free(pars->str);
-		pars->str = malloc(sizeof(char) * 1);
+		if (!(pars->str = malloc(sizeof(char) * 1)))
+			return (-1);
 		pars->str[0] = '\0';
 	}
 	pars->i--;
@@ -77,7 +78,8 @@ static int	redirection_in_utils(t_pars *pars, char *line, t_cmd **cmd)
 	if (pars->str[0])
 	{
 		free(pars->str);
-		pars->str = malloc(sizeof(char) * 1);
+		if (!(pars->str = malloc(sizeof(char) * 1)))
+			return (-1);
 		pars->str[0] = '\0';
 	}
 	return (1);
@@ -112,7 +114,8 @@ int			redirection_in(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 		ft_lstadd_back(&(*cmd)->redirection_list,
 				ft_lstnew(new_redirection(ft_strdup(pars->str), pars->type)));
 		free(pars->str);
-		pars->str = malloc(sizeof(char) * 1);
+		if (!(pars->str = malloc(sizeof(char) * 1)))
+			return (-1);
 		pars->str[0] = '\0';
 	}
 	else
