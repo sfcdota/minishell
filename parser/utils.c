@@ -18,7 +18,8 @@ char	*get_env(int *i, char *arg, t_list *env_list)
 	int		j;
 
 	j = *i;
-	env_name = (char *)malloc(sizeof(char) * 1);
+	if (!(env_name = (char *)malloc(sizeof(char) * 1)))
+		return (NULL);
 	env_name[0] = '\0';
 	while (!own_strchr("$' =\\\"", arg[j]) && arg[j])
 	{
