@@ -28,8 +28,6 @@ int		dquote(t_pars *pars, char *line)
 	pars->str = strj(pars->str, line[pars->i++]);
 	while (line[pars->i] != 34 && pars->i < (int)pars->len)
 	{
-		if (line[pars->i] == 92 && line[pars->i + 1] == 34)
-			pars->i++;
 		pars->str = strj(pars->str, line[pars->i++]);
 	}
 	if (pars->i == (int)pars->len)
