@@ -76,9 +76,11 @@ t_list	*envs_to_list(char *envp[])
 		envp++;
 	}
 	add_env(&env_list, ft_strdup("?"), ft_strdup("0"), 1);
-	if (!get_env_val_by_key("PWD", env_list))
+	add_env(&env_list, ft_strdup("~"), ft_strdup(get_env_val_by_key("HOME",
+		env_list, 0)), 1);
+	if (!get_env_val_by_key("PWD", env_list, 0))
 		add_env(&env_list, ft_strdup("PWD"), getcwd(NULL, 228), 0);
-	if (!get_env_val_by_key("OLDPWD", env_list))
+	if (!get_env_val_by_key("OLDPWD", env_list, 0))
 		add_env(&env_list, ft_strdup("OLDPWD"), NULL, 2);
 	sort_envs(env_list);
 	return (env_list);
@@ -115,14 +117,14 @@ char	**env_list_to_array(t_list *env_list)
 ** Prints char** envp array
 */
 
-void	export_env(t_arg *arg, char *tmp, t_list *env_list)
+void	export_env(char *delimiter_ptr, char *tmp, t_list *env_list)
 {
 	char	*temp_arg;
 	t_env	*env;
 
-	if ((temp_arg = get_substr(arg->name, tmp)) && *temp_arg)
+	if ((temp_arg = get_substr(delimiter_ptr, tmp)) && *temp_arg)
 	{
-		if ((env = get_env_by_key(temp_arg, env_list)))
+		if ((env = get_env_by_key(temp_arg, env_list, 1)))
 		{
 			str_replace(&temp_arg, get_substr(tmp ? tmp + 1 : tmp, NULL));
 			if (ft_strcmp(env->value, temp_arg))

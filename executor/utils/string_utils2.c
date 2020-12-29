@@ -20,7 +20,7 @@ void	uncapitalize_str(char *str)
 {
 	while (str && *str)
 	{
-		ft_tolower(*str);
+		*str = ft_tolower(*str);
 		str++;
 	}
 }

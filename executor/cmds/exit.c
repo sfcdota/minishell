@@ -57,9 +57,7 @@ int		exit_(t_list *arg_list, t_list *env_list, t_info *info)
 	}
 	if (arg_list)
 	{
-		arg = ((t_arg *)(arg_list->content));
-		str_replace(&arg->name, pure_d(arg->name, info));
-		str_replace(&arg->name, execute_d(arg->name, env_list));
+		arg = unname_argument(arg_list, env_list);
 		ft_putendl_fd("exit", STDOUT_FILENO);
 		kek = ft_atoi(arg->name);
 		if (!is_str_numeric(arg->name) || (*arg->name == '-' && !kek)

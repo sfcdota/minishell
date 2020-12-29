@@ -86,7 +86,10 @@ int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list)
 			arg_list = arg_list->next;
 			continue;
 		}
-		export_env(arg, tmp, env_list);
+		export_env(arg->name, tmp, env_list);
+		if (!ft_strncmp("HOME", arg->name, 4))
+			str_replace(&get_env_by_key("~", env_list, 1)->value,
+				get_env_val_by_key("HOME", env_list, 1));
 		arg_list = arg_list->next;
 	}
 	return (status);

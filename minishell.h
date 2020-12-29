@@ -51,6 +51,10 @@ typedef struct			s_cmd
 	int					cmd_delimeter;
 }						t_cmd;
 
+/*
+** is_hidden: 0 - basic, 1 - reinitialized, 2 - deleted (for some)
+*/
+
 typedef struct			s_env
 {
 	char				*key;

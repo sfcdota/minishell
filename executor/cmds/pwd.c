@@ -17,13 +17,13 @@
 ** Pwd execution
 */
 
-int	pwd(t_cmd *cmd)
+int	pwd(t_cmd *cmd, int fd)
 {
 	char *pwd;
 
 	if (!(pwd = getcwd(NULL, 228)))
-		return (ret_with_msg(cmd->name, GETCWD_ERROR, NULL, 1));
-	ft_putendl_fd(pwd, cmd->out);
+		return (ret_with_msg(cmd ? cmd->name : NULL, GETCWD_ERROR, NULL, 1));
+	ft_putendl_fd(pwd, fd);
 	clear_ptr((void **)&pwd);
 	return (0);
 }

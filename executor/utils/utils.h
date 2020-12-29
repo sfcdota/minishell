@@ -34,15 +34,15 @@ t_env					*add_env(t_list **env_list, char *key, char *value
 void					sort_envs(t_list *env_list);
 t_list					*envs_to_list(char *envp[]);
 char					**env_list_to_array(t_list *env_list);
-void					export_env(t_arg *arg, char *tmp, t_list *env_list);
+void					export_env(char *delimiter_ptr, char *tmp, t_list *env_list);
 
 /*
 **						ENVIRONMENT "GET" FUNCTIONS
 */
 
-char					*get_env_val_by_key(char *key, t_list *env_list);
-t_env					*get_env_by_key(char *key, t_list *env_list);
-t_list					*get_env_list_by_key(char *key, t_list *env_list);
+char *get_env_val_by_key(char *key, t_list *env_list, int supermode);
+t_env *get_env_by_key(char *key, t_list *env_list, int supermode);
+t_list *get_env_list_by_key(char *key, t_list *env_list, int supermode);
 
 /*
 **						STATUS AND RETURN FUNCTIONS

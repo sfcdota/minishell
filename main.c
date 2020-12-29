@@ -16,7 +16,7 @@
 
 void	small_error(int status, char *message)
 {
-	str_replace(&get_env_by_key("?", g_info.env_list)->value,
+	str_replace(&get_env_by_key("?", g_info.env_list, 0)->value,
 		ft_itoa(status));
 	ft_putendl_fd(message, STDOUT_FILENO);
 	clear_ptr((void **)&g_info.line);

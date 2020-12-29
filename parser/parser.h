@@ -37,7 +37,7 @@ t_arg			*new_arg(char *name, int is_env);
 t_cmd			*new_cmd(void);
 t_utils			*utils_init();
 int				own_strchr(char *str, char ch);
-char			*get_env_value_by_key(char *key, t_list *env_list);
+char *get_env_value_by_key(char *key, t_list *env_list, int supermode);
 char			*get_env(int *i, char *arg, t_list *env_list);
 char			*execute_d(char *arg, t_list *env_list);
 int				own_strcmp(const char *s1, const char *s2);

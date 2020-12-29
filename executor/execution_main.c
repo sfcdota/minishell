@@ -23,7 +23,7 @@ int		execute_cmd(t_cmd *cmd, t_list *env_list, t_info *info)
 	else if (!ft_strcmp(info->uncap_cmd, "cd"))
 		return (cd(cmd, cmd->arg_list, env_list));
 	else if (!ft_strcmp(info->uncap_cmd, "pwd"))
-		return (pwd(cmd));
+		return (pwd(cmd, cmd->out));
 	else if (!ft_strcmp(info->uncap_cmd, "export"))
 		return (export(cmd, cmd->arg_list, env_list));
 	else if (!ft_strcmp(info->uncap_cmd, "unset"))
@@ -59,7 +59,7 @@ int		execution(t_info *info, t_list *cmd_list, t_list *env_list)
 				status = pipe_end(cmd, env_list, info, res);
 			return_fds(cmd);
 		}
-		str_replace(&get_env_by_key("?", env_list)->value, ft_itoa(status));
+		str_replace(&get_env_by_key("?", env_list, 0)->value, ft_itoa(status));
 		clear_ptr((void **)&info->uncap_cmd);
 		cmd_list = cmd_list->next;
 	}

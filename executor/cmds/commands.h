@@ -18,7 +18,7 @@
 */
 int		echo(t_cmd *cmd, t_list *arg_list, t_list *env_list);
 int		env(t_cmd *cmd, t_list *arg_list, t_list *env_list);
-int		pwd(t_cmd *cmd);
+int		pwd(t_cmd *cmd, int fd);
 int		export(t_cmd *cmd, t_list *arg_list, t_list *env_list);
 int		cd(t_cmd *cmd, t_list *args, t_list *env_list);
 int		exit_(t_list *arg_list, t_list *env_list, t_info *info);

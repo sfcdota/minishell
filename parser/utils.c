@@ -34,17 +34,17 @@ char	*get_env(int *i, char *arg, t_list *env_list)
 		free(env_name);
 		return (ft_strdup(""));
 	}
-	return (get_env_value_by_key(env_name, env_list));
+	return (get_env_value_by_key(env_name, env_list, 0));
 }
 
-char	*get_env_value_by_key(char *key, t_list *env_list)
+char *get_env_value_by_key(char *key, t_list *env_list, int supermode)
 {
 	t_env	*env;
 
 	while (key && env_list)
 	{
 		env = (t_env *)(env_list->content);
-		if (!own_strcmp(key, env->key))
+		if (!own_strcmp(key, env->key) && (env->is_hidden != 2 || supermode))
 			return (env->value);
 		env_list = env_list->next;
 	}
