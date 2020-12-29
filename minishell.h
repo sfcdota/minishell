@@ -86,7 +86,7 @@ t_info					g_info;
 
 t_arg					*new_arg(char *name, int is_env);
 t_cmd					*new_cmd(void);
-void					init_info(t_info *info, char **envp);
+void init_info(t_info *info, char **envp, int argc, char **argv);
 t_redirection			*new_redirection(char *filename, int type);
 void					ft_lst_elem_delete(t_list **lst, t_list *elem,
 	void (*del)(void *));

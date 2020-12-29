@@ -12,8 +12,10 @@
 
 #include "executor/executor.h"
 
-void			init_info(t_info *info, char **envp)
+void init_info(t_info *info, char **envp, int argc, char **argv)
 {
+	if (argc != 1 && argv)
+		ft_exit("Minishell arguments do not allowed", 1, info);
 	info->cmd_list = NULL;
 	info->env_list = envs_to_list(envp);
 	info->base_in = dup(STDIN_FILENO);

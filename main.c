@@ -33,7 +33,7 @@ int		main(int argc, char **argv, char *envp[])
 {
 	int res;
 
-	init_info(&g_info, envp);
+	init_info(&g_info, envp, argc, argv);
 	setsignals(g_info.pid);
 	while (1)
 	{
