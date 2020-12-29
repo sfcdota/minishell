@@ -115,24 +115,23 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 	char		**temp2;
 	char		**temp3;
 
-	if (!(retval = stat(cmd->name, &buf)))
+	check_path(cmd, get_env_val_by_key("PATH", env_list, 0));
+	if ((retval = stat(cmd->name, &buf)))
+		return (ret_with_msg(cmd->name, NULL, NULL, 127));
+	if ((info->pid = fork()) == 0)
 	{
-		if ((info->pid = fork()) == 0)
-		{
-			setsignals(info->pid);
-			ft_lstadd_front(&cmd->arg_list, ft_lstnew(
-				new_arg(ft_strdup(cmd->name), 0)));
-			temp2 = env_list_to_array(env_list);
-			temp3 = arg_list_to_array(cmd->flags, cmd->arg_list);
-			set_redirs(cmd);
-			retval = execve(cmd->name, temp3, temp2);
-			ft_clear_split(temp2, ft_lstsize(env_list));
-			ft_clear_split(temp3, ft_lstsize(arg_list));
-			ft_exit(NULL, retval == -1 ? 127 : 0, &g_info);
-		}
-		return (ret_with_msg(cmd->name, NULL, NULL, (retval == -1 ||
-			info->pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1 ||
-			retval != 0) ? WEXITSTATUS(retval) : 0));
+		setsignals(info->pid);
+		ft_lstadd_front(&cmd->arg_list, ft_lstnew(
+			new_arg(ft_strdup(cmd->name), 0)));
+		temp2 = env_list_to_array(env_list);
+		temp3 = arg_list_to_array(cmd->flags, cmd->arg_list);
+		set_redirs(cmd);
+		retval = execve(cmd->name, temp3, temp2);
+		ft_clear_split(temp2, ft_lstsize(env_list));
+		ft_clear_split(temp3, ft_lstsize(arg_list));
+		ft_exit(NULL, retval == -1 ? 127 : 0, &g_info);
 	}
-	return (ret_with_msg(cmd->name, NULL, NULL, 127));
+	return (ret_with_msg(cmd->name, NULL, NULL, (retval == -1 ||
+		info->pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1 ||
+		retval != 0) ? WEXITSTATUS(retval) : 0));
 }
