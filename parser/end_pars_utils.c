@@ -44,6 +44,7 @@ static char	*end_pars02_utils(t_utils *utils, char *arg, t_list *env_list)
 	}
 	tmp = utils->tmp;
 	utils->tmp = ft_strjoin(utils->tmp, utils->env_name);
+	free(utils->env_name);
 	free(tmp);
 	utils->env_name = NULL;
 	return (utils->tmp);
@@ -96,9 +97,12 @@ char		*end_pars03(t_utils *utils, char *arg, t_list *env_list)
 		utils->tmp = strj(utils->tmp, '$');
 	else if (arg[utils->i] < 48 || arg[utils->i] > 57)
 	{
+		free(utils->env_name);
 		utils->env_name = ft_strdup(get_env(&utils->i, arg, env_list));
 		tmp = utils->tmp;
 		utils->tmp = ft_strjoin(utils->tmp, utils->env_name);
+		free(utils->env_name);
+		utils->env_name = NULL;
 		free(tmp);
 	}
 	free(utils->env_name);

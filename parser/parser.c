@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "parser.h"
+#include "../executor/utils/utils.h"
 
 int			cmd_count(char *line, t_info *info)
 {
@@ -22,7 +23,12 @@ int			cmd_count(char *line, t_info *info)
 	while (line[++pars->i])
 	{
 		if ((loop(info, pars, line, &cmd)) == -1)
+		{
+			clear_cmd(cmd);
+			free(pars->str);
+			free(pars);
 			return (-1);
+		}
 		if (pars->str[0] && (pars->i >= pars->len || line[pars->i + 1] == ' ' ||
 					line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
 			cmd_update(pars, &cmd);
