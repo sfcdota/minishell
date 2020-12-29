@@ -117,6 +117,7 @@ int			parser(char *command, t_info *info)
 
 	if (!command)
 		return (1);
+	command = pure_d(command, info);
 	res = cmd_count(command, info);
 	return (res);
 }
