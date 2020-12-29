@@ -76,9 +76,7 @@ char		*pure_d(char *arg, t_info *info)
 			if (arg[utils->i])
 				utils->tmp = strj(utils->tmp, arg[utils->i]);
 			if (!arg[utils->i])
-			{
 				return (utils->tmp);
-			}
 		}
 		else
 			utils->tmp = strj(utils->tmp, arg[utils->i]);
