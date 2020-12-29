@@ -64,14 +64,14 @@ make_libft:
 	$(MAKE) -C $(LIBFT_DIR) all
 
 $(NAME): $(OBJ_FILES)
-	@gcc $(FLAGS) $(OBJ_FILES) -L${LIBFT_DIR} -lft -o $(NAME)
+	gcc $(FLAGS) $(OBJ_FILES) -L${LIBFT_DIR} -lft -o $(NAME)
 
 bonus:
 	$(MAKE) BONUS_FILES=1 all
 
 .depend: $(SRC) $(BONUS)
 	@rm -f .depend
-	@gcc $(FLAGS) -MM $^ > .depend
+	gcc $(FLAGS) -MM $^ > .depend
 
 -include .depend
 
@@ -79,11 +79,12 @@ bonus:
 	gcc $(FLAGS) -c $< -o $@
 
 clean:
-	@rm -f $(OBJ) $(OBJ_BONUS) .depend
+	rm -f $(OBJ) $(OBJ_BONUS) 
+	@rm -f .depend
 	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	@rm -f $(NAME)
+	rm -f $(NAME)
 	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all

@@ -12,8 +12,6 @@
 
 #include "../executor.h"
 
-int		spec_symbols(char *cmd_name, char *path, t_list *env_list);
-
 char	*normas(char *path)
 {
 	int i;
@@ -28,34 +26,28 @@ char	*normas(char *path)
 ** Trying to move to path directory with changing PWD & OLDPWD values
 */
 
-int	go_to_dir(char *path, t_list *env_list)
+int		go_to_dir(char *path, t_list *env_list)
 {
 	t_env	*pwd;
 	t_env	*oldpwd;
 	char	*temp;
 	int		res;
-	
+
 	if (!(temp = normas(path)))
 		return (1);
 	res = spec_symbols(NULL, ft_strdup(temp), env_list);
-	if (res != -2)
-	{
-		clear_ptr((void **) &temp);
-		return (res);
-	}
-	if (chdir(temp))
+	if (res != -2 || (res = chdir(temp)))
 	{
 		clear_ptr((void **)&temp);
-		return (1);
+		return (res);
 	}
 	clear_ptr((void **)&temp);
 	pwd = get_env_by_key("PWD", env_list, 1);
 	if ((oldpwd = get_env_by_key("OLDPWD", env_list, 1)))
 	{
-		clear_ptr((void **) &oldpwd->value);
+		clear_ptr((void **)&oldpwd->value);
 		oldpwd->value = pwd ? pwd->value : NULL;
-		if (oldpwd->is_hidden == 2)
-			oldpwd->is_hidden = 1;
+		oldpwd->is_hidden = oldpwd->is_hidden == 2 ? 1 : oldpwd->is_hidden;
 	}
 	else
 		add_env(&env_list, ft_strdup("OLDPWD"), pwd->value, 1);
@@ -67,33 +59,27 @@ int	go_to_dir(char *path, t_list *env_list)
 ** Trying to move to CDPATH environment variable
 */
 
-int	check_cdpath(t_cmd *cmd, char *path, t_arg *arg, t_list *env_list)
+int		check_cdpath(t_cmd *cmd, char *path, t_arg *arg, t_list *env_list)
 {
 	char	**dirs;
 	int		i;
 	int		is_not_found;
-	char	*temp;
-	
+
 	is_not_found = 1;
-	i = 0;
+	i = -1;
 	if (!(dirs = ft_split(path, ':')))
 		return (1);
-	while (dirs[i])
+	while (dirs[++i])
 	{
 		if (is_not_found)
 		{
 			str_replace(&dirs[i], normas(dirs[i]));
-			if (!str_append(&dirs[i], "/") || !str_append(&dirs[i], arg->name))
+			if (!str_append(&dirs[i], "/") || !str_append(&dirs[i], arg->name)
+			|| spec_symbols(cmd->name, ft_strdup(dirs[i]), env_list) != -2)
 				is_not_found = 0;
-			if (spec_symbols(cmd->name, ft_strdup(temp), env_list) != -2)
-				is_not_found = 0;
-			else if (!chdir(path))
-			{
+			else if (!chdir(path) && !(is_not_found = 0))
 				str_replace(&cmd->name, ft_strdup(dirs[i]));
-				is_not_found = 0;
-			}
 		}
-		i++;
 	}
 	ft_putstr_fd(dirs[i], cmd->out);
 	ft_clear_split(dirs, i);
@@ -115,10 +101,12 @@ int		spec_symbols(char *cmd_name, char *path, t_list *env_list)
 		if (!(ft_strcmp("-", path)))
 		{
 			clear_ptr((void **)&path);
-			res = go_to_dir(get_env_val_by_key("OLDPWD", env_list, 0), env_list);
+			res = go_to_dir(get_env_val_by_key("OLDPWD", env_list, 0),
+				env_list);
 			if (res)
-				return (ret_with_msg(cmd_name, NULL, ": OLDPWD is not set", res));
-			return (ret_with_msg(NULL, get_env_val_by_key("PWD", env_list, 0), NULL, 0));
+				return (ret_with_msg(cmd_name, NULL, ": OLDPWD not set", res));
+			return (ret_with_msg(NULL, get_env_val_by_key("PWD", env_list, 0),
+				NULL, 0));
 		}
 	}
 	clear_ptr((void **)&path);
@@ -129,7 +117,7 @@ int		spec_symbols(char *cmd_name, char *path, t_list *env_list)
 ** Cd execution
 */
 
-int	cd(t_cmd *cmd, t_list *args, t_list *env_list)
+int		cd(t_cmd *cmd, t_list *args, t_list *env_list)
 {
 	char	*out;
 	t_arg	*arg;
@@ -141,7 +129,8 @@ int	cd(t_cmd *cmd, t_list *args, t_list *env_list)
 	if ((out = get_env_val_by_key("CDPATH", env_list, 0))
 	&& !check_cdpath(cmd, out, arg, env_list))
 		return (0);
-	if ((res = spec_symbols(cmd->name, normas(arg ? arg->name : NULL), env_list)) != -2)
+	if ((res = spec_symbols(cmd->name, normas(arg ? arg->name : NULL),
+		env_list)) != -2)
 		return (res);
 	return (ret_with_msg(cmd->name, NULL
 		, ": directory not found or unistd.h chdir function failed"

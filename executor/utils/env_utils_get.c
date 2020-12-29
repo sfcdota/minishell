@@ -16,7 +16,7 @@
 ** Gets environment variable value from environment list by key(dictionary-like)
 */
 
-char *get_env_val_by_key(char *key, t_list *env_list, int supermode)
+char	*get_env_val_by_key(char *key, t_list *env_list, int supermode)
 {
 	t_env *env;
 
@@ -34,7 +34,7 @@ char *get_env_val_by_key(char *key, t_list *env_list, int supermode)
 ** Gets environment variable from environment list by key(dictionary-like)
 */
 
-t_env *get_env_by_key(char *key, t_list *env_list, int supermode)
+t_env	*get_env_by_key(char *key, t_list *env_list, int supermode)
 {
 	t_env *env;
 
@@ -53,7 +53,7 @@ t_env *get_env_by_key(char *key, t_list *env_list, int supermode)
 ** from environment list by key(dictionary-like)
 */
 
-t_list *get_env_list_by_key(char *key, t_list *env_list, int supermode)
+t_list	*get_env_list_by_key(char *key, t_list *env_list, int supermode)
 {
 	t_env *env;
 
