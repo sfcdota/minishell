@@ -49,6 +49,7 @@ typedef struct			s_cmd
 	int					in;
 	int					out;
 	int					cmd_delimeter;
+	int					cmd_num;
 }						t_cmd;
 
 /*

@@ -36,6 +36,7 @@ t_cmd			*new_cmd(void)
 	cmd->in = -2;
 	cmd->out = -2;
 	cmd->cmd_delimeter = 0;
+	cmd->cmd_num = -1;
 	return (cmd);
 }
 

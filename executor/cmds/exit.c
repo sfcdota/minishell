@@ -52,8 +52,9 @@ int		exit_(t_list *arg_list, t_list *env_list, t_info *info)
 
 	if (arg_list && arg_list->next)
 	{
-		ft_putendl_fd("exit: too many arguments", STDOUT_FILENO);
-		return (1);
+		arg = unname_argument(arg_list, env_list);
+		ft_putendl_fd("exit", STDOUT_FILENO);
+		ft_exit(NULL, !is_str_numeric(arg->name) ? 2 : 250, info);
 	}
 	if (arg_list)
 	{
@@ -62,8 +63,7 @@ int		exit_(t_list *arg_list, t_list *env_list, t_info *info)
 		kek = ft_atoi(arg->name);
 		if (!is_str_numeric(arg->name) || (*arg->name == '-' && !kek)
 		|| (*arg->name != '-' && kek == -1))
-			ft_exit(NULL, ret_with_msg("exit: ", arg->name,
-			": numeric argument required", 255), info);
+			ft_exit(NULL, 2, info);
 		ft_exit(NULL, kek % 256, info);
 	}
 	else

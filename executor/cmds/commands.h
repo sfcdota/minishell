@@ -32,5 +32,5 @@ void	print_env_list(t_list *env_list, char *prefix, int std_out);
 void	ft_exit(char *message, int status, t_info *info);
 int		is_correct_var(char *s);
 int		spec_symbols(char *cmd_name, char *path, t_list *env_list);
-
+void	check_path(t_cmd *cmd, char *path);
 #endif

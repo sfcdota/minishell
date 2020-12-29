@@ -110,14 +110,11 @@ void	clear_two_dimensional_char_array(char **arr)
 
 int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 {
-	struct stat	buf;
 	int			retval;
 	char		**temp2;
 	char		**temp3;
 
-	check_path(cmd, get_env_val_by_key("PATH", env_list, 0));
-	if ((retval = stat(cmd->name, &buf)))
-		return (ret_with_msg(cmd->name, NULL, NULL, 127));
+	retval = 0;
 	if ((info->pid = fork()) == 0)
 	{
 		setsignals(info->pid);

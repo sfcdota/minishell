@@ -77,7 +77,7 @@ int		pipe_init(t_cmd *cmd, t_list *cmd_list, t_list *env_list, t_info *info)
 		close(info->pipe_fd[0]);
 		setsignals(info->pipe_pid);
 		dup2(info->pipe_fd[1], STDOUT_FILENO);
-		res = execute_cmd(cmd, env_list, info);
+		res = execute_cmd(cmd->cmd_num, cmd, cmd->arg_list, env_list);
 		close(info->pipe_fd[1]);
 		ft_exit(NULL, res, info);
 	}
@@ -92,7 +92,7 @@ int		pipe_end(t_cmd *cmd, t_list *env_list, t_info *info, int input_res)
 	int	status;
 	int	res;
 
-	status = execute_cmd(cmd, env_list, info);
+	status = execute_cmd(cmd->cmd_num, cmd, cmd->arg_list, env_list);
 	res = input_res;
 	if (info->pipe_fd)
 	{
