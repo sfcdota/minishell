@@ -132,7 +132,7 @@ int		cd(t_cmd *cmd, t_list *args, t_list *env_list)
 	if ((res = spec_symbols(cmd->name, normas(arg ? arg->name : NULL),
 		env_list)) != -2)
 		return (res);
-	return (ret_with_msg(cmd->name, NULL
-		, ": directory not found or unistd.h chdir function failed"
+	return (ret_with_msg(str_append(&cmd->name, ": "), NULL
+		, str_append(&arg->name, ": No such file or directory")
 		, go_to_dir(arg->name, env_list)));
 }
