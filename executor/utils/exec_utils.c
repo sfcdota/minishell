@@ -68,7 +68,8 @@ int		pipe_init(t_cmd *cmd, t_list *cmd_list, t_list *env_list, t_info *info)
 		return (258);
 	if (info->last_piped)
 		clear_ptr((void **)&info->pipe_fd);
-	info->pipe_fd = ft_calloc(2, sizeof(int));
+	if (!(info->pipe_fd = ft_calloc(2, sizeof(int))))
+		return (errno);
 	info->last_piped = 1;
 	res = pipe(info->pipe_fd);
 	if ((info->pipe_pid = fork()) == 0)

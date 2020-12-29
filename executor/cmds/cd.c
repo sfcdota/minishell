@@ -39,7 +39,7 @@ int		go_to_dir(char *path, t_list *env_list)
 	if (res != -2 || (res = chdir(temp)))
 	{
 		clear_ptr((void **)&temp);
-		return (res);
+		return (1);
 	}
 	clear_ptr((void **)&temp);
 	pwd = get_env_by_key("PWD", env_list, 1);

@@ -131,7 +131,7 @@ int		binary(t_cmd *cmd, t_list *arg_list, t_list *env_list, t_info *info)
 		ft_clear_split(temp3, ft_lstsize(arg_list));
 		ft_exit(NULL, retval == -1 ? 127 : 0, &g_info);
 	}
-	return (ret_with_msg(cmd->name, NULL, NULL, (retval == -1 ||
+	return (ret_with_msg(NULL, NULL, NULL, (retval == -1 ||
 		info->pid == -1 || waitpid(info->pid, &retval, WUNTRACED) == -1 ||
 		retval != 0) ? WEXITSTATUS(retval) : 0));
 }
