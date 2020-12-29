@@ -69,11 +69,7 @@ int				loop(t_info *info, t_pars *pars, char *line, t_cmd **cmd)
 		pars->i--;
 	}
 	if (loop_utils(info, pars, line, cmd) == -1)
-	{
-		free(pars->str);
-		free(pars);
 		return (-1);
-	}
 	return (1);
 }
 
