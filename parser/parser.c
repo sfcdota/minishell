@@ -22,16 +22,12 @@ int			cmd_count(char *line, t_info *info)
 	cmd = new_cmd();
 	while (line[++pars->i])
 	{
-		if ((loop(info, pars, line, &cmd)) == -1)
-		{
-			clear_cmd(cmd);
-			free(pars->str);
-			free(pars);
+		if ((loop(info, pars, line, &cmd)) == -1 && free_cmd(cmd, pars))
 			return (-1);
-		}
 		if (pars->str[0] && (pars->i >= (int)pars->len || line[pars->i + 1] ==
 			' ' || line[pars->i + 1] == '>' || line[pars->i + 1] == '<'))
-			cmd_update(pars, &cmd);
+			if (cmd_update(pars, &cmd) == -1 && free_cmd(cmd, pars))
+				return (-1);
 	}
 	if (pars->str[0])
 		cmd_update(pars, &cmd);

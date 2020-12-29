@@ -53,15 +53,10 @@ static char	*end_pars02_utils(t_utils *utils, char *arg, t_list *env_list)
 char		*end_pars02(t_utils *utils, char *arg, t_list *env_list)
 {
 	utils->i++;
-	while (arg[utils->i] != '"')
+	while (arg[utils->i] != '"' && arg[utils->i])
 	{
 		while (!own_strchr("$\"", arg[utils->i]) && arg[utils->i])
 		{
-			if (arg[utils->i] == '\\')
-			{
-				utils->tmp = strj(utils->tmp, arg[utils->i + 1]);
-				utils->i += 2;
-			}
 			utils->tmp = strj(utils->tmp, arg[utils->i++]);
 		}
 		utils->tmp = end_pars02_utils(utils, arg, env_list);

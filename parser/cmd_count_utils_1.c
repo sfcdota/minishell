@@ -38,7 +38,7 @@ int		dquote(t_pars *pars, char *line)
 	return (1);
 }
 
-void	cmd_update(t_pars *pars, t_cmd **cmd)
+int		cmd_update(t_pars *pars, t_cmd **cmd)
 {
 	if (!(*cmd)->name)
 		(*cmd)->name = ft_strdup(pars->str);
@@ -50,8 +50,9 @@ void	cmd_update(t_pars *pars, t_cmd **cmd)
 					ft_lstnew(new_arg(ft_strdup(pars->str), 0)));
 	free(pars->str);
 	if (!(pars->str = malloc(sizeof(char) * 1)))
-		return ;
+		return (-1);
 	pars->str[0] = '\0';
+	return (1);
 }
 
 int		logical_and(t_info *info, t_pars *pars, char *line, t_cmd **cmd)

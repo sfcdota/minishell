@@ -47,7 +47,7 @@ char			*end_pars02(t_utils *utils, char *arg, t_list *env_list);
 char			*end_pars03(t_utils *utils, char *arg, t_list *env_list);
 int				quote(t_pars *pars, char *line);
 int				dquote(t_pars *pars, char *line);
-void			cmd_update(t_pars *pars, t_cmd **cmd);
+int				cmd_update(t_pars *pars, t_cmd **cmd);
 int				logical_and(t_info *info, t_pars *pars,
 					char *line, t_cmd **cmd);
 int				pipes(t_info *info, t_pars *pars, char *line, t_cmd **cmd);
@@ -58,5 +58,6 @@ int				loop(t_info *info, t_pars *pars, char *line, t_cmd **cmd);
 char			*pure_d(char *arg, t_info *info);
 void			utils_free(t_utils *utils);
 t_pars			*pars_init(char *line);
+int				free_cmd(t_cmd *cmd, t_pars *pars);
 
 #endif
